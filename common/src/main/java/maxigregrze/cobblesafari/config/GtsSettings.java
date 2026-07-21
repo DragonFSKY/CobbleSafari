@@ -29,6 +29,10 @@ public class GtsSettings {
     private int pokemonBestBefore = 7;
     /** Max ADMIN-sourced personal offers kept per target player; message rewards are never capped (B3). */
     private int personalOfferAdminMaxPerPlayer = 20;
+    /** Base number of simultaneous offers per player (without tickets). */
+    private int maxOffersPerPlayer = 1;
+    /** Absolute cap of simultaneous offers per player, ticket bonuses included. */
+    private int maxOffersWithUpgrades = 3;
     private List<String> bannedPokemons = new ArrayList<>();
     private List<String> bannedHeldItems = new ArrayList<>();
 
@@ -75,6 +79,8 @@ public class GtsSettings {
     private void validateAndFix() {
         pokemonBestBefore = Math.max(1, Math.min(31, pokemonBestBefore));
         personalOfferAdminMaxPerPlayer = Math.max(1, Math.min(1000, personalOfferAdminMaxPerPlayer));
+        maxOffersPerPlayer = Math.max(1, Math.min(10, maxOffersPerPlayer));
+        maxOffersWithUpgrades = Math.max(maxOffersPerPlayer, Math.min(10, maxOffersWithUpgrades));
         if (bannedPokemons == null) {
             bannedPokemons = new ArrayList<>();
         }
@@ -122,6 +128,14 @@ public class GtsSettings {
 
     public int getPersonalOfferAdminMaxPerPlayer() {
         return personalOfferAdminMaxPerPlayer;
+    }
+
+    public int getMaxOffersPerPlayer() {
+        return maxOffersPerPlayer;
+    }
+
+    public int getMaxOffersWithUpgrades() {
+        return maxOffersWithUpgrades;
     }
 
     public List<String> getBannedPokemons() {

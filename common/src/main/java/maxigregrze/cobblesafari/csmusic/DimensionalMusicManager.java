@@ -88,8 +88,8 @@ public final class DimensionalMusicManager {
             mode = SetCsMusicPayload.MODE_CUT;
         } else if (nextMode.containsKey(uuid)) {
             mode = nextMode.get(uuid);
-        } else if (winner != null && winner.hasParent() && winner.parent().equals(prevId)) {
-            mode = SetCsMusicPayload.MODE_CROSSFADE; // child takes over from its parent
+        } else if (crossfadeRelated(prev, winner)) {
+            mode = SetCsMusicPayload.MODE_CROSSFADE; // musically related tracks: synced crossfade
         } else {
             mode = defaultExitMode(prev, winner);
         }
@@ -203,6 +203,25 @@ public final class DimensionalMusicManager {
         return SetCsMusicPayload.MODE_FADE;
     }
 
+    /**
+     * True when two tracks are musically related, so the transition is a <b>synced crossfade</b>
+     * (the incoming track starts at the outgoing track's loop playhead): the winner is the child of
+     * the current track, the current track is the child of the winner (return to parent), or both
+     * declare the same parent (siblings). Related tracks must share the same loop duration.
+     */
+    private static boolean crossfadeRelated(@Nullable CsMusicDefinition prev, @Nullable CsMusicDefinition winner) {
+        if (prev == null || winner == null) {
+            return false;
+        }
+        if (winner.hasParent() && winner.parent().equals(prev.id())) {
+            return true; // parent -> child
+        }
+        if (prev.hasParent() && prev.parent().equals(winner.id())) {
+            return true; // child -> parent
+        }
+        return prev.hasParent() && winner.hasParent() && winner.parent().equals(prev.parent()); // siblings
+    }
+
     // --- /csmusic current ------------------------------------------------------
 
     public static List<SourceInfo> describeSourcesFor(ServerPlayer player) {
@@ -244,13 +263,12 @@ public final class DimensionalMusicManager {
         for (ServerPlayer p : aliveParticipants) {
             UUID uuid = p.getUUID();
             // A boss override already present means this is a phase-to-phase switch. If the next
-            // phase's music is the child of the current phase's music, do a synced crossfade;
-            // otherwise hard-cut to the new phase.
+            // phase's music is related to the current phase's music (parent/child/sibling), do a
+            // synced crossfade; otherwise hard-cut to the new phase.
             if (bossOverride.containsKey(uuid)) {
-                String prev = bossOverride.get(uuid);
+                CsMusicDefinition prev = CsMusicRegistry.get(bossOverride.get(uuid)).orElse(null);
                 CsMusicDefinition next = CsMusicRegistry.get(csmusicId).orElse(null);
-                boolean childOfPrev = next != null && next.hasParent() && next.parent().equals(prev);
-                nextMode.put(uuid, childOfPrev
+                nextMode.put(uuid, crossfadeRelated(prev, next)
                         ? SetCsMusicPayload.MODE_CROSSFADE
                         : SetCsMusicPayload.MODE_CUT);
             }

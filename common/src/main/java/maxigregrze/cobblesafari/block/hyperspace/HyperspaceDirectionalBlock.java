@@ -15,7 +15,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  *   <li>{@code wallMounted=false} — free‑standing ({@link HorizontalModelBlock.Support#NONE}), shape authored NORTH.</li>
  *   <li>{@code hasCollision=false} — selection only (decorative banners / neon).</li>
  * </ul>
- * Reused by barrier (ground), small neon (wall, no collision), iron railing (wall), shutters (wall).
+ * Reused by small neon (wall, no collision), iron railing (wall), shutters (wall).
  */
 public class HyperspaceDirectionalBlock extends HorizontalModelBlock {
 

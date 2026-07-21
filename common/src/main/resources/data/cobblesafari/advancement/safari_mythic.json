@@ -1,0 +1,9013 @@
+{
+  "parent": "cobblesafari:safari_legend",
+  "display": {
+    "icon": {
+      "id": "cobblemon:safari_ball"
+    },
+    "title": {
+      "translate": "advancements.cobblesafari.safari_mythic.title"
+    },
+    "description": {
+      "translate": "advancements.cobblesafari.safari_mythic.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "c1": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 1
+      }
+    },
+    "c2": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 2
+      }
+    },
+    "c3": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 3
+      }
+    },
+    "c4": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 4
+      }
+    },
+    "c5": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 5
+      }
+    },
+    "c6": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 6
+      }
+    },
+    "c7": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 7
+      }
+    },
+    "c8": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 8
+      }
+    },
+    "c9": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 9
+      }
+    },
+    "c10": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 10
+      }
+    },
+    "c11": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 11
+      }
+    },
+    "c12": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 12
+      }
+    },
+    "c13": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 13
+      }
+    },
+    "c14": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 14
+      }
+    },
+    "c15": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 15
+      }
+    },
+    "c16": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 16
+      }
+    },
+    "c17": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 17
+      }
+    },
+    "c18": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 18
+      }
+    },
+    "c19": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 19
+      }
+    },
+    "c20": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 20
+      }
+    },
+    "c21": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 21
+      }
+    },
+    "c22": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 22
+      }
+    },
+    "c23": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 23
+      }
+    },
+    "c24": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 24
+      }
+    },
+    "c25": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 25
+      }
+    },
+    "c26": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 26
+      }
+    },
+    "c27": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 27
+      }
+    },
+    "c28": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 28
+      }
+    },
+    "c29": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 29
+      }
+    },
+    "c30": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 30
+      }
+    },
+    "c31": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 31
+      }
+    },
+    "c32": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 32
+      }
+    },
+    "c33": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 33
+      }
+    },
+    "c34": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 34
+      }
+    },
+    "c35": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 35
+      }
+    },
+    "c36": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 36
+      }
+    },
+    "c37": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 37
+      }
+    },
+    "c38": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 38
+      }
+    },
+    "c39": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 39
+      }
+    },
+    "c40": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 40
+      }
+    },
+    "c41": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 41
+      }
+    },
+    "c42": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 42
+      }
+    },
+    "c43": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 43
+      }
+    },
+    "c44": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 44
+      }
+    },
+    "c45": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 45
+      }
+    },
+    "c46": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 46
+      }
+    },
+    "c47": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 47
+      }
+    },
+    "c48": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 48
+      }
+    },
+    "c49": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 49
+      }
+    },
+    "c50": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 50
+      }
+    },
+    "c51": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 51
+      }
+    },
+    "c52": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 52
+      }
+    },
+    "c53": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 53
+      }
+    },
+    "c54": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 54
+      }
+    },
+    "c55": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 55
+      }
+    },
+    "c56": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 56
+      }
+    },
+    "c57": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 57
+      }
+    },
+    "c58": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 58
+      }
+    },
+    "c59": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 59
+      }
+    },
+    "c60": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 60
+      }
+    },
+    "c61": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 61
+      }
+    },
+    "c62": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 62
+      }
+    },
+    "c63": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 63
+      }
+    },
+    "c64": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 64
+      }
+    },
+    "c65": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 65
+      }
+    },
+    "c66": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 66
+      }
+    },
+    "c67": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 67
+      }
+    },
+    "c68": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 68
+      }
+    },
+    "c69": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 69
+      }
+    },
+    "c70": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 70
+      }
+    },
+    "c71": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 71
+      }
+    },
+    "c72": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 72
+      }
+    },
+    "c73": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 73
+      }
+    },
+    "c74": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 74
+      }
+    },
+    "c75": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 75
+      }
+    },
+    "c76": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 76
+      }
+    },
+    "c77": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 77
+      }
+    },
+    "c78": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 78
+      }
+    },
+    "c79": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 79
+      }
+    },
+    "c80": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 80
+      }
+    },
+    "c81": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 81
+      }
+    },
+    "c82": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 82
+      }
+    },
+    "c83": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 83
+      }
+    },
+    "c84": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 84
+      }
+    },
+    "c85": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 85
+      }
+    },
+    "c86": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 86
+      }
+    },
+    "c87": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 87
+      }
+    },
+    "c88": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 88
+      }
+    },
+    "c89": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 89
+      }
+    },
+    "c90": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 90
+      }
+    },
+    "c91": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 91
+      }
+    },
+    "c92": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 92
+      }
+    },
+    "c93": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 93
+      }
+    },
+    "c94": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 94
+      }
+    },
+    "c95": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 95
+      }
+    },
+    "c96": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 96
+      }
+    },
+    "c97": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 97
+      }
+    },
+    "c98": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 98
+      }
+    },
+    "c99": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 99
+      }
+    },
+    "c100": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 100
+      }
+    },
+    "c101": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 101
+      }
+    },
+    "c102": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 102
+      }
+    },
+    "c103": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 103
+      }
+    },
+    "c104": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 104
+      }
+    },
+    "c105": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 105
+      }
+    },
+    "c106": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 106
+      }
+    },
+    "c107": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 107
+      }
+    },
+    "c108": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 108
+      }
+    },
+    "c109": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 109
+      }
+    },
+    "c110": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 110
+      }
+    },
+    "c111": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 111
+      }
+    },
+    "c112": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 112
+      }
+    },
+    "c113": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 113
+      }
+    },
+    "c114": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 114
+      }
+    },
+    "c115": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 115
+      }
+    },
+    "c116": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 116
+      }
+    },
+    "c117": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 117
+      }
+    },
+    "c118": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 118
+      }
+    },
+    "c119": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 119
+      }
+    },
+    "c120": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 120
+      }
+    },
+    "c121": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 121
+      }
+    },
+    "c122": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 122
+      }
+    },
+    "c123": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 123
+      }
+    },
+    "c124": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 124
+      }
+    },
+    "c125": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 125
+      }
+    },
+    "c126": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 126
+      }
+    },
+    "c127": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 127
+      }
+    },
+    "c128": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 128
+      }
+    },
+    "c129": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 129
+      }
+    },
+    "c130": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 130
+      }
+    },
+    "c131": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 131
+      }
+    },
+    "c132": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 132
+      }
+    },
+    "c133": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 133
+      }
+    },
+    "c134": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 134
+      }
+    },
+    "c135": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 135
+      }
+    },
+    "c136": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 136
+      }
+    },
+    "c137": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 137
+      }
+    },
+    "c138": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 138
+      }
+    },
+    "c139": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 139
+      }
+    },
+    "c140": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 140
+      }
+    },
+    "c141": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 141
+      }
+    },
+    "c142": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 142
+      }
+    },
+    "c143": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 143
+      }
+    },
+    "c144": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 144
+      }
+    },
+    "c145": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 145
+      }
+    },
+    "c146": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 146
+      }
+    },
+    "c147": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 147
+      }
+    },
+    "c148": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 148
+      }
+    },
+    "c149": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 149
+      }
+    },
+    "c150": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 150
+      }
+    },
+    "c151": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 151
+      }
+    },
+    "c152": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 152
+      }
+    },
+    "c153": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 153
+      }
+    },
+    "c154": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 154
+      }
+    },
+    "c155": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 155
+      }
+    },
+    "c156": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 156
+      }
+    },
+    "c157": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 157
+      }
+    },
+    "c158": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 158
+      }
+    },
+    "c159": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 159
+      }
+    },
+    "c160": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 160
+      }
+    },
+    "c161": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 161
+      }
+    },
+    "c162": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 162
+      }
+    },
+    "c163": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 163
+      }
+    },
+    "c164": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 164
+      }
+    },
+    "c165": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 165
+      }
+    },
+    "c166": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 166
+      }
+    },
+    "c167": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 167
+      }
+    },
+    "c168": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 168
+      }
+    },
+    "c169": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 169
+      }
+    },
+    "c170": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 170
+      }
+    },
+    "c171": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 171
+      }
+    },
+    "c172": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 172
+      }
+    },
+    "c173": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 173
+      }
+    },
+    "c174": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 174
+      }
+    },
+    "c175": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 175
+      }
+    },
+    "c176": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 176
+      }
+    },
+    "c177": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 177
+      }
+    },
+    "c178": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 178
+      }
+    },
+    "c179": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 179
+      }
+    },
+    "c180": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 180
+      }
+    },
+    "c181": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 181
+      }
+    },
+    "c182": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 182
+      }
+    },
+    "c183": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 183
+      }
+    },
+    "c184": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 184
+      }
+    },
+    "c185": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 185
+      }
+    },
+    "c186": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 186
+      }
+    },
+    "c187": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 187
+      }
+    },
+    "c188": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 188
+      }
+    },
+    "c189": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 189
+      }
+    },
+    "c190": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 190
+      }
+    },
+    "c191": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 191
+      }
+    },
+    "c192": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 192
+      }
+    },
+    "c193": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 193
+      }
+    },
+    "c194": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 194
+      }
+    },
+    "c195": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 195
+      }
+    },
+    "c196": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 196
+      }
+    },
+    "c197": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 197
+      }
+    },
+    "c198": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 198
+      }
+    },
+    "c199": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 199
+      }
+    },
+    "c200": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 200
+      }
+    },
+    "c201": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 201
+      }
+    },
+    "c202": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 202
+      }
+    },
+    "c203": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 203
+      }
+    },
+    "c204": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 204
+      }
+    },
+    "c205": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 205
+      }
+    },
+    "c206": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 206
+      }
+    },
+    "c207": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 207
+      }
+    },
+    "c208": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 208
+      }
+    },
+    "c209": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 209
+      }
+    },
+    "c210": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 210
+      }
+    },
+    "c211": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 211
+      }
+    },
+    "c212": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 212
+      }
+    },
+    "c213": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 213
+      }
+    },
+    "c214": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 214
+      }
+    },
+    "c215": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 215
+      }
+    },
+    "c216": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 216
+      }
+    },
+    "c217": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 217
+      }
+    },
+    "c218": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 218
+      }
+    },
+    "c219": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 219
+      }
+    },
+    "c220": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 220
+      }
+    },
+    "c221": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 221
+      }
+    },
+    "c222": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 222
+      }
+    },
+    "c223": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 223
+      }
+    },
+    "c224": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 224
+      }
+    },
+    "c225": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 225
+      }
+    },
+    "c226": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 226
+      }
+    },
+    "c227": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 227
+      }
+    },
+    "c228": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 228
+      }
+    },
+    "c229": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 229
+      }
+    },
+    "c230": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 230
+      }
+    },
+    "c231": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 231
+      }
+    },
+    "c232": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 232
+      }
+    },
+    "c233": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 233
+      }
+    },
+    "c234": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 234
+      }
+    },
+    "c235": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 235
+      }
+    },
+    "c236": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 236
+      }
+    },
+    "c237": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 237
+      }
+    },
+    "c238": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 238
+      }
+    },
+    "c239": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 239
+      }
+    },
+    "c240": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 240
+      }
+    },
+    "c241": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 241
+      }
+    },
+    "c242": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 242
+      }
+    },
+    "c243": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 243
+      }
+    },
+    "c244": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 244
+      }
+    },
+    "c245": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 245
+      }
+    },
+    "c246": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 246
+      }
+    },
+    "c247": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 247
+      }
+    },
+    "c248": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 248
+      }
+    },
+    "c249": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 249
+      }
+    },
+    "c250": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 250
+      }
+    },
+    "c251": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 251
+      }
+    },
+    "c252": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 252
+      }
+    },
+    "c253": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 253
+      }
+    },
+    "c254": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 254
+      }
+    },
+    "c255": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 255
+      }
+    },
+    "c256": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 256
+      }
+    },
+    "c257": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 257
+      }
+    },
+    "c258": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 258
+      }
+    },
+    "c259": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 259
+      }
+    },
+    "c260": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 260
+      }
+    },
+    "c261": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 261
+      }
+    },
+    "c262": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 262
+      }
+    },
+    "c263": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 263
+      }
+    },
+    "c264": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 264
+      }
+    },
+    "c265": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 265
+      }
+    },
+    "c266": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 266
+      }
+    },
+    "c267": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 267
+      }
+    },
+    "c268": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 268
+      }
+    },
+    "c269": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 269
+      }
+    },
+    "c270": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 270
+      }
+    },
+    "c271": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 271
+      }
+    },
+    "c272": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 272
+      }
+    },
+    "c273": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 273
+      }
+    },
+    "c274": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 274
+      }
+    },
+    "c275": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 275
+      }
+    },
+    "c276": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 276
+      }
+    },
+    "c277": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 277
+      }
+    },
+    "c278": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 278
+      }
+    },
+    "c279": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 279
+      }
+    },
+    "c280": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 280
+      }
+    },
+    "c281": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 281
+      }
+    },
+    "c282": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 282
+      }
+    },
+    "c283": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 283
+      }
+    },
+    "c284": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 284
+      }
+    },
+    "c285": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 285
+      }
+    },
+    "c286": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 286
+      }
+    },
+    "c287": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 287
+      }
+    },
+    "c288": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 288
+      }
+    },
+    "c289": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 289
+      }
+    },
+    "c290": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 290
+      }
+    },
+    "c291": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 291
+      }
+    },
+    "c292": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 292
+      }
+    },
+    "c293": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 293
+      }
+    },
+    "c294": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 294
+      }
+    },
+    "c295": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 295
+      }
+    },
+    "c296": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 296
+      }
+    },
+    "c297": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 297
+      }
+    },
+    "c298": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 298
+      }
+    },
+    "c299": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 299
+      }
+    },
+    "c300": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 300
+      }
+    },
+    "c301": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 301
+      }
+    },
+    "c302": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 302
+      }
+    },
+    "c303": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 303
+      }
+    },
+    "c304": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 304
+      }
+    },
+    "c305": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 305
+      }
+    },
+    "c306": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 306
+      }
+    },
+    "c307": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 307
+      }
+    },
+    "c308": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 308
+      }
+    },
+    "c309": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 309
+      }
+    },
+    "c310": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 310
+      }
+    },
+    "c311": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 311
+      }
+    },
+    "c312": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 312
+      }
+    },
+    "c313": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 313
+      }
+    },
+    "c314": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 314
+      }
+    },
+    "c315": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 315
+      }
+    },
+    "c316": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 316
+      }
+    },
+    "c317": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 317
+      }
+    },
+    "c318": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 318
+      }
+    },
+    "c319": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 319
+      }
+    },
+    "c320": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 320
+      }
+    },
+    "c321": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 321
+      }
+    },
+    "c322": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 322
+      }
+    },
+    "c323": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 323
+      }
+    },
+    "c324": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 324
+      }
+    },
+    "c325": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 325
+      }
+    },
+    "c326": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 326
+      }
+    },
+    "c327": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 327
+      }
+    },
+    "c328": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 328
+      }
+    },
+    "c329": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 329
+      }
+    },
+    "c330": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 330
+      }
+    },
+    "c331": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 331
+      }
+    },
+    "c332": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 332
+      }
+    },
+    "c333": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 333
+      }
+    },
+    "c334": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 334
+      }
+    },
+    "c335": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 335
+      }
+    },
+    "c336": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 336
+      }
+    },
+    "c337": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 337
+      }
+    },
+    "c338": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 338
+      }
+    },
+    "c339": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 339
+      }
+    },
+    "c340": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 340
+      }
+    },
+    "c341": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 341
+      }
+    },
+    "c342": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 342
+      }
+    },
+    "c343": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 343
+      }
+    },
+    "c344": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 344
+      }
+    },
+    "c345": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 345
+      }
+    },
+    "c346": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 346
+      }
+    },
+    "c347": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 347
+      }
+    },
+    "c348": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 348
+      }
+    },
+    "c349": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 349
+      }
+    },
+    "c350": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 350
+      }
+    },
+    "c351": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 351
+      }
+    },
+    "c352": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 352
+      }
+    },
+    "c353": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 353
+      }
+    },
+    "c354": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 354
+      }
+    },
+    "c355": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 355
+      }
+    },
+    "c356": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 356
+      }
+    },
+    "c357": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 357
+      }
+    },
+    "c358": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 358
+      }
+    },
+    "c359": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 359
+      }
+    },
+    "c360": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 360
+      }
+    },
+    "c361": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 361
+      }
+    },
+    "c362": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 362
+      }
+    },
+    "c363": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 363
+      }
+    },
+    "c364": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 364
+      }
+    },
+    "c365": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 365
+      }
+    },
+    "c366": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 366
+      }
+    },
+    "c367": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 367
+      }
+    },
+    "c368": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 368
+      }
+    },
+    "c369": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 369
+      }
+    },
+    "c370": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 370
+      }
+    },
+    "c371": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 371
+      }
+    },
+    "c372": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 372
+      }
+    },
+    "c373": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 373
+      }
+    },
+    "c374": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 374
+      }
+    },
+    "c375": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 375
+      }
+    },
+    "c376": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 376
+      }
+    },
+    "c377": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 377
+      }
+    },
+    "c378": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 378
+      }
+    },
+    "c379": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 379
+      }
+    },
+    "c380": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 380
+      }
+    },
+    "c381": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 381
+      }
+    },
+    "c382": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 382
+      }
+    },
+    "c383": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 383
+      }
+    },
+    "c384": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 384
+      }
+    },
+    "c385": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 385
+      }
+    },
+    "c386": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 386
+      }
+    },
+    "c387": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 387
+      }
+    },
+    "c388": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 388
+      }
+    },
+    "c389": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 389
+      }
+    },
+    "c390": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 390
+      }
+    },
+    "c391": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 391
+      }
+    },
+    "c392": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 392
+      }
+    },
+    "c393": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 393
+      }
+    },
+    "c394": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 394
+      }
+    },
+    "c395": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 395
+      }
+    },
+    "c396": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 396
+      }
+    },
+    "c397": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 397
+      }
+    },
+    "c398": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 398
+      }
+    },
+    "c399": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 399
+      }
+    },
+    "c400": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 400
+      }
+    },
+    "c401": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 401
+      }
+    },
+    "c402": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 402
+      }
+    },
+    "c403": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 403
+      }
+    },
+    "c404": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 404
+      }
+    },
+    "c405": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 405
+      }
+    },
+    "c406": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 406
+      }
+    },
+    "c407": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 407
+      }
+    },
+    "c408": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 408
+      }
+    },
+    "c409": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 409
+      }
+    },
+    "c410": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 410
+      }
+    },
+    "c411": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 411
+      }
+    },
+    "c412": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 412
+      }
+    },
+    "c413": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 413
+      }
+    },
+    "c414": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 414
+      }
+    },
+    "c415": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 415
+      }
+    },
+    "c416": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 416
+      }
+    },
+    "c417": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 417
+      }
+    },
+    "c418": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 418
+      }
+    },
+    "c419": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 419
+      }
+    },
+    "c420": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 420
+      }
+    },
+    "c421": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 421
+      }
+    },
+    "c422": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 422
+      }
+    },
+    "c423": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 423
+      }
+    },
+    "c424": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 424
+      }
+    },
+    "c425": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 425
+      }
+    },
+    "c426": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 426
+      }
+    },
+    "c427": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 427
+      }
+    },
+    "c428": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 428
+      }
+    },
+    "c429": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 429
+      }
+    },
+    "c430": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 430
+      }
+    },
+    "c431": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 431
+      }
+    },
+    "c432": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 432
+      }
+    },
+    "c433": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 433
+      }
+    },
+    "c434": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 434
+      }
+    },
+    "c435": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 435
+      }
+    },
+    "c436": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 436
+      }
+    },
+    "c437": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 437
+      }
+    },
+    "c438": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 438
+      }
+    },
+    "c439": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 439
+      }
+    },
+    "c440": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 440
+      }
+    },
+    "c441": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 441
+      }
+    },
+    "c442": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 442
+      }
+    },
+    "c443": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 443
+      }
+    },
+    "c444": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 444
+      }
+    },
+    "c445": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 445
+      }
+    },
+    "c446": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 446
+      }
+    },
+    "c447": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 447
+      }
+    },
+    "c448": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 448
+      }
+    },
+    "c449": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 449
+      }
+    },
+    "c450": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 450
+      }
+    },
+    "c451": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 451
+      }
+    },
+    "c452": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 452
+      }
+    },
+    "c453": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 453
+      }
+    },
+    "c454": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 454
+      }
+    },
+    "c455": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 455
+      }
+    },
+    "c456": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 456
+      }
+    },
+    "c457": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 457
+      }
+    },
+    "c458": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 458
+      }
+    },
+    "c459": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 459
+      }
+    },
+    "c460": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 460
+      }
+    },
+    "c461": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 461
+      }
+    },
+    "c462": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 462
+      }
+    },
+    "c463": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 463
+      }
+    },
+    "c464": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 464
+      }
+    },
+    "c465": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 465
+      }
+    },
+    "c466": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 466
+      }
+    },
+    "c467": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 467
+      }
+    },
+    "c468": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 468
+      }
+    },
+    "c469": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 469
+      }
+    },
+    "c470": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 470
+      }
+    },
+    "c471": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 471
+      }
+    },
+    "c472": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 472
+      }
+    },
+    "c473": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 473
+      }
+    },
+    "c474": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 474
+      }
+    },
+    "c475": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 475
+      }
+    },
+    "c476": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 476
+      }
+    },
+    "c477": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 477
+      }
+    },
+    "c478": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 478
+      }
+    },
+    "c479": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 479
+      }
+    },
+    "c480": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 480
+      }
+    },
+    "c481": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 481
+      }
+    },
+    "c482": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 482
+      }
+    },
+    "c483": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 483
+      }
+    },
+    "c484": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 484
+      }
+    },
+    "c485": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 485
+      }
+    },
+    "c486": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 486
+      }
+    },
+    "c487": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 487
+      }
+    },
+    "c488": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 488
+      }
+    },
+    "c489": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 489
+      }
+    },
+    "c490": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 490
+      }
+    },
+    "c491": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 491
+      }
+    },
+    "c492": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 492
+      }
+    },
+    "c493": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 493
+      }
+    },
+    "c494": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 494
+      }
+    },
+    "c495": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 495
+      }
+    },
+    "c496": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 496
+      }
+    },
+    "c497": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 497
+      }
+    },
+    "c498": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 498
+      }
+    },
+    "c499": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 499
+      }
+    },
+    "c500": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 500
+      }
+    },
+    "c501": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 501
+      }
+    },
+    "c502": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 502
+      }
+    },
+    "c503": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 503
+      }
+    },
+    "c504": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 504
+      }
+    },
+    "c505": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 505
+      }
+    },
+    "c506": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 506
+      }
+    },
+    "c507": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 507
+      }
+    },
+    "c508": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 508
+      }
+    },
+    "c509": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 509
+      }
+    },
+    "c510": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 510
+      }
+    },
+    "c511": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 511
+      }
+    },
+    "c512": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 512
+      }
+    },
+    "c513": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 513
+      }
+    },
+    "c514": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 514
+      }
+    },
+    "c515": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 515
+      }
+    },
+    "c516": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 516
+      }
+    },
+    "c517": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 517
+      }
+    },
+    "c518": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 518
+      }
+    },
+    "c519": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 519
+      }
+    },
+    "c520": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 520
+      }
+    },
+    "c521": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 521
+      }
+    },
+    "c522": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 522
+      }
+    },
+    "c523": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 523
+      }
+    },
+    "c524": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 524
+      }
+    },
+    "c525": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 525
+      }
+    },
+    "c526": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 526
+      }
+    },
+    "c527": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 527
+      }
+    },
+    "c528": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 528
+      }
+    },
+    "c529": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 529
+      }
+    },
+    "c530": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 530
+      }
+    },
+    "c531": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 531
+      }
+    },
+    "c532": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 532
+      }
+    },
+    "c533": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 533
+      }
+    },
+    "c534": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 534
+      }
+    },
+    "c535": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 535
+      }
+    },
+    "c536": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 536
+      }
+    },
+    "c537": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 537
+      }
+    },
+    "c538": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 538
+      }
+    },
+    "c539": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 539
+      }
+    },
+    "c540": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 540
+      }
+    },
+    "c541": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 541
+      }
+    },
+    "c542": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 542
+      }
+    },
+    "c543": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 543
+      }
+    },
+    "c544": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 544
+      }
+    },
+    "c545": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 545
+      }
+    },
+    "c546": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 546
+      }
+    },
+    "c547": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 547
+      }
+    },
+    "c548": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 548
+      }
+    },
+    "c549": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 549
+      }
+    },
+    "c550": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 550
+      }
+    },
+    "c551": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 551
+      }
+    },
+    "c552": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 552
+      }
+    },
+    "c553": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 553
+      }
+    },
+    "c554": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 554
+      }
+    },
+    "c555": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 555
+      }
+    },
+    "c556": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 556
+      }
+    },
+    "c557": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 557
+      }
+    },
+    "c558": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 558
+      }
+    },
+    "c559": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 559
+      }
+    },
+    "c560": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 560
+      }
+    },
+    "c561": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 561
+      }
+    },
+    "c562": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 562
+      }
+    },
+    "c563": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 563
+      }
+    },
+    "c564": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 564
+      }
+    },
+    "c565": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 565
+      }
+    },
+    "c566": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 566
+      }
+    },
+    "c567": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 567
+      }
+    },
+    "c568": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 568
+      }
+    },
+    "c569": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 569
+      }
+    },
+    "c570": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 570
+      }
+    },
+    "c571": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 571
+      }
+    },
+    "c572": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 572
+      }
+    },
+    "c573": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 573
+      }
+    },
+    "c574": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 574
+      }
+    },
+    "c575": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 575
+      }
+    },
+    "c576": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 576
+      }
+    },
+    "c577": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 577
+      }
+    },
+    "c578": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 578
+      }
+    },
+    "c579": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 579
+      }
+    },
+    "c580": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 580
+      }
+    },
+    "c581": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 581
+      }
+    },
+    "c582": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 582
+      }
+    },
+    "c583": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 583
+      }
+    },
+    "c584": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 584
+      }
+    },
+    "c585": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 585
+      }
+    },
+    "c586": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 586
+      }
+    },
+    "c587": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 587
+      }
+    },
+    "c588": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 588
+      }
+    },
+    "c589": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 589
+      }
+    },
+    "c590": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 590
+      }
+    },
+    "c591": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 591
+      }
+    },
+    "c592": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 592
+      }
+    },
+    "c593": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 593
+      }
+    },
+    "c594": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 594
+      }
+    },
+    "c595": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 595
+      }
+    },
+    "c596": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 596
+      }
+    },
+    "c597": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 597
+      }
+    },
+    "c598": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 598
+      }
+    },
+    "c599": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 599
+      }
+    },
+    "c600": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 600
+      }
+    },
+    "c601": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 601
+      }
+    },
+    "c602": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 602
+      }
+    },
+    "c603": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 603
+      }
+    },
+    "c604": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 604
+      }
+    },
+    "c605": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 605
+      }
+    },
+    "c606": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 606
+      }
+    },
+    "c607": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 607
+      }
+    },
+    "c608": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 608
+      }
+    },
+    "c609": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 609
+      }
+    },
+    "c610": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 610
+      }
+    },
+    "c611": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 611
+      }
+    },
+    "c612": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 612
+      }
+    },
+    "c613": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 613
+      }
+    },
+    "c614": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 614
+      }
+    },
+    "c615": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 615
+      }
+    },
+    "c616": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 616
+      }
+    },
+    "c617": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 617
+      }
+    },
+    "c618": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 618
+      }
+    },
+    "c619": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 619
+      }
+    },
+    "c620": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 620
+      }
+    },
+    "c621": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 621
+      }
+    },
+    "c622": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 622
+      }
+    },
+    "c623": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 623
+      }
+    },
+    "c624": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 624
+      }
+    },
+    "c625": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 625
+      }
+    },
+    "c626": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 626
+      }
+    },
+    "c627": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 627
+      }
+    },
+    "c628": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 628
+      }
+    },
+    "c629": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 629
+      }
+    },
+    "c630": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 630
+      }
+    },
+    "c631": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 631
+      }
+    },
+    "c632": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 632
+      }
+    },
+    "c633": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 633
+      }
+    },
+    "c634": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 634
+      }
+    },
+    "c635": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 635
+      }
+    },
+    "c636": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 636
+      }
+    },
+    "c637": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 637
+      }
+    },
+    "c638": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 638
+      }
+    },
+    "c639": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 639
+      }
+    },
+    "c640": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 640
+      }
+    },
+    "c641": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 641
+      }
+    },
+    "c642": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 642
+      }
+    },
+    "c643": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 643
+      }
+    },
+    "c644": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 644
+      }
+    },
+    "c645": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 645
+      }
+    },
+    "c646": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 646
+      }
+    },
+    "c647": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 647
+      }
+    },
+    "c648": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 648
+      }
+    },
+    "c649": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 649
+      }
+    },
+    "c650": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 650
+      }
+    },
+    "c651": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 651
+      }
+    },
+    "c652": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 652
+      }
+    },
+    "c653": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 653
+      }
+    },
+    "c654": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 654
+      }
+    },
+    "c655": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 655
+      }
+    },
+    "c656": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 656
+      }
+    },
+    "c657": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 657
+      }
+    },
+    "c658": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 658
+      }
+    },
+    "c659": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 659
+      }
+    },
+    "c660": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 660
+      }
+    },
+    "c661": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 661
+      }
+    },
+    "c662": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 662
+      }
+    },
+    "c663": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 663
+      }
+    },
+    "c664": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 664
+      }
+    },
+    "c665": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 665
+      }
+    },
+    "c666": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 666
+      }
+    },
+    "c667": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 667
+      }
+    },
+    "c668": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 668
+      }
+    },
+    "c669": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 669
+      }
+    },
+    "c670": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 670
+      }
+    },
+    "c671": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 671
+      }
+    },
+    "c672": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 672
+      }
+    },
+    "c673": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 673
+      }
+    },
+    "c674": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 674
+      }
+    },
+    "c675": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 675
+      }
+    },
+    "c676": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 676
+      }
+    },
+    "c677": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 677
+      }
+    },
+    "c678": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 678
+      }
+    },
+    "c679": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 679
+      }
+    },
+    "c680": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 680
+      }
+    },
+    "c681": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 681
+      }
+    },
+    "c682": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 682
+      }
+    },
+    "c683": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 683
+      }
+    },
+    "c684": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 684
+      }
+    },
+    "c685": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 685
+      }
+    },
+    "c686": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 686
+      }
+    },
+    "c687": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 687
+      }
+    },
+    "c688": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 688
+      }
+    },
+    "c689": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 689
+      }
+    },
+    "c690": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 690
+      }
+    },
+    "c691": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 691
+      }
+    },
+    "c692": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 692
+      }
+    },
+    "c693": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 693
+      }
+    },
+    "c694": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 694
+      }
+    },
+    "c695": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 695
+      }
+    },
+    "c696": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 696
+      }
+    },
+    "c697": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 697
+      }
+    },
+    "c698": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 698
+      }
+    },
+    "c699": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 699
+      }
+    },
+    "c700": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 700
+      }
+    },
+    "c701": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 701
+      }
+    },
+    "c702": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 702
+      }
+    },
+    "c703": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 703
+      }
+    },
+    "c704": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 704
+      }
+    },
+    "c705": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 705
+      }
+    },
+    "c706": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 706
+      }
+    },
+    "c707": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 707
+      }
+    },
+    "c708": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 708
+      }
+    },
+    "c709": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 709
+      }
+    },
+    "c710": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 710
+      }
+    },
+    "c711": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 711
+      }
+    },
+    "c712": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 712
+      }
+    },
+    "c713": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 713
+      }
+    },
+    "c714": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 714
+      }
+    },
+    "c715": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 715
+      }
+    },
+    "c716": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 716
+      }
+    },
+    "c717": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 717
+      }
+    },
+    "c718": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 718
+      }
+    },
+    "c719": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 719
+      }
+    },
+    "c720": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 720
+      }
+    },
+    "c721": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 721
+      }
+    },
+    "c722": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 722
+      }
+    },
+    "c723": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 723
+      }
+    },
+    "c724": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 724
+      }
+    },
+    "c725": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 725
+      }
+    },
+    "c726": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 726
+      }
+    },
+    "c727": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 727
+      }
+    },
+    "c728": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 728
+      }
+    },
+    "c729": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 729
+      }
+    },
+    "c730": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 730
+      }
+    },
+    "c731": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 731
+      }
+    },
+    "c732": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 732
+      }
+    },
+    "c733": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 733
+      }
+    },
+    "c734": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 734
+      }
+    },
+    "c735": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 735
+      }
+    },
+    "c736": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 736
+      }
+    },
+    "c737": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 737
+      }
+    },
+    "c738": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 738
+      }
+    },
+    "c739": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 739
+      }
+    },
+    "c740": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 740
+      }
+    },
+    "c741": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 741
+      }
+    },
+    "c742": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 742
+      }
+    },
+    "c743": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 743
+      }
+    },
+    "c744": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 744
+      }
+    },
+    "c745": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 745
+      }
+    },
+    "c746": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 746
+      }
+    },
+    "c747": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 747
+      }
+    },
+    "c748": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 748
+      }
+    },
+    "c749": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 749
+      }
+    },
+    "c750": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 750
+      }
+    },
+    "c751": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 751
+      }
+    },
+    "c752": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 752
+      }
+    },
+    "c753": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 753
+      }
+    },
+    "c754": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 754
+      }
+    },
+    "c755": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 755
+      }
+    },
+    "c756": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 756
+      }
+    },
+    "c757": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 757
+      }
+    },
+    "c758": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 758
+      }
+    },
+    "c759": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 759
+      }
+    },
+    "c760": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 760
+      }
+    },
+    "c761": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 761
+      }
+    },
+    "c762": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 762
+      }
+    },
+    "c763": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 763
+      }
+    },
+    "c764": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 764
+      }
+    },
+    "c765": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 765
+      }
+    },
+    "c766": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 766
+      }
+    },
+    "c767": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 767
+      }
+    },
+    "c768": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 768
+      }
+    },
+    "c769": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 769
+      }
+    },
+    "c770": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 770
+      }
+    },
+    "c771": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 771
+      }
+    },
+    "c772": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 772
+      }
+    },
+    "c773": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 773
+      }
+    },
+    "c774": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 774
+      }
+    },
+    "c775": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 775
+      }
+    },
+    "c776": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 776
+      }
+    },
+    "c777": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 777
+      }
+    },
+    "c778": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 778
+      }
+    },
+    "c779": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 779
+      }
+    },
+    "c780": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 780
+      }
+    },
+    "c781": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 781
+      }
+    },
+    "c782": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 782
+      }
+    },
+    "c783": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 783
+      }
+    },
+    "c784": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 784
+      }
+    },
+    "c785": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 785
+      }
+    },
+    "c786": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 786
+      }
+    },
+    "c787": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 787
+      }
+    },
+    "c788": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 788
+      }
+    },
+    "c789": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 789
+      }
+    },
+    "c790": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 790
+      }
+    },
+    "c791": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 791
+      }
+    },
+    "c792": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 792
+      }
+    },
+    "c793": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 793
+      }
+    },
+    "c794": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 794
+      }
+    },
+    "c795": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 795
+      }
+    },
+    "c796": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 796
+      }
+    },
+    "c797": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 797
+      }
+    },
+    "c798": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 798
+      }
+    },
+    "c799": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 799
+      }
+    },
+    "c800": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 800
+      }
+    },
+    "c801": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 801
+      }
+    },
+    "c802": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 802
+      }
+    },
+    "c803": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 803
+      }
+    },
+    "c804": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 804
+      }
+    },
+    "c805": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 805
+      }
+    },
+    "c806": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 806
+      }
+    },
+    "c807": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 807
+      }
+    },
+    "c808": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 808
+      }
+    },
+    "c809": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 809
+      }
+    },
+    "c810": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 810
+      }
+    },
+    "c811": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 811
+      }
+    },
+    "c812": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 812
+      }
+    },
+    "c813": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 813
+      }
+    },
+    "c814": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 814
+      }
+    },
+    "c815": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 815
+      }
+    },
+    "c816": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 816
+      }
+    },
+    "c817": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 817
+      }
+    },
+    "c818": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 818
+      }
+    },
+    "c819": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 819
+      }
+    },
+    "c820": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 820
+      }
+    },
+    "c821": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 821
+      }
+    },
+    "c822": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 822
+      }
+    },
+    "c823": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 823
+      }
+    },
+    "c824": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 824
+      }
+    },
+    "c825": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 825
+      }
+    },
+    "c826": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 826
+      }
+    },
+    "c827": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 827
+      }
+    },
+    "c828": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 828
+      }
+    },
+    "c829": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 829
+      }
+    },
+    "c830": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 830
+      }
+    },
+    "c831": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 831
+      }
+    },
+    "c832": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 832
+      }
+    },
+    "c833": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 833
+      }
+    },
+    "c834": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 834
+      }
+    },
+    "c835": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 835
+      }
+    },
+    "c836": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 836
+      }
+    },
+    "c837": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 837
+      }
+    },
+    "c838": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 838
+      }
+    },
+    "c839": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 839
+      }
+    },
+    "c840": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 840
+      }
+    },
+    "c841": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 841
+      }
+    },
+    "c842": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 842
+      }
+    },
+    "c843": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 843
+      }
+    },
+    "c844": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 844
+      }
+    },
+    "c845": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 845
+      }
+    },
+    "c846": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 846
+      }
+    },
+    "c847": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 847
+      }
+    },
+    "c848": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 848
+      }
+    },
+    "c849": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 849
+      }
+    },
+    "c850": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 850
+      }
+    },
+    "c851": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 851
+      }
+    },
+    "c852": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 852
+      }
+    },
+    "c853": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 853
+      }
+    },
+    "c854": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 854
+      }
+    },
+    "c855": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 855
+      }
+    },
+    "c856": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 856
+      }
+    },
+    "c857": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 857
+      }
+    },
+    "c858": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 858
+      }
+    },
+    "c859": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 859
+      }
+    },
+    "c860": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 860
+      }
+    },
+    "c861": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 861
+      }
+    },
+    "c862": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 862
+      }
+    },
+    "c863": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 863
+      }
+    },
+    "c864": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 864
+      }
+    },
+    "c865": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 865
+      }
+    },
+    "c866": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 866
+      }
+    },
+    "c867": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 867
+      }
+    },
+    "c868": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 868
+      }
+    },
+    "c869": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 869
+      }
+    },
+    "c870": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 870
+      }
+    },
+    "c871": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 871
+      }
+    },
+    "c872": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 872
+      }
+    },
+    "c873": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 873
+      }
+    },
+    "c874": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 874
+      }
+    },
+    "c875": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 875
+      }
+    },
+    "c876": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 876
+      }
+    },
+    "c877": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 877
+      }
+    },
+    "c878": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 878
+      }
+    },
+    "c879": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 879
+      }
+    },
+    "c880": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 880
+      }
+    },
+    "c881": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 881
+      }
+    },
+    "c882": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 882
+      }
+    },
+    "c883": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 883
+      }
+    },
+    "c884": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 884
+      }
+    },
+    "c885": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 885
+      }
+    },
+    "c886": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 886
+      }
+    },
+    "c887": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 887
+      }
+    },
+    "c888": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 888
+      }
+    },
+    "c889": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 889
+      }
+    },
+    "c890": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 890
+      }
+    },
+    "c891": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 891
+      }
+    },
+    "c892": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 892
+      }
+    },
+    "c893": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 893
+      }
+    },
+    "c894": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 894
+      }
+    },
+    "c895": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 895
+      }
+    },
+    "c896": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 896
+      }
+    },
+    "c897": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 897
+      }
+    },
+    "c898": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 898
+      }
+    },
+    "c899": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 899
+      }
+    },
+    "c900": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 900
+      }
+    },
+    "c901": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 901
+      }
+    },
+    "c902": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 902
+      }
+    },
+    "c903": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 903
+      }
+    },
+    "c904": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 904
+      }
+    },
+    "c905": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 905
+      }
+    },
+    "c906": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 906
+      }
+    },
+    "c907": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 907
+      }
+    },
+    "c908": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 908
+      }
+    },
+    "c909": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 909
+      }
+    },
+    "c910": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 910
+      }
+    },
+    "c911": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 911
+      }
+    },
+    "c912": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 912
+      }
+    },
+    "c913": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 913
+      }
+    },
+    "c914": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 914
+      }
+    },
+    "c915": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 915
+      }
+    },
+    "c916": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 916
+      }
+    },
+    "c917": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 917
+      }
+    },
+    "c918": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 918
+      }
+    },
+    "c919": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 919
+      }
+    },
+    "c920": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 920
+      }
+    },
+    "c921": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 921
+      }
+    },
+    "c922": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 922
+      }
+    },
+    "c923": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 923
+      }
+    },
+    "c924": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 924
+      }
+    },
+    "c925": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 925
+      }
+    },
+    "c926": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 926
+      }
+    },
+    "c927": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 927
+      }
+    },
+    "c928": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 928
+      }
+    },
+    "c929": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 929
+      }
+    },
+    "c930": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 930
+      }
+    },
+    "c931": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 931
+      }
+    },
+    "c932": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 932
+      }
+    },
+    "c933": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 933
+      }
+    },
+    "c934": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 934
+      }
+    },
+    "c935": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 935
+      }
+    },
+    "c936": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 936
+      }
+    },
+    "c937": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 937
+      }
+    },
+    "c938": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 938
+      }
+    },
+    "c939": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 939
+      }
+    },
+    "c940": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 940
+      }
+    },
+    "c941": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 941
+      }
+    },
+    "c942": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 942
+      }
+    },
+    "c943": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 943
+      }
+    },
+    "c944": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 944
+      }
+    },
+    "c945": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 945
+      }
+    },
+    "c946": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 946
+      }
+    },
+    "c947": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 947
+      }
+    },
+    "c948": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 948
+      }
+    },
+    "c949": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 949
+      }
+    },
+    "c950": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 950
+      }
+    },
+    "c951": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 951
+      }
+    },
+    "c952": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 952
+      }
+    },
+    "c953": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 953
+      }
+    },
+    "c954": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 954
+      }
+    },
+    "c955": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 955
+      }
+    },
+    "c956": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 956
+      }
+    },
+    "c957": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 957
+      }
+    },
+    "c958": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 958
+      }
+    },
+    "c959": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 959
+      }
+    },
+    "c960": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 960
+      }
+    },
+    "c961": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 961
+      }
+    },
+    "c962": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 962
+      }
+    },
+    "c963": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 963
+      }
+    },
+    "c964": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 964
+      }
+    },
+    "c965": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 965
+      }
+    },
+    "c966": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 966
+      }
+    },
+    "c967": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 967
+      }
+    },
+    "c968": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 968
+      }
+    },
+    "c969": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 969
+      }
+    },
+    "c970": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 970
+      }
+    },
+    "c971": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 971
+      }
+    },
+    "c972": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 972
+      }
+    },
+    "c973": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 973
+      }
+    },
+    "c974": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 974
+      }
+    },
+    "c975": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 975
+      }
+    },
+    "c976": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 976
+      }
+    },
+    "c977": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 977
+      }
+    },
+    "c978": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 978
+      }
+    },
+    "c979": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 979
+      }
+    },
+    "c980": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 980
+      }
+    },
+    "c981": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 981
+      }
+    },
+    "c982": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 982
+      }
+    },
+    "c983": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 983
+      }
+    },
+    "c984": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 984
+      }
+    },
+    "c985": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 985
+      }
+    },
+    "c986": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 986
+      }
+    },
+    "c987": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 987
+      }
+    },
+    "c988": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 988
+      }
+    },
+    "c989": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 989
+      }
+    },
+    "c990": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 990
+      }
+    },
+    "c991": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 991
+      }
+    },
+    "c992": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 992
+      }
+    },
+    "c993": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 993
+      }
+    },
+    "c994": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 994
+      }
+    },
+    "c995": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 995
+      }
+    },
+    "c996": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 996
+      }
+    },
+    "c997": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 997
+      }
+    },
+    "c998": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 998
+      }
+    },
+    "c999": {
+      "trigger": "cobblesafari:pokemon_caught",
+      "conditions": {
+        "count": 999
+      }
+    }
+  },
+  "requirements": [
+    [
+      "c1"
+    ],
+    [
+      "c2"
+    ],
+    [
+      "c3"
+    ],
+    [
+      "c4"
+    ],
+    [
+      "c5"
+    ],
+    [
+      "c6"
+    ],
+    [
+      "c7"
+    ],
+    [
+      "c8"
+    ],
+    [
+      "c9"
+    ],
+    [
+      "c10"
+    ],
+    [
+      "c11"
+    ],
+    [
+      "c12"
+    ],
+    [
+      "c13"
+    ],
+    [
+      "c14"
+    ],
+    [
+      "c15"
+    ],
+    [
+      "c16"
+    ],
+    [
+      "c17"
+    ],
+    [
+      "c18"
+    ],
+    [
+      "c19"
+    ],
+    [
+      "c20"
+    ],
+    [
+      "c21"
+    ],
+    [
+      "c22"
+    ],
+    [
+      "c23"
+    ],
+    [
+      "c24"
+    ],
+    [
+      "c25"
+    ],
+    [
+      "c26"
+    ],
+    [
+      "c27"
+    ],
+    [
+      "c28"
+    ],
+    [
+      "c29"
+    ],
+    [
+      "c30"
+    ],
+    [
+      "c31"
+    ],
+    [
+      "c32"
+    ],
+    [
+      "c33"
+    ],
+    [
+      "c34"
+    ],
+    [
+      "c35"
+    ],
+    [
+      "c36"
+    ],
+    [
+      "c37"
+    ],
+    [
+      "c38"
+    ],
+    [
+      "c39"
+    ],
+    [
+      "c40"
+    ],
+    [
+      "c41"
+    ],
+    [
+      "c42"
+    ],
+    [
+      "c43"
+    ],
+    [
+      "c44"
+    ],
+    [
+      "c45"
+    ],
+    [
+      "c46"
+    ],
+    [
+      "c47"
+    ],
+    [
+      "c48"
+    ],
+    [
+      "c49"
+    ],
+    [
+      "c50"
+    ],
+    [
+      "c51"
+    ],
+    [
+      "c52"
+    ],
+    [
+      "c53"
+    ],
+    [
+      "c54"
+    ],
+    [
+      "c55"
+    ],
+    [
+      "c56"
+    ],
+    [
+      "c57"
+    ],
+    [
+      "c58"
+    ],
+    [
+      "c59"
+    ],
+    [
+      "c60"
+    ],
+    [
+      "c61"
+    ],
+    [
+      "c62"
+    ],
+    [
+      "c63"
+    ],
+    [
+      "c64"
+    ],
+    [
+      "c65"
+    ],
+    [
+      "c66"
+    ],
+    [
+      "c67"
+    ],
+    [
+      "c68"
+    ],
+    [
+      "c69"
+    ],
+    [
+      "c70"
+    ],
+    [
+      "c71"
+    ],
+    [
+      "c72"
+    ],
+    [
+      "c73"
+    ],
+    [
+      "c74"
+    ],
+    [
+      "c75"
+    ],
+    [
+      "c76"
+    ],
+    [
+      "c77"
+    ],
+    [
+      "c78"
+    ],
+    [
+      "c79"
+    ],
+    [
+      "c80"
+    ],
+    [
+      "c81"
+    ],
+    [
+      "c82"
+    ],
+    [
+      "c83"
+    ],
+    [
+      "c84"
+    ],
+    [
+      "c85"
+    ],
+    [
+      "c86"
+    ],
+    [
+      "c87"
+    ],
+    [
+      "c88"
+    ],
+    [
+      "c89"
+    ],
+    [
+      "c90"
+    ],
+    [
+      "c91"
+    ],
+    [
+      "c92"
+    ],
+    [
+      "c93"
+    ],
+    [
+      "c94"
+    ],
+    [
+      "c95"
+    ],
+    [
+      "c96"
+    ],
+    [
+      "c97"
+    ],
+    [
+      "c98"
+    ],
+    [
+      "c99"
+    ],
+    [
+      "c100"
+    ],
+    [
+      "c101"
+    ],
+    [
+      "c102"
+    ],
+    [
+      "c103"
+    ],
+    [
+      "c104"
+    ],
+    [
+      "c105"
+    ],
+    [
+      "c106"
+    ],
+    [
+      "c107"
+    ],
+    [
+      "c108"
+    ],
+    [
+      "c109"
+    ],
+    [
+      "c110"
+    ],
+    [
+      "c111"
+    ],
+    [
+      "c112"
+    ],
+    [
+      "c113"
+    ],
+    [
+      "c114"
+    ],
+    [
+      "c115"
+    ],
+    [
+      "c116"
+    ],
+    [
+      "c117"
+    ],
+    [
+      "c118"
+    ],
+    [
+      "c119"
+    ],
+    [
+      "c120"
+    ],
+    [
+      "c121"
+    ],
+    [
+      "c122"
+    ],
+    [
+      "c123"
+    ],
+    [
+      "c124"
+    ],
+    [
+      "c125"
+    ],
+    [
+      "c126"
+    ],
+    [
+      "c127"
+    ],
+    [
+      "c128"
+    ],
+    [
+      "c129"
+    ],
+    [
+      "c130"
+    ],
+    [
+      "c131"
+    ],
+    [
+      "c132"
+    ],
+    [
+      "c133"
+    ],
+    [
+      "c134"
+    ],
+    [
+      "c135"
+    ],
+    [
+      "c136"
+    ],
+    [
+      "c137"
+    ],
+    [
+      "c138"
+    ],
+    [
+      "c139"
+    ],
+    [
+      "c140"
+    ],
+    [
+      "c141"
+    ],
+    [
+      "c142"
+    ],
+    [
+      "c143"
+    ],
+    [
+      "c144"
+    ],
+    [
+      "c145"
+    ],
+    [
+      "c146"
+    ],
+    [
+      "c147"
+    ],
+    [
+      "c148"
+    ],
+    [
+      "c149"
+    ],
+    [
+      "c150"
+    ],
+    [
+      "c151"
+    ],
+    [
+      "c152"
+    ],
+    [
+      "c153"
+    ],
+    [
+      "c154"
+    ],
+    [
+      "c155"
+    ],
+    [
+      "c156"
+    ],
+    [
+      "c157"
+    ],
+    [
+      "c158"
+    ],
+    [
+      "c159"
+    ],
+    [
+      "c160"
+    ],
+    [
+      "c161"
+    ],
+    [
+      "c162"
+    ],
+    [
+      "c163"
+    ],
+    [
+      "c164"
+    ],
+    [
+      "c165"
+    ],
+    [
+      "c166"
+    ],
+    [
+      "c167"
+    ],
+    [
+      "c168"
+    ],
+    [
+      "c169"
+    ],
+    [
+      "c170"
+    ],
+    [
+      "c171"
+    ],
+    [
+      "c172"
+    ],
+    [
+      "c173"
+    ],
+    [
+      "c174"
+    ],
+    [
+      "c175"
+    ],
+    [
+      "c176"
+    ],
+    [
+      "c177"
+    ],
+    [
+      "c178"
+    ],
+    [
+      "c179"
+    ],
+    [
+      "c180"
+    ],
+    [
+      "c181"
+    ],
+    [
+      "c182"
+    ],
+    [
+      "c183"
+    ],
+    [
+      "c184"
+    ],
+    [
+      "c185"
+    ],
+    [
+      "c186"
+    ],
+    [
+      "c187"
+    ],
+    [
+      "c188"
+    ],
+    [
+      "c189"
+    ],
+    [
+      "c190"
+    ],
+    [
+      "c191"
+    ],
+    [
+      "c192"
+    ],
+    [
+      "c193"
+    ],
+    [
+      "c194"
+    ],
+    [
+      "c195"
+    ],
+    [
+      "c196"
+    ],
+    [
+      "c197"
+    ],
+    [
+      "c198"
+    ],
+    [
+      "c199"
+    ],
+    [
+      "c200"
+    ],
+    [
+      "c201"
+    ],
+    [
+      "c202"
+    ],
+    [
+      "c203"
+    ],
+    [
+      "c204"
+    ],
+    [
+      "c205"
+    ],
+    [
+      "c206"
+    ],
+    [
+      "c207"
+    ],
+    [
+      "c208"
+    ],
+    [
+      "c209"
+    ],
+    [
+      "c210"
+    ],
+    [
+      "c211"
+    ],
+    [
+      "c212"
+    ],
+    [
+      "c213"
+    ],
+    [
+      "c214"
+    ],
+    [
+      "c215"
+    ],
+    [
+      "c216"
+    ],
+    [
+      "c217"
+    ],
+    [
+      "c218"
+    ],
+    [
+      "c219"
+    ],
+    [
+      "c220"
+    ],
+    [
+      "c221"
+    ],
+    [
+      "c222"
+    ],
+    [
+      "c223"
+    ],
+    [
+      "c224"
+    ],
+    [
+      "c225"
+    ],
+    [
+      "c226"
+    ],
+    [
+      "c227"
+    ],
+    [
+      "c228"
+    ],
+    [
+      "c229"
+    ],
+    [
+      "c230"
+    ],
+    [
+      "c231"
+    ],
+    [
+      "c232"
+    ],
+    [
+      "c233"
+    ],
+    [
+      "c234"
+    ],
+    [
+      "c235"
+    ],
+    [
+      "c236"
+    ],
+    [
+      "c237"
+    ],
+    [
+      "c238"
+    ],
+    [
+      "c239"
+    ],
+    [
+      "c240"
+    ],
+    [
+      "c241"
+    ],
+    [
+      "c242"
+    ],
+    [
+      "c243"
+    ],
+    [
+      "c244"
+    ],
+    [
+      "c245"
+    ],
+    [
+      "c246"
+    ],
+    [
+      "c247"
+    ],
+    [
+      "c248"
+    ],
+    [
+      "c249"
+    ],
+    [
+      "c250"
+    ],
+    [
+      "c251"
+    ],
+    [
+      "c252"
+    ],
+    [
+      "c253"
+    ],
+    [
+      "c254"
+    ],
+    [
+      "c255"
+    ],
+    [
+      "c256"
+    ],
+    [
+      "c257"
+    ],
+    [
+      "c258"
+    ],
+    [
+      "c259"
+    ],
+    [
+      "c260"
+    ],
+    [
+      "c261"
+    ],
+    [
+      "c262"
+    ],
+    [
+      "c263"
+    ],
+    [
+      "c264"
+    ],
+    [
+      "c265"
+    ],
+    [
+      "c266"
+    ],
+    [
+      "c267"
+    ],
+    [
+      "c268"
+    ],
+    [
+      "c269"
+    ],
+    [
+      "c270"
+    ],
+    [
+      "c271"
+    ],
+    [
+      "c272"
+    ],
+    [
+      "c273"
+    ],
+    [
+      "c274"
+    ],
+    [
+      "c275"
+    ],
+    [
+      "c276"
+    ],
+    [
+      "c277"
+    ],
+    [
+      "c278"
+    ],
+    [
+      "c279"
+    ],
+    [
+      "c280"
+    ],
+    [
+      "c281"
+    ],
+    [
+      "c282"
+    ],
+    [
+      "c283"
+    ],
+    [
+      "c284"
+    ],
+    [
+      "c285"
+    ],
+    [
+      "c286"
+    ],
+    [
+      "c287"
+    ],
+    [
+      "c288"
+    ],
+    [
+      "c289"
+    ],
+    [
+      "c290"
+    ],
+    [
+      "c291"
+    ],
+    [
+      "c292"
+    ],
+    [
+      "c293"
+    ],
+    [
+      "c294"
+    ],
+    [
+      "c295"
+    ],
+    [
+      "c296"
+    ],
+    [
+      "c297"
+    ],
+    [
+      "c298"
+    ],
+    [
+      "c299"
+    ],
+    [
+      "c300"
+    ],
+    [
+      "c301"
+    ],
+    [
+      "c302"
+    ],
+    [
+      "c303"
+    ],
+    [
+      "c304"
+    ],
+    [
+      "c305"
+    ],
+    [
+      "c306"
+    ],
+    [
+      "c307"
+    ],
+    [
+      "c308"
+    ],
+    [
+      "c309"
+    ],
+    [
+      "c310"
+    ],
+    [
+      "c311"
+    ],
+    [
+      "c312"
+    ],
+    [
+      "c313"
+    ],
+    [
+      "c314"
+    ],
+    [
+      "c315"
+    ],
+    [
+      "c316"
+    ],
+    [
+      "c317"
+    ],
+    [
+      "c318"
+    ],
+    [
+      "c319"
+    ],
+    [
+      "c320"
+    ],
+    [
+      "c321"
+    ],
+    [
+      "c322"
+    ],
+    [
+      "c323"
+    ],
+    [
+      "c324"
+    ],
+    [
+      "c325"
+    ],
+    [
+      "c326"
+    ],
+    [
+      "c327"
+    ],
+    [
+      "c328"
+    ],
+    [
+      "c329"
+    ],
+    [
+      "c330"
+    ],
+    [
+      "c331"
+    ],
+    [
+      "c332"
+    ],
+    [
+      "c333"
+    ],
+    [
+      "c334"
+    ],
+    [
+      "c335"
+    ],
+    [
+      "c336"
+    ],
+    [
+      "c337"
+    ],
+    [
+      "c338"
+    ],
+    [
+      "c339"
+    ],
+    [
+      "c340"
+    ],
+    [
+      "c341"
+    ],
+    [
+      "c342"
+    ],
+    [
+      "c343"
+    ],
+    [
+      "c344"
+    ],
+    [
+      "c345"
+    ],
+    [
+      "c346"
+    ],
+    [
+      "c347"
+    ],
+    [
+      "c348"
+    ],
+    [
+      "c349"
+    ],
+    [
+      "c350"
+    ],
+    [
+      "c351"
+    ],
+    [
+      "c352"
+    ],
+    [
+      "c353"
+    ],
+    [
+      "c354"
+    ],
+    [
+      "c355"
+    ],
+    [
+      "c356"
+    ],
+    [
+      "c357"
+    ],
+    [
+      "c358"
+    ],
+    [
+      "c359"
+    ],
+    [
+      "c360"
+    ],
+    [
+      "c361"
+    ],
+    [
+      "c362"
+    ],
+    [
+      "c363"
+    ],
+    [
+      "c364"
+    ],
+    [
+      "c365"
+    ],
+    [
+      "c366"
+    ],
+    [
+      "c367"
+    ],
+    [
+      "c368"
+    ],
+    [
+      "c369"
+    ],
+    [
+      "c370"
+    ],
+    [
+      "c371"
+    ],
+    [
+      "c372"
+    ],
+    [
+      "c373"
+    ],
+    [
+      "c374"
+    ],
+    [
+      "c375"
+    ],
+    [
+      "c376"
+    ],
+    [
+      "c377"
+    ],
+    [
+      "c378"
+    ],
+    [
+      "c379"
+    ],
+    [
+      "c380"
+    ],
+    [
+      "c381"
+    ],
+    [
+      "c382"
+    ],
+    [
+      "c383"
+    ],
+    [
+      "c384"
+    ],
+    [
+      "c385"
+    ],
+    [
+      "c386"
+    ],
+    [
+      "c387"
+    ],
+    [
+      "c388"
+    ],
+    [
+      "c389"
+    ],
+    [
+      "c390"
+    ],
+    [
+      "c391"
+    ],
+    [
+      "c392"
+    ],
+    [
+      "c393"
+    ],
+    [
+      "c394"
+    ],
+    [
+      "c395"
+    ],
+    [
+      "c396"
+    ],
+    [
+      "c397"
+    ],
+    [
+      "c398"
+    ],
+    [
+      "c399"
+    ],
+    [
+      "c400"
+    ],
+    [
+      "c401"
+    ],
+    [
+      "c402"
+    ],
+    [
+      "c403"
+    ],
+    [
+      "c404"
+    ],
+    [
+      "c405"
+    ],
+    [
+      "c406"
+    ],
+    [
+      "c407"
+    ],
+    [
+      "c408"
+    ],
+    [
+      "c409"
+    ],
+    [
+      "c410"
+    ],
+    [
+      "c411"
+    ],
+    [
+      "c412"
+    ],
+    [
+      "c413"
+    ],
+    [
+      "c414"
+    ],
+    [
+      "c415"
+    ],
+    [
+      "c416"
+    ],
+    [
+      "c417"
+    ],
+    [
+      "c418"
+    ],
+    [
+      "c419"
+    ],
+    [
+      "c420"
+    ],
+    [
+      "c421"
+    ],
+    [
+      "c422"
+    ],
+    [
+      "c423"
+    ],
+    [
+      "c424"
+    ],
+    [
+      "c425"
+    ],
+    [
+      "c426"
+    ],
+    [
+      "c427"
+    ],
+    [
+      "c428"
+    ],
+    [
+      "c429"
+    ],
+    [
+      "c430"
+    ],
+    [
+      "c431"
+    ],
+    [
+      "c432"
+    ],
+    [
+      "c433"
+    ],
+    [
+      "c434"
+    ],
+    [
+      "c435"
+    ],
+    [
+      "c436"
+    ],
+    [
+      "c437"
+    ],
+    [
+      "c438"
+    ],
+    [
+      "c439"
+    ],
+    [
+      "c440"
+    ],
+    [
+      "c441"
+    ],
+    [
+      "c442"
+    ],
+    [
+      "c443"
+    ],
+    [
+      "c444"
+    ],
+    [
+      "c445"
+    ],
+    [
+      "c446"
+    ],
+    [
+      "c447"
+    ],
+    [
+      "c448"
+    ],
+    [
+      "c449"
+    ],
+    [
+      "c450"
+    ],
+    [
+      "c451"
+    ],
+    [
+      "c452"
+    ],
+    [
+      "c453"
+    ],
+    [
+      "c454"
+    ],
+    [
+      "c455"
+    ],
+    [
+      "c456"
+    ],
+    [
+      "c457"
+    ],
+    [
+      "c458"
+    ],
+    [
+      "c459"
+    ],
+    [
+      "c460"
+    ],
+    [
+      "c461"
+    ],
+    [
+      "c462"
+    ],
+    [
+      "c463"
+    ],
+    [
+      "c464"
+    ],
+    [
+      "c465"
+    ],
+    [
+      "c466"
+    ],
+    [
+      "c467"
+    ],
+    [
+      "c468"
+    ],
+    [
+      "c469"
+    ],
+    [
+      "c470"
+    ],
+    [
+      "c471"
+    ],
+    [
+      "c472"
+    ],
+    [
+      "c473"
+    ],
+    [
+      "c474"
+    ],
+    [
+      "c475"
+    ],
+    [
+      "c476"
+    ],
+    [
+      "c477"
+    ],
+    [
+      "c478"
+    ],
+    [
+      "c479"
+    ],
+    [
+      "c480"
+    ],
+    [
+      "c481"
+    ],
+    [
+      "c482"
+    ],
+    [
+      "c483"
+    ],
+    [
+      "c484"
+    ],
+    [
+      "c485"
+    ],
+    [
+      "c486"
+    ],
+    [
+      "c487"
+    ],
+    [
+      "c488"
+    ],
+    [
+      "c489"
+    ],
+    [
+      "c490"
+    ],
+    [
+      "c491"
+    ],
+    [
+      "c492"
+    ],
+    [
+      "c493"
+    ],
+    [
+      "c494"
+    ],
+    [
+      "c495"
+    ],
+    [
+      "c496"
+    ],
+    [
+      "c497"
+    ],
+    [
+      "c498"
+    ],
+    [
+      "c499"
+    ],
+    [
+      "c500"
+    ],
+    [
+      "c501"
+    ],
+    [
+      "c502"
+    ],
+    [
+      "c503"
+    ],
+    [
+      "c504"
+    ],
+    [
+      "c505"
+    ],
+    [
+      "c506"
+    ],
+    [
+      "c507"
+    ],
+    [
+      "c508"
+    ],
+    [
+      "c509"
+    ],
+    [
+      "c510"
+    ],
+    [
+      "c511"
+    ],
+    [
+      "c512"
+    ],
+    [
+      "c513"
+    ],
+    [
+      "c514"
+    ],
+    [
+      "c515"
+    ],
+    [
+      "c516"
+    ],
+    [
+      "c517"
+    ],
+    [
+      "c518"
+    ],
+    [
+      "c519"
+    ],
+    [
+      "c520"
+    ],
+    [
+      "c521"
+    ],
+    [
+      "c522"
+    ],
+    [
+      "c523"
+    ],
+    [
+      "c524"
+    ],
+    [
+      "c525"
+    ],
+    [
+      "c526"
+    ],
+    [
+      "c527"
+    ],
+    [
+      "c528"
+    ],
+    [
+      "c529"
+    ],
+    [
+      "c530"
+    ],
+    [
+      "c531"
+    ],
+    [
+      "c532"
+    ],
+    [
+      "c533"
+    ],
+    [
+      "c534"
+    ],
+    [
+      "c535"
+    ],
+    [
+      "c536"
+    ],
+    [
+      "c537"
+    ],
+    [
+      "c538"
+    ],
+    [
+      "c539"
+    ],
+    [
+      "c540"
+    ],
+    [
+      "c541"
+    ],
+    [
+      "c542"
+    ],
+    [
+      "c543"
+    ],
+    [
+      "c544"
+    ],
+    [
+      "c545"
+    ],
+    [
+      "c546"
+    ],
+    [
+      "c547"
+    ],
+    [
+      "c548"
+    ],
+    [
+      "c549"
+    ],
+    [
+      "c550"
+    ],
+    [
+      "c551"
+    ],
+    [
+      "c552"
+    ],
+    [
+      "c553"
+    ],
+    [
+      "c554"
+    ],
+    [
+      "c555"
+    ],
+    [
+      "c556"
+    ],
+    [
+      "c557"
+    ],
+    [
+      "c558"
+    ],
+    [
+      "c559"
+    ],
+    [
+      "c560"
+    ],
+    [
+      "c561"
+    ],
+    [
+      "c562"
+    ],
+    [
+      "c563"
+    ],
+    [
+      "c564"
+    ],
+    [
+      "c565"
+    ],
+    [
+      "c566"
+    ],
+    [
+      "c567"
+    ],
+    [
+      "c568"
+    ],
+    [
+      "c569"
+    ],
+    [
+      "c570"
+    ],
+    [
+      "c571"
+    ],
+    [
+      "c572"
+    ],
+    [
+      "c573"
+    ],
+    [
+      "c574"
+    ],
+    [
+      "c575"
+    ],
+    [
+      "c576"
+    ],
+    [
+      "c577"
+    ],
+    [
+      "c578"
+    ],
+    [
+      "c579"
+    ],
+    [
+      "c580"
+    ],
+    [
+      "c581"
+    ],
+    [
+      "c582"
+    ],
+    [
+      "c583"
+    ],
+    [
+      "c584"
+    ],
+    [
+      "c585"
+    ],
+    [
+      "c586"
+    ],
+    [
+      "c587"
+    ],
+    [
+      "c588"
+    ],
+    [
+      "c589"
+    ],
+    [
+      "c590"
+    ],
+    [
+      "c591"
+    ],
+    [
+      "c592"
+    ],
+    [
+      "c593"
+    ],
+    [
+      "c594"
+    ],
+    [
+      "c595"
+    ],
+    [
+      "c596"
+    ],
+    [
+      "c597"
+    ],
+    [
+      "c598"
+    ],
+    [
+      "c599"
+    ],
+    [
+      "c600"
+    ],
+    [
+      "c601"
+    ],
+    [
+      "c602"
+    ],
+    [
+      "c603"
+    ],
+    [
+      "c604"
+    ],
+    [
+      "c605"
+    ],
+    [
+      "c606"
+    ],
+    [
+      "c607"
+    ],
+    [
+      "c608"
+    ],
+    [
+      "c609"
+    ],
+    [
+      "c610"
+    ],
+    [
+      "c611"
+    ],
+    [
+      "c612"
+    ],
+    [
+      "c613"
+    ],
+    [
+      "c614"
+    ],
+    [
+      "c615"
+    ],
+    [
+      "c616"
+    ],
+    [
+      "c617"
+    ],
+    [
+      "c618"
+    ],
+    [
+      "c619"
+    ],
+    [
+      "c620"
+    ],
+    [
+      "c621"
+    ],
+    [
+      "c622"
+    ],
+    [
+      "c623"
+    ],
+    [
+      "c624"
+    ],
+    [
+      "c625"
+    ],
+    [
+      "c626"
+    ],
+    [
+      "c627"
+    ],
+    [
+      "c628"
+    ],
+    [
+      "c629"
+    ],
+    [
+      "c630"
+    ],
+    [
+      "c631"
+    ],
+    [
+      "c632"
+    ],
+    [
+      "c633"
+    ],
+    [
+      "c634"
+    ],
+    [
+      "c635"
+    ],
+    [
+      "c636"
+    ],
+    [
+      "c637"
+    ],
+    [
+      "c638"
+    ],
+    [
+      "c639"
+    ],
+    [
+      "c640"
+    ],
+    [
+      "c641"
+    ],
+    [
+      "c642"
+    ],
+    [
+      "c643"
+    ],
+    [
+      "c644"
+    ],
+    [
+      "c645"
+    ],
+    [
+      "c646"
+    ],
+    [
+      "c647"
+    ],
+    [
+      "c648"
+    ],
+    [
+      "c649"
+    ],
+    [
+      "c650"
+    ],
+    [
+      "c651"
+    ],
+    [
+      "c652"
+    ],
+    [
+      "c653"
+    ],
+    [
+      "c654"
+    ],
+    [
+      "c655"
+    ],
+    [
+      "c656"
+    ],
+    [
+      "c657"
+    ],
+    [
+      "c658"
+    ],
+    [
+      "c659"
+    ],
+    [
+      "c660"
+    ],
+    [
+      "c661"
+    ],
+    [
+      "c662"
+    ],
+    [
+      "c663"
+    ],
+    [
+      "c664"
+    ],
+    [
+      "c665"
+    ],
+    [
+      "c666"
+    ],
+    [
+      "c667"
+    ],
+    [
+      "c668"
+    ],
+    [
+      "c669"
+    ],
+    [
+      "c670"
+    ],
+    [
+      "c671"
+    ],
+    [
+      "c672"
+    ],
+    [
+      "c673"
+    ],
+    [
+      "c674"
+    ],
+    [
+      "c675"
+    ],
+    [
+      "c676"
+    ],
+    [
+      "c677"
+    ],
+    [
+      "c678"
+    ],
+    [
+      "c679"
+    ],
+    [
+      "c680"
+    ],
+    [
+      "c681"
+    ],
+    [
+      "c682"
+    ],
+    [
+      "c683"
+    ],
+    [
+      "c684"
+    ],
+    [
+      "c685"
+    ],
+    [
+      "c686"
+    ],
+    [
+      "c687"
+    ],
+    [
+      "c688"
+    ],
+    [
+      "c689"
+    ],
+    [
+      "c690"
+    ],
+    [
+      "c691"
+    ],
+    [
+      "c692"
+    ],
+    [
+      "c693"
+    ],
+    [
+      "c694"
+    ],
+    [
+      "c695"
+    ],
+    [
+      "c696"
+    ],
+    [
+      "c697"
+    ],
+    [
+      "c698"
+    ],
+    [
+      "c699"
+    ],
+    [
+      "c700"
+    ],
+    [
+      "c701"
+    ],
+    [
+      "c702"
+    ],
+    [
+      "c703"
+    ],
+    [
+      "c704"
+    ],
+    [
+      "c705"
+    ],
+    [
+      "c706"
+    ],
+    [
+      "c707"
+    ],
+    [
+      "c708"
+    ],
+    [
+      "c709"
+    ],
+    [
+      "c710"
+    ],
+    [
+      "c711"
+    ],
+    [
+      "c712"
+    ],
+    [
+      "c713"
+    ],
+    [
+      "c714"
+    ],
+    [
+      "c715"
+    ],
+    [
+      "c716"
+    ],
+    [
+      "c717"
+    ],
+    [
+      "c718"
+    ],
+    [
+      "c719"
+    ],
+    [
+      "c720"
+    ],
+    [
+      "c721"
+    ],
+    [
+      "c722"
+    ],
+    [
+      "c723"
+    ],
+    [
+      "c724"
+    ],
+    [
+      "c725"
+    ],
+    [
+      "c726"
+    ],
+    [
+      "c727"
+    ],
+    [
+      "c728"
+    ],
+    [
+      "c729"
+    ],
+    [
+      "c730"
+    ],
+    [
+      "c731"
+    ],
+    [
+      "c732"
+    ],
+    [
+      "c733"
+    ],
+    [
+      "c734"
+    ],
+    [
+      "c735"
+    ],
+    [
+      "c736"
+    ],
+    [
+      "c737"
+    ],
+    [
+      "c738"
+    ],
+    [
+      "c739"
+    ],
+    [
+      "c740"
+    ],
+    [
+      "c741"
+    ],
+    [
+      "c742"
+    ],
+    [
+      "c743"
+    ],
+    [
+      "c744"
+    ],
+    [
+      "c745"
+    ],
+    [
+      "c746"
+    ],
+    [
+      "c747"
+    ],
+    [
+      "c748"
+    ],
+    [
+      "c749"
+    ],
+    [
+      "c750"
+    ],
+    [
+      "c751"
+    ],
+    [
+      "c752"
+    ],
+    [
+      "c753"
+    ],
+    [
+      "c754"
+    ],
+    [
+      "c755"
+    ],
+    [
+      "c756"
+    ],
+    [
+      "c757"
+    ],
+    [
+      "c758"
+    ],
+    [
+      "c759"
+    ],
+    [
+      "c760"
+    ],
+    [
+      "c761"
+    ],
+    [
+      "c762"
+    ],
+    [
+      "c763"
+    ],
+    [
+      "c764"
+    ],
+    [
+      "c765"
+    ],
+    [
+      "c766"
+    ],
+    [
+      "c767"
+    ],
+    [
+      "c768"
+    ],
+    [
+      "c769"
+    ],
+    [
+      "c770"
+    ],
+    [
+      "c771"
+    ],
+    [
+      "c772"
+    ],
+    [
+      "c773"
+    ],
+    [
+      "c774"
+    ],
+    [
+      "c775"
+    ],
+    [
+      "c776"
+    ],
+    [
+      "c777"
+    ],
+    [
+      "c778"
+    ],
+    [
+      "c779"
+    ],
+    [
+      "c780"
+    ],
+    [
+      "c781"
+    ],
+    [
+      "c782"
+    ],
+    [
+      "c783"
+    ],
+    [
+      "c784"
+    ],
+    [
+      "c785"
+    ],
+    [
+      "c786"
+    ],
+    [
+      "c787"
+    ],
+    [
+      "c788"
+    ],
+    [
+      "c789"
+    ],
+    [
+      "c790"
+    ],
+    [
+      "c791"
+    ],
+    [
+      "c792"
+    ],
+    [
+      "c793"
+    ],
+    [
+      "c794"
+    ],
+    [
+      "c795"
+    ],
+    [
+      "c796"
+    ],
+    [
+      "c797"
+    ],
+    [
+      "c798"
+    ],
+    [
+      "c799"
+    ],
+    [
+      "c800"
+    ],
+    [
+      "c801"
+    ],
+    [
+      "c802"
+    ],
+    [
+      "c803"
+    ],
+    [
+      "c804"
+    ],
+    [
+      "c805"
+    ],
+    [
+      "c806"
+    ],
+    [
+      "c807"
+    ],
+    [
+      "c808"
+    ],
+    [
+      "c809"
+    ],
+    [
+      "c810"
+    ],
+    [
+      "c811"
+    ],
+    [
+      "c812"
+    ],
+    [
+      "c813"
+    ],
+    [
+      "c814"
+    ],
+    [
+      "c815"
+    ],
+    [
+      "c816"
+    ],
+    [
+      "c817"
+    ],
+    [
+      "c818"
+    ],
+    [
+      "c819"
+    ],
+    [
+      "c820"
+    ],
+    [
+      "c821"
+    ],
+    [
+      "c822"
+    ],
+    [
+      "c823"
+    ],
+    [
+      "c824"
+    ],
+    [
+      "c825"
+    ],
+    [
+      "c826"
+    ],
+    [
+      "c827"
+    ],
+    [
+      "c828"
+    ],
+    [
+      "c829"
+    ],
+    [
+      "c830"
+    ],
+    [
+      "c831"
+    ],
+    [
+      "c832"
+    ],
+    [
+      "c833"
+    ],
+    [
+      "c834"
+    ],
+    [
+      "c835"
+    ],
+    [
+      "c836"
+    ],
+    [
+      "c837"
+    ],
+    [
+      "c838"
+    ],
+    [
+      "c839"
+    ],
+    [
+      "c840"
+    ],
+    [
+      "c841"
+    ],
+    [
+      "c842"
+    ],
+    [
+      "c843"
+    ],
+    [
+      "c844"
+    ],
+    [
+      "c845"
+    ],
+    [
+      "c846"
+    ],
+    [
+      "c847"
+    ],
+    [
+      "c848"
+    ],
+    [
+      "c849"
+    ],
+    [
+      "c850"
+    ],
+    [
+      "c851"
+    ],
+    [
+      "c852"
+    ],
+    [
+      "c853"
+    ],
+    [
+      "c854"
+    ],
+    [
+      "c855"
+    ],
+    [
+      "c856"
+    ],
+    [
+      "c857"
+    ],
+    [
+      "c858"
+    ],
+    [
+      "c859"
+    ],
+    [
+      "c860"
+    ],
+    [
+      "c861"
+    ],
+    [
+      "c862"
+    ],
+    [
+      "c863"
+    ],
+    [
+      "c864"
+    ],
+    [
+      "c865"
+    ],
+    [
+      "c866"
+    ],
+    [
+      "c867"
+    ],
+    [
+      "c868"
+    ],
+    [
+      "c869"
+    ],
+    [
+      "c870"
+    ],
+    [
+      "c871"
+    ],
+    [
+      "c872"
+    ],
+    [
+      "c873"
+    ],
+    [
+      "c874"
+    ],
+    [
+      "c875"
+    ],
+    [
+      "c876"
+    ],
+    [
+      "c877"
+    ],
+    [
+      "c878"
+    ],
+    [
+      "c879"
+    ],
+    [
+      "c880"
+    ],
+    [
+      "c881"
+    ],
+    [
+      "c882"
+    ],
+    [
+      "c883"
+    ],
+    [
+      "c884"
+    ],
+    [
+      "c885"
+    ],
+    [
+      "c886"
+    ],
+    [
+      "c887"
+    ],
+    [
+      "c888"
+    ],
+    [
+      "c889"
+    ],
+    [
+      "c890"
+    ],
+    [
+      "c891"
+    ],
+    [
+      "c892"
+    ],
+    [
+      "c893"
+    ],
+    [
+      "c894"
+    ],
+    [
+      "c895"
+    ],
+    [
+      "c896"
+    ],
+    [
+      "c897"
+    ],
+    [
+      "c898"
+    ],
+    [
+      "c899"
+    ],
+    [
+      "c900"
+    ],
+    [
+      "c901"
+    ],
+    [
+      "c902"
+    ],
+    [
+      "c903"
+    ],
+    [
+      "c904"
+    ],
+    [
+      "c905"
+    ],
+    [
+      "c906"
+    ],
+    [
+      "c907"
+    ],
+    [
+      "c908"
+    ],
+    [
+      "c909"
+    ],
+    [
+      "c910"
+    ],
+    [
+      "c911"
+    ],
+    [
+      "c912"
+    ],
+    [
+      "c913"
+    ],
+    [
+      "c914"
+    ],
+    [
+      "c915"
+    ],
+    [
+      "c916"
+    ],
+    [
+      "c917"
+    ],
+    [
+      "c918"
+    ],
+    [
+      "c919"
+    ],
+    [
+      "c920"
+    ],
+    [
+      "c921"
+    ],
+    [
+      "c922"
+    ],
+    [
+      "c923"
+    ],
+    [
+      "c924"
+    ],
+    [
+      "c925"
+    ],
+    [
+      "c926"
+    ],
+    [
+      "c927"
+    ],
+    [
+      "c928"
+    ],
+    [
+      "c929"
+    ],
+    [
+      "c930"
+    ],
+    [
+      "c931"
+    ],
+    [
+      "c932"
+    ],
+    [
+      "c933"
+    ],
+    [
+      "c934"
+    ],
+    [
+      "c935"
+    ],
+    [
+      "c936"
+    ],
+    [
+      "c937"
+    ],
+    [
+      "c938"
+    ],
+    [
+      "c939"
+    ],
+    [
+      "c940"
+    ],
+    [
+      "c941"
+    ],
+    [
+      "c942"
+    ],
+    [
+      "c943"
+    ],
+    [
+      "c944"
+    ],
+    [
+      "c945"
+    ],
+    [
+      "c946"
+    ],
+    [
+      "c947"
+    ],
+    [
+      "c948"
+    ],
+    [
+      "c949"
+    ],
+    [
+      "c950"
+    ],
+    [
+      "c951"
+    ],
+    [
+      "c952"
+    ],
+    [
+      "c953"
+    ],
+    [
+      "c954"
+    ],
+    [
+      "c955"
+    ],
+    [
+      "c956"
+    ],
+    [
+      "c957"
+    ],
+    [
+      "c958"
+    ],
+    [
+      "c959"
+    ],
+    [
+      "c960"
+    ],
+    [
+      "c961"
+    ],
+    [
+      "c962"
+    ],
+    [
+      "c963"
+    ],
+    [
+      "c964"
+    ],
+    [
+      "c965"
+    ],
+    [
+      "c966"
+    ],
+    [
+      "c967"
+    ],
+    [
+      "c968"
+    ],
+    [
+      "c969"
+    ],
+    [
+      "c970"
+    ],
+    [
+      "c971"
+    ],
+    [
+      "c972"
+    ],
+    [
+      "c973"
+    ],
+    [
+      "c974"
+    ],
+    [
+      "c975"
+    ],
+    [
+      "c976"
+    ],
+    [
+      "c977"
+    ],
+    [
+      "c978"
+    ],
+    [
+      "c979"
+    ],
+    [
+      "c980"
+    ],
+    [
+      "c981"
+    ],
+    [
+      "c982"
+    ],
+    [
+      "c983"
+    ],
+    [
+      "c984"
+    ],
+    [
+      "c985"
+    ],
+    [
+      "c986"
+    ],
+    [
+      "c987"
+    ],
+    [
+      "c988"
+    ],
+    [
+      "c989"
+    ],
+    [
+      "c990"
+    ],
+    [
+      "c991"
+    ],
+    [
+      "c992"
+    ],
+    [
+      "c993"
+    ],
+    [
+      "c994"
+    ],
+    [
+      "c995"
+    ],
+    [
+      "c996"
+    ],
+    [
+      "c997"
+    ],
+    [
+      "c998"
+    ],
+    [
+      "c999"
+    ]
+  ]
+}

@@ -324,6 +324,15 @@ public class CobbleSafariClientFabric implements ClientModInitializer {
         net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry.ITEM.register(
                 (stack, tintIndex) -> tintIndex != 0 ? -1 : net.minecraft.world.level.FoliageColor.getDefaultColor(),
                 ModBlocks.HYPERSPACE_FLOWERS, ModBlocks.HYPERSPACE_BUSH, ModBlocks.HYPERSPACE_BUSH_FLOWERED);
+        // Dyeable Hyperspace flags: tint the colored layer (tintindex 0) to the applied DyeColor
+        // (banner / leather / collar / beacon colour). The overlay layer and any undyed flag stay untinted.
+        net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry.BLOCK.register(
+                (state, level, pos, tintIndex) -> (tintIndex != 0 || state == null
+                        || !state.getValue(maxigregrze.cobblesafari.block.hyperspace.HyperspaceFlagDye.DYED))
+                        ? -1
+                        : state.getValue(maxigregrze.cobblesafari.block.hyperspace.HyperspaceFlagDye.COLOR)
+                                .getTextureDiffuseColor() & 0xFFFFFF,
+                ModBlocks.HYPERSPACE_FLAG_SMALL, ModBlocks.HYPERSPACE_FLAG_LARGE);
         // Dynamic skin-unlock disc: layer0 tinted to the target skin's color.
         net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry.ITEM.register(
                 (stack, tintIndex) -> maxigregrze.cobblesafari.item.RotomSkinUnlockItem.computeTint(stack, tintIndex),

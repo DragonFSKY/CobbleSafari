@@ -70,6 +70,17 @@ public class BannedItemsManager {
         return restrictions.allowBattle;
     }
 
+    public static boolean isMountingAllowed(ResourceKey<Level> dimension) {
+        String dimensionId = dimension.location().toString();
+        DimensionalBanData.DimensionRestrictions restrictions = DimensionalBanConfig.getEffectiveData().dimensions.get(dimensionId);
+
+        if (restrictions == null) {
+            return true;
+        }
+
+        return !restrictions.forbidMounting;
+    }
+
     public static boolean hasDimensionRestrictions(ResourceKey<Level> dimension) {
         String dimensionId = dimension.location().toString();
         return DimensionalBanConfig.getEffectiveData().dimensions.containsKey(dimensionId);

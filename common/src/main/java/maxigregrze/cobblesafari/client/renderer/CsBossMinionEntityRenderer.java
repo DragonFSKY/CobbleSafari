@@ -91,16 +91,17 @@ public class CsBossMinionEntityRenderer extends EntityRenderer<CsBossMinionEntit
         Runnable afterPose = () -> {
             int seq = minion.getAttackSeq();
             Integer lastSeq = lastAttackSeq.get(minion.getUUID());
-            // Queue: only start when the model is free — no primary animation AND no attack animation still
-            // running. Battle anims are *active* (non-primary), so getPrimaryAnimation() stays null while
-            // they play; the activeAnimations check stops repeated seq bumps from stacking/looping the
-            // animation before the previous one finished.
-            if (seq != 0 && (lastSeq == null || lastSeq != seq)
-                    && state.getPrimaryAnimation() == null && state.getActiveAnimations().isEmpty()) {
+            if (seq != 0 && (lastSeq == null || lastSeq != seq)) {
+                // Consume the bump even when the model is busy. Minion bumps are *periodic* (every
+                // 30 ticks), so queueing a bump that arrived mid-animation (boss behavior, where bumps
+                // are per-attack and spaced out) would chain animations back-to-back: the next one
+                // starts from the previous animation's end state instead of the idle pose, visibly
+                // snapping models whose attack animation ends away from rest. Dropped bumps just mean
+                // the next animation starts on the next bump after the model is free.
                 lastAttackSeq.put(minion.getUUID(), seq);
-                // "cry" as fallback if the species has no battle animation (order guaranteed).
-                state.addFirstAnimation(new java.util.LinkedHashSet<>(
-                        java.util.List.of("physical", "special", "status", "cry")));
+                if (state.getPrimaryAnimation() == null && state.getActiveAnimations().isEmpty()) {
+                    startBattleAnimation(state);
+                }
             }
         };
 
@@ -113,4 +114,37 @@ public class CsBossMinionEntityRenderer extends EntityRenderer<CsBossMinionEntit
                 scale, minion.getAlpha(), bodyYaw, limbSwing, limbSwingAmount,
                 minion.tickCount + partialTicks, partialTicks, afterPose);
     }
+
+    /** Battle-animation priority: first existing wins; if none exist, no animation plays. */
+    private static final java.util.List<String> BATTLE_ANIMATION_PRIORITY =
+            java.util.List.of("physical", "special", "cry");
+
+    /**
+     * Plays the first battle animation the species defines, in {@link #BATTLE_ANIMATION_PRIORITY}
+     * order. Resolved manually instead of {@code state.addFirstAnimation(...)}: standard species
+     * posers define physical/special as {@code q.bedrock_primary(...)} — a {@code PrimaryAnimation}
+     * whose lifecycle expects Cobblemon's per-tick entity delegate ({@code incrementAge}), which
+     * this borrowed-model pipeline never runs, so primaries were observed to never play. Unwrapping
+     * the primary and playing its inner bedrock animation as an <b>active</b> animation uses the
+     * same path as the boss's stateful cry, which renders correctly.
+     */
+    private static void startBattleAnimation(CsBossPosableState state) {
+        com.cobblemon.mod.common.client.render.models.blockbench.PosableModel model = state.getCurrentModel();
+        if (model == null) {
+            return;
+        }
+        for (String name : BATTLE_ANIMATION_PRIORITY) {
+            com.cobblemon.mod.common.client.render.models.blockbench.animation.ActiveAnimation anim =
+                    model.getAnimation(state, name, state.getRuntime());
+            if (anim == null) {
+                continue;
+            }
+            if (anim instanceof com.cobblemon.mod.common.client.render.models.blockbench.animation.PrimaryAnimation primary) {
+                anim = primary.getAnimation();
+            }
+            state.addActiveAnimation(anim, s -> kotlin.Unit.INSTANCE);
+            return;
+        }
+    }
+
 }

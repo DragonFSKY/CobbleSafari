@@ -27,8 +27,9 @@ public class RotomPhoneServerHandler {
         String skin = RotomPhoneItem.getCurrentSkin(phoneStack);
         boolean safety = RotomPhoneItem.isSafetyMode(phoneStack);
         boolean rotoGlide = RotomPhoneItem.isRotoGlideEnabled(phoneStack);
+        boolean customWallpaper = RotomPhoneItem.isCustomWallpaperEnabled(phoneStack);
         Services.PLATFORM.sendPayloadToPlayer(player,
-                new OpenRotomPhonePayload(name, shiny, skin, safety, rotoGlide));
+                new OpenRotomPhonePayload(name, shiny, skin, safety, rotoGlide, customWallpaper));
     }
 
     public static void handleAction(ServerPlayer player, RotomPhoneActionPayload payload) {
@@ -58,6 +59,11 @@ public class RotomPhoneServerHandler {
             case RotomPhoneActionPayload.ACTION_TOGGLE_ROTO_GLIDE -> {
                 boolean current = RotomPhoneItem.isRotoGlideEnabled(phoneStack);
                 RotomPhoneItem.setRotoGlideEnabled(phoneStack, !current);
+                markAccessoryPhoneChangedIfNeeded(player);
+            }
+            case RotomPhoneActionPayload.ACTION_TOGGLE_WALLPAPER -> {
+                boolean current = RotomPhoneItem.isCustomWallpaperEnabled(phoneStack);
+                RotomPhoneItem.setCustomWallpaperEnabled(phoneStack, !current);
                 markAccessoryPhoneChangedIfNeeded(player);
             }
             case RotomPhoneActionPayload.ACTION_OPEN_PC -> {

@@ -1,6 +1,5 @@
 package maxigregrze.cobblesafari.client.screen.rotomphone;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import maxigregrze.cobblesafari.network.UnionAppPayload;
 import maxigregrze.cobblesafari.network.UnionAppResultPayload;
 import maxigregrze.cobblesafari.platform.Services;
@@ -26,9 +25,6 @@ public class RotomPhoneUnionScreen extends RotomPhoneBaseScreen {
     private static final ResourceLocation TEX_EMPTY = loc("rotomphone_gui_icon_empty.png");
     private static final ResourceLocation TEX_RESET = loc("union/rotomphone_gui_icon_code_reset.png");
     private static final ResourceLocation TEX_ERROR = loc("rotomphone_gui_error.png");
-
-    /** Added to anchor Y before scaling; negative moves the drawn text upward by 7 screen pixels. */
-    private static final float SCALED_TEXT_Y_OFFSET = -7f;
 
     private static final ResourceLocation[] TEX_DIGITS = {
             null,
@@ -145,37 +141,6 @@ public class RotomPhoneUnionScreen extends RotomPhoneBaseScreen {
         g.pose().scale(2f, 2f, 1f);
         g.drawString(this.font, c, -w, 0, color, false);
         g.pose().popPose();
-    }
-
-    /** Renders text at 2× scale, left-aligned so its left edge starts at x. */
-    private void drawScaledLeftAligned(GuiGraphics g, Component c, int x, int y, int color) {
-        g.pose().pushPose();
-        g.pose().translate(x, y + SCALED_TEXT_Y_OFFSET, 0);
-        g.pose().scale(2f, 2f, 1f);
-        g.drawString(this.font, c, 0, 0, color, false);
-        g.pose().popPose();
-    }
-
-    /** Renders text at 2× scale, centered on x. */
-    private void drawScaledCentered(GuiGraphics g, Component c, int x, int y, int color) {
-        g.pose().pushPose();
-        g.pose().translate(x, y + SCALED_TEXT_Y_OFFSET, 0);
-        g.pose().scale(2f, 2f, 1f);
-        g.drawCenteredString(this.font, c, 0, 0, color);
-        g.pose().popPose();
-    }
-
-    private void drawTinted(GuiGraphics g, ResourceLocation tex, int x, int y, int w, int h, int argb) {
-        float red = ((argb >> 16) & 0xFF) / 255f;
-        float green = ((argb >> 8) & 0xFF) / 255f;
-        float blue = (argb & 0xFF) / 255f;
-        float alpha = ((argb >>> 24) & 0xFF) / 255f;
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        g.setColor(red, green, blue, alpha);
-        g.blit(tex, x, y, 0, 0, w, h, w, h);
-        g.setColor(1f, 1f, 1f, 1f);
-        RenderSystem.disableBlend();
     }
 
     private void renderChooseType(GuiGraphics g, int mx, int my) {

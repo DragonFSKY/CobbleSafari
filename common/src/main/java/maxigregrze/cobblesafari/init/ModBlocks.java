@@ -80,8 +80,11 @@ import maxigregrze.cobblesafari.block.trap.SlowTrapBlock;
 import maxigregrze.cobblesafari.block.trap.TeleportTrapBlock;
 import maxigregrze.cobblesafari.block.trap.WindTrapBlock;
 import maxigregrze.cobblesafari.block.underground.UndergroundTimberBlock;
+import maxigregrze.cobblesafari.block.hyperspace.HyperspaceBarrierBlock;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceBushBlock;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceDirectionalBlock;
+import maxigregrze.cobblesafari.block.hyperspace.HyperspaceFlagLargeBlock;
+import maxigregrze.cobblesafari.block.hyperspace.HyperspaceFlagSmallBlock;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceDoubleBlock;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceLadderBlock;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceLogBlock;
@@ -96,7 +99,6 @@ import maxigregrze.cobblesafari.block.hyperspace.HyperspaceWallHangingSignBlock;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceScaffoldStairsBlock;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceScaffoldTubeBlock;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceShapedBlock;
-import maxigregrze.cobblesafari.block.hyperspace.HyperspaceTriBlock;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceTriPart;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceTrashcanBlock;
 import net.minecraft.core.Registry;
@@ -1509,7 +1511,6 @@ public class ModBlocks {
 
     private static final VoxelShape HS_ROAD_SHAPE = Block.box(0, 0, 0, 16, 15, 16);
     private static final VoxelShape HS_CONE_SHAPE = Block.box(3, 0, 2, 15, 12, 14);
-    private static final VoxelShape HS_BARRIER_SHAPE = Block.box(0, 0, 7, 16, 16, 9);
     private static final VoxelShape HS_FLAG_SMALL_SHAPE = Block.box(6, 12, 0, 10, 16, 2);
     private static final VoxelShape HS_IRONRAILS_SHAPE = Block.box(0, 0, 0, 16, 8, 1);
     private static final VoxelShape HS_SHUTTERS_SHAPE = Block.box(0, 0, 0, 16, 16, 2);
@@ -1575,11 +1576,11 @@ public class ModBlocks {
     public static final Block HYPERSPACE_ROAD_PLAIN_SLAB = registerBlock("hyperspace_road_plain_slab", new SlabBlock(hsStone().noOcclusion()));
 
     public static final Block HYPERSPACE_BARRIER = registerBlock("hyperspace_barrier",
-            new HyperspaceDirectionalBlock(hsIronHand(), HS_BARRIER_SHAPE, false, true));
+            new HyperspaceBarrierBlock(hsIronHand()));
     public static final Block HYPERSPACE_CONE = registerBlock("hyperspace_cone",
             new HyperspaceShapedBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instabreak().sound(SoundType.STONE).noOcclusion(), HS_CONE_SHAPE));
     public static final Block HYPERSPACE_FLAG_SMALL = registerBlock("hyperspace_flag_small",
-            new HyperspaceDirectionalBlock(hsPaneLight(), HS_FLAG_SMALL_SHAPE, true, false));
+            new HyperspaceFlagSmallBlock(hsPaneLight(), HS_FLAG_SMALL_SHAPE));
     public static final Block HYPERSPACE_IRONRAILS = registerBlock("hyperspace_ironrails",
             new HyperspaceDirectionalBlock(hsIronHand(), HS_IRONRAILS_SHAPE, true, true));
     public static final Block HYPERSPACE_SCAFFOLDING_PLATFORM = registerBlock("hyperspace_scaffolding_platform",
@@ -1604,7 +1605,7 @@ public class ModBlocks {
     public static final Block HYPERSPACE_DOOR = registerBlock("hyperspace_door",
             new HyperspaceDoubleBlock(hsWood()));
     public static final Block HYPERSPACE_FLAG_LARGE = registerBlock("hyperspace_flag_large",
-            new HyperspaceTriBlock(hsPaneLight(), true, false, HS_NEON_TRI_SHAPE));
+            new HyperspaceFlagLargeBlock(hsPaneLight(), true, false, HS_NEON_TRI_SHAPE));
     public static final Block HYPERSPACE_LAMPPOST = registerBlock("hyperspace_lamppost",
             new HyperspaceQuadBlock(hsIronBlock().noOcclusion()
                     .lightLevel(s -> s.getValue(HyperspaceQuadBlock.PART) == HyperspaceQuadPart.CENTERTOP ? 15 : 0),

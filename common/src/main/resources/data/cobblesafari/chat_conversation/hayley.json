@@ -90,7 +90,523 @@
         "cobblesafari.chat.hayley.s5.a3",
         "cobblesafari.chat.hayley.s5.a4"
       ],
-      "waitNextDay": false
+      "waitNextDay": true
+    },
+    {
+      "unlockingAdvancement": "cobblesafari:sociable",
+      "messagesBefore": [
+        "cobblesafari.chat.hayley.s6.b1",
+        "cobblesafari.chat.hayley.s6.b2",
+        "cobblesafari.chat.hayley.s6.b3",
+        "cobblesafari.chat.hayley.s6.b4",
+        "cobblesafari.chat.hayley.s6.b5",
+        "cobblesafari.chat.hayley.s6.b6",
+        "cobblesafari.chat.hayley.s6.b7"
+      ],
+      "statistic": "cobblesafari:pokemon_caught_safari",
+      "statisticAmount": 5,
+      "rewardPersonalTradeTag": "trainerspokemon",
+      "fallbackReward": "cobblesafari:gifts/rotom_wt_tickets",
+      "messagesAfter": [
+        "cobblesafari.chat.hayley.s6.a1",
+        "cobblesafari.chat.hayley.s6.a2",
+        "cobblesafari.chat.hayley.s6.a3",
+        "cobblesafari.chat.hayley.s6.a4"
+      ],
+      "waitNextDay": true
+    }
+  ],
+  "repeatableStepsLists": [
+    {
+      "id": "unique_phione",
+      "weight": 1000,
+      "isUnique": true,
+      "isTimed": false,
+      "doDisapear": false,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "unlockingAdvancement": "cobblesafari:safari_legend",
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.unique.phione.b1",
+            "cobblesafari.chat.hayley.rep.unique.phione.b2",
+            "cobblesafari.chat.hayley.rep.unique.phione.b3",
+            "cobblesafari.chat.hayley.rep.unique.phione.b4",
+            "cobblesafari.chat.hayley.rep.unique.phione.b5",
+            "cobblesafari.chat.hayley.rep.unique.phione.b6",
+            "cobblesafari.chat.hayley.rep.unique.phione.b7",
+            "cobblesafari.chat.hayley.rep.unique.phione.b8",
+            "cobblesafari.chat.hayley.rep.unique.phione.b9",
+            "cobblesafari.chat.hayley.rep.unique.phione.b10",
+            "cobblesafari.chat.hayley.rep.unique.phione.b11",
+            "cobblesafari.chat.hayley.rep.unique.phione.b12",
+            "cobblesafari.chat.hayley.rep.unique.phione.b13",
+            "cobblesafari.chat.hayley.rep.unique.phione.b14",
+            "cobblesafari.chat.hayley.rep.unique.phione.b15",
+            "cobblesafari.chat.hayley.rep.unique.phione.b16"
+          ],
+          "statistic": "cobblesafari:pokemon_caught_safari",
+          "statisticAmount": 5,
+          "rewardPersonalTrade": "hayley_phione",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.unique.phione.a1",
+            "cobblesafari.chat.hayley.rep.unique.phione.a2",
+            "cobblesafari.chat.hayley.rep.unique.phione.a3",
+            "cobblesafari.chat.hayley.rep.unique.phione.a4",
+            "cobblesafari.chat.hayley.rep.unique.phione.a5",
+            "cobblesafari.chat.hayley.rep.unique.phione.a6",
+            "cobblesafari.chat.hayley.rep.unique.phione.a7"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "catch_trade",
+      "weight": 9,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.catch",
+            "cobblesafari.chat.hayley.rep.reward.trade",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:pokemon_caught_safari",
+          "statisticAmount": 8,
+          "rewardPersonalTradeTag": "trainerspokemon",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.trade",
+            "cobblesafari.chat.hayley.rep.end"
+          ],
+          "fallbackReward": "cobblesafari:gifts/hayley_daily_tickets",
+          "fallbackMessagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.fallback.trade",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "catch_ticket",
+      "weight": 10,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.catch",
+            "cobblesafari.chat.hayley.rep.reward.ticket",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:pokemon_caught_safari",
+          "statisticAmount": 8,
+          "rewardItems": "cobblesafari:gifts/hayley_daily_tickets",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.ticket",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "catch_skin",
+      "weight": 9,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.catch",
+            "cobblesafari.chat.hayley.rep.reward.skin",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:pokemon_caught_safari",
+          "statisticAmount": 8,
+          "rewardSkinTag": "questunlock",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.skin",
+            "cobblesafari.chat.hayley.rep.end"
+          ],
+          "fallbackReward": "cobblesafari:gifts/hayley_daily_tickets",
+          "fallbackMessagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.fallback.skin",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "catch_balls",
+      "weight": 8,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.catch",
+            "cobblesafari.chat.hayley.rep.reward.balls",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:pokemon_caught_safari",
+          "statisticAmount": 8,
+          "rewardItems": "cobblesafari:gifts/hayley_daily_safari_balls",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.balls",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bait_trade",
+      "weight": 8,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.bait",
+            "cobblesafari.chat.hayley.rep.reward.trade",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:bait_used_safari",
+          "statisticAmount": 16,
+          "rewardPersonalTradeTag": "trainerspokemon",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.trade",
+            "cobblesafari.chat.hayley.rep.end"
+          ],
+          "fallbackReward": "cobblesafari:gifts/hayley_daily_tickets",
+          "fallbackMessagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.fallback.trade",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bait_ticket",
+      "weight": 9,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.bait",
+            "cobblesafari.chat.hayley.rep.reward.ticket",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:bait_used_safari",
+          "statisticAmount": 16,
+          "rewardItems": "cobblesafari:gifts/hayley_daily_tickets",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.ticket",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bait_skin",
+      "weight": 8,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.bait",
+            "cobblesafari.chat.hayley.rep.reward.skin",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:bait_used_safari",
+          "statisticAmount": 16,
+          "rewardSkinTag": "questunlock",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.skin",
+            "cobblesafari.chat.hayley.rep.end"
+          ],
+          "fallbackReward": "cobblesafari:gifts/hayley_daily_tickets",
+          "fallbackMessagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.fallback.skin",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bait_balls",
+      "weight": 7,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.bait",
+            "cobblesafari.chat.hayley.rep.reward.balls",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:bait_used_safari",
+          "statisticAmount": 16,
+          "rewardItems": "cobblesafari:gifts/hayley_daily_safari_balls",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.balls",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mudball_trade",
+      "weight": 8,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.mudball",
+            "cobblesafari.chat.hayley.rep.reward.trade",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:mud_balls_used_safari",
+          "statisticAmount": 16,
+          "rewardPersonalTradeTag": "trainerspokemon",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.trade",
+            "cobblesafari.chat.hayley.rep.end"
+          ],
+          "fallbackReward": "cobblesafari:gifts/hayley_daily_tickets",
+          "fallbackMessagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.fallback.trade",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mudball_ticket",
+      "weight": 9,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.mudball",
+            "cobblesafari.chat.hayley.rep.reward.ticket",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:mud_balls_used_safari",
+          "statisticAmount": 16,
+          "rewardItems": "cobblesafari:gifts/hayley_daily_tickets",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.ticket",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mudball_skin",
+      "weight": 8,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.mudball",
+            "cobblesafari.chat.hayley.rep.reward.skin",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:mud_balls_used_safari",
+          "statisticAmount": 16,
+          "rewardSkinTag": "questunlock",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.skin",
+            "cobblesafari.chat.hayley.rep.end"
+          ],
+          "fallbackReward": "cobblesafari:gifts/hayley_daily_tickets",
+          "fallbackMessagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.fallback.skin",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mudball_balls",
+      "weight": 7,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.mudball",
+            "cobblesafari.chat.hayley.rep.reward.balls",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:mud_balls_used_safari",
+          "statisticAmount": 16,
+          "rewardItems": "cobblesafari:gifts/hayley_daily_safari_balls",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.balls",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "time_trade",
+      "weight": 7,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.time",
+            "cobblesafari.chat.hayley.rep.reward.trade",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:time_in_safari",
+          "statisticAmount": 12000,
+          "rewardPersonalTradeTag": "trainerspokemon",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.trade",
+            "cobblesafari.chat.hayley.rep.end"
+          ],
+          "fallbackReward": "cobblesafari:gifts/hayley_daily_tickets",
+          "fallbackMessagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.fallback.trade",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "time_ticket",
+      "weight": 8,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.time",
+            "cobblesafari.chat.hayley.rep.reward.ticket",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:time_in_safari",
+          "statisticAmount": 12000,
+          "rewardItems": "cobblesafari:gifts/hayley_daily_tickets",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.ticket",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "time_skin",
+      "weight": 7,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.time",
+            "cobblesafari.chat.hayley.rep.reward.skin",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:time_in_safari",
+          "statisticAmount": 12000,
+          "rewardSkinTag": "questunlock",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.skin",
+            "cobblesafari.chat.hayley.rep.end"
+          ],
+          "fallbackReward": "cobblesafari:gifts/hayley_daily_tickets",
+          "fallbackMessagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.fallback.skin",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "time_balls",
+      "weight": 6,
+      "isTimed": true,
+      "doDisapear": true,
+      "failMessage": "cobblesafari.chat.hayley.rep.fail",
+      "steps": [
+        {
+          "messagesBefore": [
+            "cobblesafari.chat.hayley.rep.start",
+            "cobblesafari.chat.hayley.rep.task.time",
+            "cobblesafari.chat.hayley.rep.reward.balls",
+            "cobblesafari.chat.hayley.rep.ready"
+          ],
+          "statistic": "cobblesafari:time_in_safari",
+          "statisticAmount": 12000,
+          "rewardItems": "cobblesafari:gifts/hayley_daily_safari_balls",
+          "messagesAfter": [
+            "cobblesafari.chat.hayley.rep.congrats",
+            "cobblesafari.chat.hayley.rep.rewardreminder.balls",
+            "cobblesafari.chat.hayley.rep.end"
+          ]
+        }
+      ]
     }
   ]
 }

@@ -125,7 +125,7 @@ public abstract class RotomPhoneBaseScreen extends Screen {
             return ONLINE_PC_TINT;
         }
         RotomPhoneConfigSyncPayload.SkinData skinData = getCurrentSkinData();
-        if (skinData != null && skinData.hasCustomScreen()) {
+        if (skinData != null && skinData.hasCustomScreen() && RotomPhoneClientCache.isCurrentWallpaperEnabled()) {
             try {
                 return 0xFF000000 | Integer.parseInt(skinData.color(), 16);
             } catch (NumberFormatException ignored) {
@@ -190,6 +190,123 @@ public abstract class RotomPhoneBaseScreen extends Screen {
 
     protected static boolean isInBounds(double mouseX, double mouseY, int x, int y, int w, int h) {
         return mouseX >= x && mouseX < x + w && mouseY >= y && mouseY < y + h;
+    }
+
+    // ---------------------------------------------------------------- shared draw helpers
+
+    /** Added to anchor Y before scaling; negative moves the drawn text upward by 7 screen pixels. */
+    protected static final float SCALED_TEXT_Y_OFFSET = -7f;
+
+    /** Corner radius used by rounded rectangles across the phone apps. */
+    protected static final int CORNER_R = 5;
+
+    /**
+     * Per-row horizontal inset for a rounded corner, indexed by distance (in pixels) from the
+     * corner edge (0 = the outermost row/column of the corner). Mirrored on every axis to round
+     * each of the four corners. Tuned to give a soft, fully-opaque rounded look rather than a
+     * straight diagonal bevel. Length matches {@link #CORNER_R}.
+     */
+    private static final int[] CORNER_INSET = {4, 2, 1, 1, 0};
+
+    private static int cornerInset(int dist) {
+        return dist >= 0 && dist < CORNER_INSET.length ? CORNER_INSET[dist] : 0;
+    }
+
+    /** Filled rectangle with rounded corners selected by the four flags. */
+    protected static void fillRoundedRect(GuiGraphics g, int x, int y, int w, int h, int r, int argb,
+                                          boolean tl, boolean tr, boolean bl, boolean br) {
+        for (int row = 0; row < h; row++) {
+            int leftInset = 0;
+            int rightInset = 0;
+            int topDist = row;
+            int botDist = h - 1 - row;
+            if (tl && topDist < r) {
+                leftInset = Math.max(leftInset, cornerInset(topDist));
+            }
+            if (bl && botDist < r) {
+                leftInset = Math.max(leftInset, cornerInset(botDist));
+            }
+            if (tr && topDist < r) {
+                rightInset = Math.max(rightInset, cornerInset(topDist));
+            }
+            if (br && botDist < r) {
+                rightInset = Math.max(rightInset, cornerInset(botDist));
+            }
+            g.fill(x + leftInset, y + row, x + w - rightInset, y + row + 1, argb);
+        }
+    }
+
+    /**
+     * Rounded rectangle drawn as a 1px border plus interior fill, each pixel painted exactly once,
+     * so translucent colours (alpha below 0xFF) render without the border and fill double-blending.
+     */
+    protected static void fillRoundedRectWithBorder(GuiGraphics g, int x, int y, int w, int h, int r,
+                                                    int borderArgb, int fillArgb) {
+        for (int row = 0; row < h; row++) {
+            int outer = roundedRowInset(row, h, r);
+            int oL = x + outer;
+            int oR = x + w - outer;
+            if (row == 0 || row == h - 1) {
+                g.fill(oL, y + row, oR, y + row + 1, borderArgb);
+                continue;
+            }
+            int inner = roundedRowInset(row - 1, h - 2, r);
+            int iL = x + 1 + inner;
+            int iR = x + w - 1 - inner;
+            if (iL > oL) {
+                g.fill(oL, y + row, iL, y + row + 1, borderArgb);
+            }
+            if (oR > iR) {
+                g.fill(iR, y + row, oR, y + row + 1, borderArgb);
+            }
+            if (iR > iL) {
+                g.fill(iL, y + row, iR, y + row + 1, fillArgb);
+            }
+        }
+    }
+
+    private static int roundedRowInset(int row, int h, int r) {
+        int inset = 0;
+        if (row < r) {
+            inset = cornerInset(row);
+        }
+        int botDist = h - 1 - row;
+        if (botDist < r) {
+            inset = Math.max(inset, cornerInset(botDist));
+        }
+        return inset;
+    }
+
+    /** Blits a white-on-transparent texture tinted with the given ARGB colour (alpha included). */
+    protected static void drawTinted(GuiGraphics g, ResourceLocation tex, int x, int y, int w, int h, int argb) {
+        float red = ((argb >> 16) & 0xFF) / 255f;
+        float green = ((argb >> 8) & 0xFF) / 255f;
+        float blue = (argb & 0xFF) / 255f;
+        float alpha = ((argb >>> 24) & 0xFF) / 255f;
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        g.setColor(red, green, blue, alpha);
+        g.blit(tex, x, y, 0, 0, w, h, w, h);
+        g.setColor(1f, 1f, 1f, 1f);
+        RenderSystem.disableBlend();
+    }
+
+    /** Renders text at 2x scale, left-aligned so its left edge starts at x. */
+    protected void drawScaledLeftAligned(GuiGraphics g, Component c, int x, int y, int color) {
+        g.pose().pushPose();
+        g.pose().translate(x, y + SCALED_TEXT_Y_OFFSET, 0);
+        g.pose().scale(2f, 2f, 1f);
+        g.drawString(this.font, c, 0, 0, color, false);
+        g.pose().popPose();
+    }
+
+    /** Renders text at 2x scale, centered on x. */
+    protected void drawScaledCentered(GuiGraphics g, Component c, int x, int y, int color) {
+        g.pose().pushPose();
+        g.pose().translate(x, y + SCALED_TEXT_Y_OFFSET, 0);
+        g.pose().scale(2f, 2f, 1f);
+        g.drawCenteredString(this.font, c, 0, 0, color);
+        g.pose().popPose();
     }
 
     @Override

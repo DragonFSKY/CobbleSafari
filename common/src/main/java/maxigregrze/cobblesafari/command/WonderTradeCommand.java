@@ -127,8 +127,8 @@ public final class WonderTradeCommand {
         ensureTicketsApplicable();
         UUID id = resolvePlayerUuid(ctx);
         int amount = IntegerArgumentType.getInteger(ctx, ARG_AMOUNT);
-        WonderTradeService.addPlayerTickets(ctx.getSource().getServer(), id, amount);
-        int after = WonderTradeService.getEffectiveTicketCount(ctx.getSource().getServer(), id);
+        WonderTradeService.addPlayerBonusTickets(ctx.getSource().getServer(), id, amount);
+        int after = WonderTradeService.getBonusTickets(ctx.getSource().getServer(), id);
         String name = StringArgumentType.getString(ctx, ARG_PLAYER_NAME);
         ctx.getSource().sendSuccess(
                 () -> Component.translatable("cobblesafari.command.wondertrade.ticket_add", name, amount, after),
@@ -140,7 +140,7 @@ public final class WonderTradeCommand {
         ensureTicketsApplicable();
         UUID id = resolvePlayerUuid(ctx);
         int amount = IntegerArgumentType.getInteger(ctx, ARG_AMOUNT);
-        WonderTradeService.setPlayerTickets(ctx.getSource().getServer(), id, amount);
+        WonderTradeService.setPlayerBonusTickets(ctx.getSource().getServer(), id, amount);
         String name = StringArgumentType.getString(ctx, ARG_PLAYER_NAME);
         ctx.getSource().sendSuccess(
                 () -> Component.translatable("cobblesafari.command.wondertrade.ticket_set", name, amount),
@@ -152,8 +152,8 @@ public final class WonderTradeCommand {
         ensureTicketsApplicable();
         UUID id = resolvePlayerUuid(ctx);
         int amount = IntegerArgumentType.getInteger(ctx, ARG_AMOUNT);
-        WonderTradeService.removePlayerTickets(ctx.getSource().getServer(), id, amount);
-        int after = WonderTradeService.getEffectiveTicketCount(ctx.getSource().getServer(), id);
+        WonderTradeService.removePlayerBonusTickets(ctx.getSource().getServer(), id, amount);
+        int after = WonderTradeService.getBonusTickets(ctx.getSource().getServer(), id);
         String name = StringArgumentType.getString(ctx, ARG_PLAYER_NAME);
         ctx.getSource().sendSuccess(
                 () -> Component.translatable("cobblesafari.command.wondertrade.ticket_remove", name, amount, after),
@@ -164,12 +164,12 @@ public final class WonderTradeCommand {
     private static int ticketGet(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         UUID id = resolvePlayerUuid(ctx);
         String name = StringArgumentType.getString(ctx, ARG_PLAYER_NAME);
-        int n = WonderTradeService.getEffectiveTicketCount(ctx.getSource().getServer(), id);
-        if (n == Integer.MAX_VALUE) {
+        if (WonderTradeSettings.get().isUnlimitedDailyTrades()) {
             ctx.getSource().sendSuccess(
                     () -> Component.translatable("cobblesafari.command.wondertrade.ticket_get_unlimited", name),
                     false);
         } else {
+            int n = WonderTradeService.getBonusTickets(ctx.getSource().getServer(), id);
             ctx.getSource().sendSuccess(
                     () -> Component.translatable("cobblesafari.command.wondertrade.ticket_get", name, n),
                     false);

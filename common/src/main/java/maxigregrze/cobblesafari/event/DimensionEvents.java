@@ -92,6 +92,7 @@ public class DimensionEvents {
             maxigregrze.cobblesafari.power.GuaranteedShinyManager.sweepExpired(server);
             DungeonTeleportHandler.sweepStaleGenerations();
         }
+        DimensionalBanEventHandler.tickMountEnforcement(server);
         maxigregrze.cobblesafari.safari.SafariStateManager.onServerTick(server);
         maxigregrze.cobblesafari.unionroom.UnionRoomManager.tickSessionCheck(server);
         maxigregrze.cobblesafari.unionroom.UnionRoomManager.tickPendingExitSetups(server);

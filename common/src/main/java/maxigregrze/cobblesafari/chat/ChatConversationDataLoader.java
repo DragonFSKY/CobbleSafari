@@ -163,10 +163,54 @@ public final class ChatConversationDataLoader {
                 }
                 repeatables.add(s);
             }
+            if (!validatePrerequisites(fileId, repeatables)) {
+                return null; // reason already logged
+            }
         }
 
         return new ChatConversationDefinition(schemaVersion, id, displayName, displayPriority,
                 textureFile, unlockedFromStart, unlockingAdvancement, steps, repeatables);
+    }
+
+    /**
+     * Checks every {@code prerequisite} once all series ids are known: the target must exist, must not be
+     * the series itself, and the prerequisite graph must be acyclic — a cycle would make every series in
+     * it permanently unrollable, silently emptying the pool.
+     *
+     * @return false (reason logged) if the conversation must be skipped
+     */
+    private static boolean validatePrerequisites(ResourceLocation fileId, List<RepeatableSeriesDefinition> series) {
+        Map<String, String> prereqOf = new java.util.HashMap<>();
+        Set<String> ids = new HashSet<>();
+        for (RepeatableSeriesDefinition s : series) {
+            ids.add(s.id());
+        }
+        for (RepeatableSeriesDefinition s : series) {
+            if (!s.hasPrerequisite()) {
+                continue;
+            }
+            if (s.prerequisite().equals(s.id())) {
+                reject(fileId, "series '" + s.id() + "' has itself as prerequisite");
+                return false;
+            }
+            if (!ids.contains(s.prerequisite())) {
+                reject(fileId, "series '" + s.id() + "' has unknown prerequisite '" + s.prerequisite() + "'");
+                return false;
+            }
+            prereqOf.put(s.id(), s.prerequisite());
+        }
+        for (String start : prereqOf.keySet()) {
+            Set<String> seen = new HashSet<>();
+            String cur = start;
+            while (cur != null && seen.add(cur)) {
+                cur = prereqOf.get(cur);
+            }
+            if (cur != null) {
+                reject(fileId, "prerequisite cycle involving series '" + start + "'");
+                return false;
+            }
+        }
+        return true;
     }
 
     private static RepeatableSeriesDefinition parseRepeatableSeries(ResourceLocation fileId, JsonObject obj, int index) {
@@ -190,6 +234,11 @@ public final class ChatConversationDataLoader {
         String failMessage = obj.has("failMessage") ? obj.get("failMessage").getAsString() : null;
         if (failMessage != null && failMessage.isEmpty()) {
             return rejectSeries(fileId, index, "empty failMessage");
+        }
+        // Existence / self-reference / cycles are checked once every series is known (validatePrerequisites).
+        String prerequisite = obj.has("prerequisite") ? obj.get("prerequisite").getAsString() : null;
+        if (prerequisite != null && !SAFE_ID.matcher(prerequisite).matches()) {
+            return rejectSeries(fileId, index, "invalid prerequisite '" + prerequisite + "' (expected ^[a-z0-9_]+$)");
         }
 
         if (!obj.has("steps") || !obj.get("steps").isJsonArray()) {
@@ -224,7 +273,8 @@ public final class ChatConversationDataLoader {
                 }
             }
         }
-        return new RepeatableSeriesDefinition(id, weight, isUnique, isTimed, failMessage, doDisapear, steps);
+        return new RepeatableSeriesDefinition(id, weight, isUnique, isTimed, failMessage, doDisapear,
+                prerequisite, steps);
     }
 
     private static ChatStepDefinition parseStep(ResourceLocation fileId, JsonObject obj, int index,
@@ -235,13 +285,46 @@ public final class ChatConversationDataLoader {
         if (before == null || after == null) {
             return rejectStep(fileId, index, "missing messagesBefore/messagesAfter (must be string arrays)");
         }
+        // Optional: shown instead of messagesAfter when a tag reward fell back to the loot pool.
+        List<String> fallbackAfter = List.of();
+        if (obj.has("fallbackMessagesAfter")) {
+            fallbackAfter = readStringArray(obj, "fallbackMessagesAfter");
+            if (fallbackAfter == null) {
+                return rejectStep(fileId, index, "fallbackMessagesAfter must be a string array");
+            }
+        }
+
+        // Optional visibility gate: the step stays hidden until the player owns this advancement.
+        String unlockingAdvancement =
+                obj.has("unlockingAdvancement") ? obj.get("unlockingAdvancement").getAsString() : null;
+        if (unlockingAdvancement != null
+                && (unlockingAdvancement.isEmpty() || ResourceLocation.tryParse(unlockingAdvancement) == null)) {
+            return rejectStep(fileId, index, "invalid unlockingAdvancement id '" + unlockingAdvancement + "'");
+        }
 
         String advancement = obj.has("advancement") ? obj.get("advancement").getAsString() : null;
         String statistic = obj.has("statistic") ? obj.get("statistic").getAsString() : null;
         int statisticAmount = obj.has("statisticAmount") ? obj.get("statisticAmount").getAsInt() : 0;
 
-        // Gating: statistic-gated if 'statistic' present (valid + amount > 0), else advancement required.
-        if (statistic != null && !statistic.isEmpty()) {
+        // Optional item-gathering objective (highest-priority gating).
+        List<ChatStepDefinition.ItemReq> requiredItems = List.of();
+        if (obj.has("requiredItems")) {
+            requiredItems = parseRequiredItems(fileId, index, obj.get("requiredItems"));
+            if (requiredItems == null) {
+                return null; // reason already logged
+            }
+        }
+        boolean itemGated = !requiredItems.isEmpty();
+
+        // Gating priority: requiredItems > statistic > advancement (mutually exclusive).
+        if (itemGated) {
+            if (statistic != null && !statistic.isEmpty()) {
+                return rejectStep(fileId, index, "requiredItems and statistic are mutually exclusive");
+            }
+            if (advancement != null && !advancement.isEmpty()) {
+                return rejectStep(fileId, index, "requiredItems and advancement are mutually exclusive");
+            }
+        } else if (statistic != null && !statistic.isEmpty()) {
             if (ResourceLocation.tryParse(statistic) == null) {
                 return rejectStep(fileId, index, "invalid 'statistic' id '" + statistic + "'");
             }
@@ -297,14 +380,79 @@ public final class ChatConversationDataLoader {
             return rejectStep(fileId, index, "invalid fallbackReward id '" + fallbackReward + "'");
         }
 
+        // The fallback only ever fires for tag rewards, so fallback messages are dead weight without one.
+        if (!fallbackAfter.isEmpty() && rewardSkinTag == null && rewardTradeTag == null) {
+            CobbleSafari.LOGGER.warn("[Chat] {} : step {}: fallbackMessagesAfter has no effect without "
+                    + "rewardSkinTag/rewardPersonalTradeTag", fileId, index);
+        }
+
         boolean waitNextDay = obj.has("waitNextDay") && obj.get("waitNextDay").getAsBoolean();
         if (waitNextDay && forbidWaitNextDay) {
             return rejectStep(fileId, index, "waitNextDay is not allowed inside a timed repeatable series");
         }
 
-        return new ChatStepDefinition(before, after, advancement, statistic, statisticAmount,
+        return new ChatStepDefinition(before, after, fallbackAfter, unlockingAdvancement,
+                advancement, statistic, statisticAmount,
                 rewardItems, rewardTrade, rewardTradeTag, unlockApp, rewardSkin, rewardSkinTag,
-                fallbackReward, waitNextDay);
+                fallbackReward, requiredItems, waitNextDay);
+    }
+
+    /**
+     * Parses an item-gathering objective. Each entry must be {@code { "item": <existing item id>,
+     * "count": >0 }}; ids must resolve to a registered item (not air) and be unique across the list
+     * (duplicate ids would make the per-item count check double-count). Returns {@code null} (reason
+     * logged) on any error, or a non-empty list on success.
+     */
+    private static List<ChatStepDefinition.ItemReq> parseRequiredItems(ResourceLocation fileId, int index,
+                                                                       JsonElement el) {
+        if (!el.isJsonArray()) {
+            rejectStep(fileId, index, "requiredItems must be an array");
+            return null;
+        }
+        JsonArray arr = el.getAsJsonArray();
+        if (arr.isEmpty()) {
+            rejectStep(fileId, index, "requiredItems must not be empty");
+            return null;
+        }
+        List<ChatStepDefinition.ItemReq> out = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
+        for (int i = 0; i < arr.size(); i++) {
+            if (!arr.get(i).isJsonObject()) {
+                rejectStep(fileId, index, "requiredItems[" + i + "] is not a JSON object");
+                return null;
+            }
+            JsonObject o = arr.get(i).getAsJsonObject();
+            if (!o.has("item") || !o.get("item").getAsJsonPrimitive().isString()) {
+                rejectStep(fileId, index, "requiredItems[" + i + "] missing 'item'");
+                return null;
+            }
+            String itemId = o.get("item").getAsString();
+            ResourceLocation loc = ResourceLocation.tryParse(itemId);
+            if (loc == null) {
+                rejectStep(fileId, index, "requiredItems[" + i + "] invalid item id '" + itemId + "'");
+                return null;
+            }
+            if (!net.minecraft.core.registries.BuiltInRegistries.ITEM.containsKey(loc)
+                    || itemId.equals("minecraft:air")) {
+                rejectStep(fileId, index, "requiredItems[" + i + "] unknown item '" + itemId + "'");
+                return null;
+            }
+            if (!seen.add(itemId)) {
+                rejectStep(fileId, index, "requiredItems[" + i + "] duplicate item '" + itemId + "'");
+                return null;
+            }
+            if (!o.has("count") || !o.get("count").getAsJsonPrimitive().isNumber()) {
+                rejectStep(fileId, index, "requiredItems[" + i + "] missing/invalid 'count'");
+                return null;
+            }
+            int count = o.get("count").getAsInt();
+            if (count <= 0) {
+                rejectStep(fileId, index, "requiredItems[" + i + "] count must be > 0");
+                return null;
+            }
+            out.add(new ChatStepDefinition.ItemReq(itemId, count));
+        }
+        return out;
     }
 
     /** Returns null if the field is missing or not an array of strings. */

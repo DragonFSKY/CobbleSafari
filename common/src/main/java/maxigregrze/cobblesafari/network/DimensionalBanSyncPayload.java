@@ -40,6 +40,7 @@ public record DimensionalBanSyncPayload(
             buf.writeBoolean(r.allowBattle);
             buf.writeBoolean(r.allowBlockBreaking);
             buf.writeBoolean(r.allowBlockPlacing);
+            buf.writeBoolean(r.forbidMounting);
         }
     }
 
@@ -66,6 +67,7 @@ public record DimensionalBanSyncPayload(
             r.allowBattle = buf.readBoolean();
             r.allowBlockBreaking = buf.readBoolean();
             r.allowBlockPlacing = buf.readBoolean();
+            r.forbidMounting = buf.readBoolean();
             dimensions.put(dimId, r);
         }
 

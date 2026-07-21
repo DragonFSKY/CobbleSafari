@@ -6,5 +6,8 @@
   "itemTint": "ffffff",
   "unlockedFromStart": false,
   "hasShinyVariant": true,
-  "addUnlockItem": false
+  "addUnlockItem": false,
+  "tags": [
+    "questunlock"
+  ]
 }

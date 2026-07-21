@@ -269,7 +269,8 @@ public final class WonderTradeService {
         data.setLastDailyResetEpochDay(todayEpoch);
     }
 
-    public static int getRemainingCredits(ServerPlayer player) {
+    /** Daily allowance remaining, bonus excluded (absent-key sentinel resolves to {@code dailyTrades}). */
+    public static int getDailyCreditsRemaining(ServerPlayer player) {
         WonderTradeSettings cfg = WonderTradeSettings.get();
         if (cfg.isUnlimitedDailyTrades()) {
             return Integer.MAX_VALUE;
@@ -282,17 +283,32 @@ public final class WonderTradeService {
         return v;
     }
 
+    /** Total usable for trading: daily allowance + persistent bonus tickets. */
+    public static int getRemainingCredits(ServerPlayer player) {
+        WonderTradeSettings cfg = WonderTradeSettings.get();
+        if (cfg.isUnlimitedDailyTrades()) {
+            return Integer.MAX_VALUE;
+        }
+        return getDailyCreditsRemaining(player)
+                + getBonusTickets(player.getServer(), player.getUUID());
+    }
+
+    /** Depletes the daily allowance first, then the persistent bonus pool. */
     private static void consumeCredit(ServerPlayer player) {
         WonderTradeSettings cfg = WonderTradeSettings.get();
         if (cfg.isUnlimitedDailyTrades()) {
             return;
         }
         WonderTradeSavedData data = WonderTradeSavedData.get(player.getServer());
-        int cur = getRemainingCredits(player);
-        if (cur <= 0) {
+        int daily = getDailyCreditsRemaining(player);
+        if (daily > 0) {
+            data.setCredits(player.getUUID(), daily - 1);
             return;
         }
-        data.setCredits(player.getUUID(), cur - 1);
+        int bonus = data.getBonusTickets(player.getUUID());
+        if (bonus > 0) {
+            data.setBonusTickets(player.getUUID(), bonus - 1);
+        }
     }
 
     public record TradeResultDetailed(TradeResult result, CompoundTag offeredNbt, CompoundTag receivedNbt) {
@@ -461,48 +477,43 @@ public final class WonderTradeService {
         return new PoolResetSummary(removed, data.getPoolSize());
     }
 
-    /** Effective credit value (never {@link Integer#MIN_VALUE}). */
-    public static int getEffectiveTicketCount(MinecraftServer server, UUID playerId) {
-        WonderTradeSettings cfg = WonderTradeSettings.get();
-        if (cfg.isUnlimitedDailyTrades()) {
-            return Integer.MAX_VALUE;
-        }
-        WonderTradeSavedData data = WonderTradeSavedData.get(server);
-        int v = data.getCredits(playerId);
-        if (v == Integer.MIN_VALUE) {
-            return cfg.getDailyTrades();
-        }
-        return v;
+    /** Hard cap of the persistent bonus-ticket pool (no config, by design). */
+    public static final int MAX_BONUS_TICKETS = 64;
+
+    /** Persistent bonus tickets; carries over daily resets. */
+    public static int getBonusTickets(MinecraftServer server, UUID playerId) {
+        return WonderTradeSavedData.get(server).getBonusTickets(playerId);
     }
 
-    public static void setPlayerTickets(MinecraftServer server, UUID playerId, int amount) {
-        WonderTradeSavedData.get(server).setCredits(playerId, Math.max(0, amount));
+    public enum UseTicketResult {
+        SUCCESS,
+        AT_MAX
     }
 
-    public static void addPlayerTickets(MinecraftServer server, UUID playerId, int delta) {
-        WonderTradeSettings cfg = WonderTradeSettings.get();
-        if (cfg.isUnlimitedDailyTrades()) {
-            return;
-        }
+    /** Server-authoritative; grants +1 bonus ticket unless the pool is already at {@link #MAX_BONUS_TICKETS}. */
+    public static UseTicketResult tryUseWonderTicket(MinecraftServer server, UUID playerId) {
         WonderTradeSavedData data = WonderTradeSavedData.get(server);
-        int base = data.getCredits(playerId);
-        if (base == Integer.MIN_VALUE) {
-            base = cfg.getDailyTrades();
+        int bonus = data.getBonusTickets(playerId);
+        if (bonus >= MAX_BONUS_TICKETS) {
+            return UseTicketResult.AT_MAX;
         }
-        data.setCredits(playerId, Math.max(0, base + delta));
+        data.setBonusTickets(playerId, bonus + 1);
+        return UseTicketResult.SUCCESS;
     }
 
-    public static void removePlayerTickets(MinecraftServer server, UUID playerId, int amount) {
-        WonderTradeSettings cfg = WonderTradeSettings.get();
-        if (cfg.isUnlimitedDailyTrades()) {
-            return;
-        }
+    public static void setPlayerBonusTickets(MinecraftServer server, UUID playerId, int amount) {
+        WonderTradeSavedData.get(server)
+                .setBonusTickets(playerId, Math.max(0, Math.min(MAX_BONUS_TICKETS, amount)));
+    }
+
+    public static void addPlayerBonusTickets(MinecraftServer server, UUID playerId, int delta) {
         WonderTradeSavedData data = WonderTradeSavedData.get(server);
-        int base = data.getCredits(playerId);
-        if (base == Integer.MIN_VALUE) {
-            base = cfg.getDailyTrades();
-        }
-        data.setCredits(playerId, Math.max(0, base - amount));
+        long sum = (long) data.getBonusTickets(playerId) + delta;
+        data.setBonusTickets(playerId, (int) Math.max(0L, Math.min(MAX_BONUS_TICKETS, sum)));
+    }
+
+    public static void removePlayerBonusTickets(MinecraftServer server, UUID playerId, int amount) {
+        addPlayerBonusTickets(server, playerId, -amount);
     }
 
     public record PoolResetSummary(int removedEntries, int poolSizeAfter) {}

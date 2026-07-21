@@ -27,6 +27,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.GameProfileArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -54,6 +55,7 @@ public final class GtsCommand {
     private static final String KEY_DETAILS_OFFER = "cobblesafari.command.gts.details_header.offer";
     private static final String ARG_PICK = "pickIndex";
     private static final String ARG_PAGE = "page";
+    private static final String ARG_AMOUNT = "amount";
     private static final String ARG_OFFER_ID = "offerId";
     private static final String ARG_SUCCESS_ID = "successId";
 
@@ -96,6 +98,17 @@ public final class GtsCommand {
                         .requires(s -> s.hasPermission(4))
                         .then(Commands.argument(ARG_ID, IntegerArgumentType.integer(1))
                                 .executes(GtsCommand::adminRemove)))
+                .then(Commands.literal("extraslots")
+                        .requires(s -> s.hasPermission(4))
+                        .then(Commands.argument(ARG_PLAYER, GameProfileArgument.gameProfile())
+                                .then(Commands.literal("get")
+                                        .executes(GtsCommand::extraSlotsGet))
+                                .then(Commands.literal("set")
+                                        .then(Commands.argument(ARG_AMOUNT, IntegerArgumentType.integer(0))
+                                                .executes(GtsCommand::extraSlotsSet)))
+                                .then(Commands.literal("add")
+                                        .then(Commands.argument(ARG_AMOUNT, IntegerArgumentType.integer())
+                                                .executes(GtsCommand::extraSlotsAdd)))))
                 .then(Commands.literal("test-deposit")
                         .then(Commands.argument(ARG_PLAYER, EntityArgument.player())
                                 .then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(1, 6))
@@ -827,6 +840,49 @@ public final class GtsCommand {
         };
     }
 
+    private static int extraSlotsGet(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        GtsSavedData data = GtsSavedData.get(ctx.getSource().getServer());
+        int count = 0;
+        for (com.mojang.authlib.GameProfile profile : GameProfileArgument.getGameProfiles(ctx, ARG_PLAYER)) {
+            int slots = data.getExtraOfferSlots(profile.getId());
+            ctx.getSource()
+                    .sendSuccess(
+                            () -> Component.translatable(
+                                    "cobblesafari.command.gts.extraslots.get", profile.getName(), slots),
+                            false);
+            count++;
+        }
+        return count;
+    }
+
+    private static int extraSlotsSet(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        int amount = IntegerArgumentType.getInteger(ctx, ARG_AMOUNT);
+        return applyExtraSlots(ctx, uuidSlots -> amount);
+    }
+
+    private static int extraSlotsAdd(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        int amount = IntegerArgumentType.getInteger(ctx, ARG_AMOUNT);
+        return applyExtraSlots(ctx, current -> Math.max(0, current + amount));
+    }
+
+    private static int applyExtraSlots(
+            CommandContext<CommandSourceStack> ctx, java.util.function.IntUnaryOperator newValue)
+            throws CommandSyntaxException {
+        GtsSavedData data = GtsSavedData.get(ctx.getSource().getServer());
+        int count = 0;
+        for (com.mojang.authlib.GameProfile profile : GameProfileArgument.getGameProfiles(ctx, ARG_PLAYER)) {
+            int updated = newValue.applyAsInt(data.getExtraOfferSlots(profile.getId()));
+            data.setExtraOfferSlots(profile.getId(), updated);
+            ctx.getSource()
+                    .sendSuccess(
+                            () -> Component.translatable(
+                                    "cobblesafari.command.gts.extraslots.set", profile.getName(), updated),
+                            true);
+            count++;
+        }
+        return count;
+    }
+
     private static int testDeposit(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         ServerPlayer target = EntityArgument.getPlayer(ctx, ARG_PLAYER);
         int opSlot = IntegerArgumentType.getInteger(ctx, ARG_SLOT);
@@ -865,8 +921,8 @@ public final class GtsCommand {
                 ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.incompatible_gender"));
                 yield 0;
             }
-            case ALREADY_HAS_OFFER -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.already_has_offer"));
+            case LIMIT_REACHED -> {
+                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.limit_reached"));
                 yield 0;
             }
             case ERROR -> {

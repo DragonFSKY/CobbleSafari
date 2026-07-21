@@ -1,0 +1,16 @@
+{
+  "offerId": "hayley_phione",
+  "tags": [
+  ],
+  "given": "phione level=50 originaltrainertype=npc originaltrainer=Hayley",
+  "givenMarks": [
+    "cobblesafari:ribbon_safari"
+  ],
+  "givenActiveMark": "cobblesafari:ribbon_safari",
+  "wish": {
+    "species": "leafeon",
+    "levelBucket": -1,
+    "gender": "any",
+    "shiny": "any"
+  }
+}

@@ -3,6 +3,7 @@ package maxigregrze.cobblesafari.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import maxigregrze.cobblesafari.CobbleSafari;
 import maxigregrze.cobblesafari.platform.Services;
 
@@ -24,6 +25,7 @@ public class DimensionalBanConfig {
     public static final int CONFIG_VERSION = 1;
 
     private static final String KEY_CONFIG_VERSION = "CONFIG_VERSION";
+    private static final String KEY_DIMENSIONS = "dimensions";
 
     private static final Path CONFIG_DIR = Services.PLATFORM.getConfigDir().resolve("cobblesafari");
     private static final Path CONFIG_PATH = CONFIG_DIR.resolve("dimensional_restrictions_config.json");
@@ -98,10 +100,17 @@ public class DimensionalBanConfig {
         }
 
         try (Reader in = Files.newBufferedReader(CONFIG_PATH)) {
-            DimensionalBanData parsed = GSON.fromJson(in, DimensionalBanData.class);
+            JsonObject root = JsonParser.parseReader(in).getAsJsonObject();
+            DimensionalBanData parsed = GSON.fromJson(root, DimensionalBanData.class);
             data = parsed != null ? parsed : new DimensionalBanData();
             ensureDataDefaults(data);
+            boolean migrated = migrateForbidMounting(root, data);
             CobbleSafari.LOGGER.info("CobbleSafari >> dimensional_restrictions_config.json loaded successfully from {}", CONFIG_PATH);
+            if (migrated) {
+                save();
+                CobbleSafari.LOGGER.info(
+                        "CobbleSafari >> dimensional_restrictions_config.json migrated: forbidMounting defaults written (true for cobblesafari:dungeon_distortion)");
+            }
         } catch (Exception e) {
             CobbleSafari.LOGGER.error(
                     "CobbleSafari >> Failed to read or parse dimensional_restrictions_config.json at {} (invalid JSON or unexpected structure). Using in-memory defaults; the file on disk was not overwritten.",
@@ -109,6 +118,31 @@ public class DimensionalBanConfig {
                     e);
             data = new DimensionalBanData();
         }
+    }
+
+    /**
+     * File predating the forbidMounting field: if at least one dimension entry does not declare
+     * the key, forces true for the distortion (when its key is absent) and reports that a rewrite
+     * of the file is needed to materialize the defaults. Entries that declare the key keep their
+     * value untouched, so manual edits stay respected.
+     */
+    private static boolean migrateForbidMounting(JsonObject root, DimensionalBanData loaded) {
+        JsonObject dims = root.has(KEY_DIMENSIONS) && root.get(KEY_DIMENSIONS).isJsonObject()
+                ? root.getAsJsonObject(KEY_DIMENSIONS) : null;
+        if (dims == null) {
+            return false;
+        }
+        boolean migrationNeeded = false;
+        for (String dimensionId : loaded.dimensions.keySet()) {
+            if (dims.has(dimensionId) && dims.get(dimensionId).isJsonObject()
+                    && !dims.getAsJsonObject(dimensionId).has("forbidMounting")) {
+                migrationNeeded = true;
+                if ("cobblesafari:dungeon_distortion".equals(dimensionId)) {
+                    loaded.dimensions.get(dimensionId).forbidMounting = true;
+                }
+            }
+        }
+        return migrationNeeded;
     }
 
     private static void ensureDataDefaults(DimensionalBanData loaded) {
@@ -145,7 +179,6 @@ public class DimensionalBanConfig {
     }
 
     private static void writeFieldTo(JsonObject json, Field field) {
-        field.setAccessible(true);
         try {
             json.add(field.getName(), GSON.toJsonTree(field.get(data)));
         } catch (IllegalAccessException e) {

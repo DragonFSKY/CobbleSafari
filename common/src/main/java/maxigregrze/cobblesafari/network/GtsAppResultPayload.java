@@ -26,7 +26,9 @@ public record GtsAppResultPayload(
         List<CompoundTag> candidateNbts,
         CompoundTag offeredNbt,
         CompoundTag receivedNbt,
-        String errorKey
+        String errorKey,
+        int usedOffers,
+        int allowedOffers
 ) implements CustomPacketPayload {
 
     public static final int SUB_BEGIN = 0;
@@ -38,6 +40,7 @@ public record GtsAppResultPayload(
     public static final int SUB_START_TRADE_RESULT = 6;
     public static final int SUB_TRADE = 7;
     public static final int SUB_ERROR = 8;
+    public static final int SUB_MY_OFFERS_RESULT = 9;
 
     public record SearchEntry(
             int offerId,
@@ -84,6 +87,8 @@ public record GtsAppResultPayload(
         buf.writeNbt(p.offeredNbt() == null ? new CompoundTag() : p.offeredNbt());
         buf.writeNbt(p.receivedNbt() == null ? new CompoundTag() : p.receivedNbt());
         buf.writeUtf(p.errorKey() == null ? "" : p.errorKey());
+        buf.writeVarInt(p.usedOffers());
+        buf.writeVarInt(p.allowedOffers());
     }
 
     private static GtsAppResultPayload read(FriendlyByteBuf buf) {
@@ -123,6 +128,8 @@ public record GtsAppResultPayload(
         CompoundTag offered = buf.readNbt();
         CompoundTag received = buf.readNbt();
         String err = buf.readUtf();
+        int usedOffers = buf.readVarInt();
+        int allowedOffers = buf.readVarInt();
         return new GtsAppResultPayload(
                 sub,
                 offerCount,
@@ -138,7 +145,9 @@ public record GtsAppResultPayload(
                 Collections.unmodifiableList(cands),
                 offered == null ? new CompoundTag() : offered,
                 received == null ? new CompoundTag() : received,
-                err);
+                err,
+                usedOffers,
+                allowedOffers);
     }
 
     @Override

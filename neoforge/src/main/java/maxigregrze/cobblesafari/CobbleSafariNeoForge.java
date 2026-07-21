@@ -622,6 +622,8 @@ public class CobbleSafariNeoForge {
         if (!(event.getEntity() instanceof ServerPlayer sp)) {
             return;
         }
+        // Pre-drop: strip balm items from boss-fight participants before the inventory drops.
+        maxigregrze.cobblesafari.csboss.BossBattleManager.onPlayerDeath(sp);
         if (!DimensionTimerDeathHandler.allowVanillaDeath(sp)) {
             event.setCanceled(true);
         }

@@ -21,6 +21,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -29,6 +30,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -540,6 +542,7 @@ public final class BossBattleManager {
         ServerLevel level = server.getLevel(s.getDimension());
         if (level != null) {
             stopBossMusic(server, s);
+            purgeBalmsAtFightEnd(server, level, s);
             removeEntity(level, s.getBossUuid());
             removeEntity(level, s.getSummonProjectileUuid());
             removeEntity(level, s.getPortalUuid()); // hard cut, no closing animation
@@ -597,9 +600,17 @@ public final class BossBattleManager {
                 triggerWinAdvancements(level, s);
                 maxigregrze.cobblesafari.csmusic.DimensionalMusicManager.onBossWin(s.aliveParticipants(level));
                 s.getBossBar().removeAllPlayers();
-            } else if (current.giveRewardsBeforeSecondPhase()) {
-                // Transition: this phase's rewards before the next (music/bar kept).
-                RewardService.grant(level, s);
+            } else {
+                if (current.giveRewardsBeforeSecondPhase()) {
+                    // Transition: this phase's rewards before the next (bar kept).
+                    RewardService.grant(level, s);
+                }
+                // Next phase's music starts the moment the death animation begins (cut + intro,
+                // or synced crossfade when the two tracks are musically related).
+                if (nextDef.music() != null && !nextDef.music().isBlank()) {
+                    maxigregrze.cobblesafari.csmusic.DimensionalMusicManager
+                            .onBossStart(s.aliveParticipants(level), nextDef.music());
+                }
             }
         }
     }
@@ -633,9 +644,7 @@ public final class BossBattleManager {
             boss.setPos(s.getArenaCenter().x, standY + s.getEntranceHeight(), s.getArenaCenter().z);
             boss.setDeltaMovement(Vec3.ZERO);
         }
-        if (nextDef.music() != null && !nextDef.music().isBlank()) {
-            maxigregrze.cobblesafari.csmusic.DimensionalMusicManager.onBossStart(alive, nextDef.music());
-        }
+        // Music already switched at the start of the death animation (startDeathSequence).
         for (ServerPlayer p : alive) {
             s.getBossBar().addPlayer(p);
         }
@@ -660,6 +669,7 @@ public final class BossBattleManager {
         SESSIONS.remove(s.getId());
         ServerLevel level = server.getLevel(s.getDimension());
         if (level != null) {
+            purgeBalmsAtFightEnd(server, level, s);
             if (level.getEntity(s.getBossUuid()) instanceof CsBossEntity boss) {
                 level.sendParticles(ParticleTypes.EXPLOSION_EMITTER,
                         boss.getX(), boss.getY() + boss.getBbHeight() * 0.5, boss.getZ(), 1, 0, 0, 0, 0);
@@ -788,6 +798,87 @@ public final class BossBattleManager {
         }
         s.reduceRemainingByPercent(CsBossSettings.get().getBalmBossDamagePercent());
         s.getBossBar().setProgress(s.progress());
+    }
+
+    // --- Balm purge ------------------------------------------------------------
+
+    /**
+     * A player died: if they are a (non-discarded) participant of an active fight and not in
+     * creative mode, strip all balm-tagged items from their inventory. Called from the loader
+     * death hooks, <b>before</b> the vanilla inventory drop.
+     */
+    public static void onPlayerDeath(ServerPlayer player) {
+        if (player.isCreative()) {
+            return;
+        }
+        for (BossBattleSession s : SESSIONS.values()) {
+            ParticipantState st = s.getParticipants().get(player.getUUID());
+            if (st != null && !st.discarded) {
+                stripBalms(player);
+                return;
+            }
+        }
+    }
+
+    private static void stripBalms(ServerPlayer player) {
+        player.getInventory().clearOrCountMatchingItems(
+                stack -> stack.is(maxigregrze.cobblesafari.init.ModItemTags.BALM),
+                -1, player.inventoryMenu.getCraftSlots());
+    }
+
+    /** Fight end: strips balms from online participants (non-creative) + balm drops in the arena. */
+    private static void purgeBalmsAtFightEnd(MinecraftServer server, ServerLevel level, BossBattleSession s) {
+        for (UUID uuid : s.getParticipants().keySet()) { // all participants, discarded included
+            ServerPlayer p = server.getPlayerList().getPlayer(uuid);
+            if (p != null && !p.isCreative()) {
+                stripBalms(p);
+            }
+        }
+        double r = Math.max(s.getPlayerRadius(), s.getBlockRadius());
+        Vec3 c = s.getArenaCenter();
+        net.minecraft.world.phys.AABB area = new net.minecraft.world.phys.AABB(
+                c.x - r, level.getMinBuildHeight(), c.z - r,
+                c.x + r, level.getMaxBuildHeight(), c.z + r);
+        for (net.minecraft.world.entity.item.ItemEntity item : level.getEntitiesOfClass(
+                net.minecraft.world.entity.item.ItemEntity.class, area,
+                e -> e.getItem().is(maxigregrze.cobblesafari.init.ModItemTags.BALM))) {
+            item.discard();
+        }
+    }
+
+    // --- Arena restriction queries ----------------------------------------------
+
+    /**
+     * True if {@code pos} is in the vicinity (horizontal square, any height) of an active arena
+     * of {@code dim}. Used to block wild Pokémon spawns around a fight.
+     */
+    public static boolean isNearActiveArena(ResourceKey<Level> dim, BlockPos pos) {
+        for (BossBattleSession s : SESSIONS.values()) {
+            if (!s.getDimension().equals(dim)) {
+                continue;
+            }
+            double r = Math.max(s.getPlayerRadius(), s.getBlockRadius());
+            Vec3 c = s.getArenaCenter();
+            if (Math.abs(pos.getX() + 0.5 - c.x) <= r && Math.abs(pos.getZ() + 0.5 - c.z) <= r) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * True if {@code pos} is inside the arena bounds (playerRadius + arenaYTolerance) of an
+     * active session of {@code dim} — same bounds as participant capture. Used to block
+     * Pokémon send-out during a fight.
+     */
+    public static boolean isInsideActiveArena(ResourceKey<Level> dim, Vec3 pos) {
+        int yTol = CsBossSettings.get().getArenaYTolerance();
+        for (BossBattleSession s : SESSIONS.values()) {
+            if (s.getDimension().equals(dim) && s.withinArena(pos, yTol)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // --- Command API ---------------------------------------------------------

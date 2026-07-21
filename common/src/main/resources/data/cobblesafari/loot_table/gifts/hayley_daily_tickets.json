@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:gift",
+  "pools": [
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 2,
+        "max": 4
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "cobblesafari:ticket_wondertrade",
+          "weight": 9
+        },
+        {
+          "type": "minecraft:item",
+          "name": "cobblesafari:ticket_gts",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

@@ -170,8 +170,49 @@ public final class GtsService {
         BANNED_WISH,
         INVALID_LEVEL_BUCKET,
         INCOMPATIBLE_GENDER,
-        ALREADY_HAS_OFFER,
+        LIMIT_REACHED,
         ERROR
+    }
+
+    public enum UseTicketResult {
+        SUCCESS,
+        AT_MAX
+    }
+
+    /** Simultaneous-offer limit effective for a player (base + ticket bonus, capped). */
+    public static int getAllowedOfferCount(MinecraftServer server, UUID playerId) {
+        GtsSettings cfg = GtsSettings.get();
+        int extra = GtsSavedData.get(server).getExtraOfferSlots(playerId);
+        return Math.min(cfg.getMaxOffersPerPlayer() + extra, cfg.getMaxOffersWithUpgrades());
+    }
+
+    /** Server-authoritative; grants +1 extra offer slot unless the effective limit is already at the cap. */
+    public static UseTicketResult tryUseGtsTicket(MinecraftServer server, UUID playerId) {
+        GtsSettings cfg = GtsSettings.get();
+        GtsSavedData data = GtsSavedData.get(server);
+        int extra = data.getExtraOfferSlots(playerId);
+        if (cfg.getMaxOffersPerPlayer() + extra >= cfg.getMaxOffersWithUpgrades()) {
+            return UseTicketResult.AT_MAX;
+        }
+        data.setExtraOfferSlots(playerId, extra + 1);
+        return UseTicketResult.SUCCESS;
+    }
+
+    /**
+     * A successful trade consumes one extra slot of the depositor — only when the bonus was actually
+     * occupied (offer count before removal above the base). Expiry, admin removal and manual retrieve
+     * never consume the bonus.
+     */
+    private static void consumeExtraSlotOnTrade(GtsSavedData data, UUID depositorUuid) {
+        int extra = data.getExtraOfferSlots(depositorUuid);
+        if (extra <= 0) {
+            return;
+        }
+        // Evaluated after data.removeOffer(offerId): +1 restores the pre-removal count.
+        int before = data.findOffersByDepositor(depositorUuid).size() + 1;
+        if (before > GtsSettings.get().getMaxOffersPerPlayer()) {
+            data.setExtraOfferSlots(depositorUuid, extra - 1);
+        }
     }
 
     public enum ValidateSpeciesResult {
@@ -240,6 +281,24 @@ public final class GtsService {
             GtsOffer.ShinyWish shinyFilter) {
         return searchOffers(
                 player.getServer(), page, speciesFilter, genderFilter, shinyFilter, player.getUUID());
+    }
+
+    /**
+     * Offers deposited by the player himself, newest first, paginated by 10. Unlike the Seek search,
+     * locked offers are included: the owner must see everything he deposited (retrieving a locked
+     * offer is still rejected server-side).
+     */
+    public static SearchResult myOffers(ServerPlayer player, int page) {
+        GtsSavedData data = GtsSavedData.get(player.getServer());
+        List<GtsOffer> own = new ArrayList<>(data.findOffersByDepositor(player.getUUID()));
+        own.sort((a, b) -> Integer.compare(b.getId(), a.getId()));
+        int pageSize = 10;
+        int totalPages = Math.max(1, (own.size() + pageSize - 1) / pageSize);
+        int p = Math.max(1, Math.min(page, totalPages));
+        int from = (p - 1) * pageSize;
+        int to = Math.min(own.size(), from + pageSize);
+        List<GtsOffer> pageOffers = from >= own.size() ? List.of() : own.subList(from, to);
+        return new SearchResult(p, totalPages, pageOffers);
     }
 
     public static SearchResult searchOffers(
@@ -340,8 +399,9 @@ public final class GtsService {
             GtsOffer.ShinyWish wishShiny) {
         GtsSettings cfg = GtsSettings.get();
         GtsSavedData data = GtsSavedData.get(player.getServer());
-        if (!data.findOffersByDepositor(player.getUUID()).isEmpty()) {
-            return DepositResult.ALREADY_HAS_OFFER;
+        if (data.findOffersByDepositor(player.getUUID()).size()
+                >= getAllowedOfferCount(player.getServer(), player.getUUID())) {
+            return DepositResult.LIMIT_REACHED;
         }
         PlayerPartyStore party = Cobblemon.INSTANCE.getStorage().getParty(player);
         Pokemon offered = party.get(internalSlot0To5);
@@ -1004,6 +1064,9 @@ public final class GtsService {
             }
             offer.clearLock();
             PENDING_BY_PLAYER.remove(player.getUUID());
+            if (!uniqueOffer) {
+                consumeExtraSlotOnTrade(data, offer.getDepositorUuid());
+            }
             data.setDirty();
             int gtsTrades = maxigregrze.cobblesafari.init.ModStats.awardAndGet(
                     player, maxigregrze.cobblesafari.init.ModStats.GTS_TRADES);

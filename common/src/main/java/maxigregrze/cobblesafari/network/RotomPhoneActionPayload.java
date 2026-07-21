@@ -16,6 +16,7 @@ public record RotomPhoneActionPayload(
     public static final int ACTION_OPEN_PC = 2;
     public static final int ACTION_CLOSE = 3;
     public static final int ACTION_TOGGLE_ROTO_GLIDE = 4;
+    public static final int ACTION_TOGGLE_WALLPAPER = 5;
 
     private static final int MAX_DATA_LEN = 128;
 

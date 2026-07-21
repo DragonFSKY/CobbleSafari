@@ -14,6 +14,7 @@ import com.cobblemon.mod.common.util.math.QuaternionUtilsKt;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
 import maxigregrze.cobblesafari.gts.GenderFilter;
+import maxigregrze.cobblesafari.mixin.client.EditBoxAccessor;
 import maxigregrze.cobblesafari.gts.GtsOffer;
 import maxigregrze.cobblesafari.gts.GtsService;
 import maxigregrze.cobblesafari.network.GtsAppPayload;
@@ -21,6 +22,7 @@ import maxigregrze.cobblesafari.network.GtsAppResultPayload;
 import maxigregrze.cobblesafari.platform.Services;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -38,6 +40,8 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
     private enum SubScreen {
         LOADING,
         BEGIN,
+        MY_OFFERS,
+        CONFIRM_RETRIEVE,
         SELECT,
         PARAMETERS,
         CONFIRM,
@@ -60,14 +64,6 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
     private static final String GTS_EXIT = "gui.cobblesafari.rotomphone.gts.exit";
     private static final String STATUS_SUCCESS = "SUCCESS";
 
-    /** Begin hub layout modes (retrieve confirmation is local UI). */
-    private enum BeginBeginMode {
-        NO_OFFER,
-        HAS_OFFER,
-        HAS_SUCCESS,
-        CONFIRM_RETRIEVE
-    }
-
     private static final ResourceLocation TEX_GTS_LOGO = loc("gts/rotomphone_gui_icon_gts.png");
     private static final ResourceLocation TEX_DOUBLE = loc("rotomphone_gui_icon_double.png");
     private static final ResourceLocation TEX_RIGHT = loc("rotomphone_gui_icon_right.png");
@@ -78,7 +74,6 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
     private static final ResourceLocation TEX_VALID = loc("gts/rotomphone_gui_icon_valid.png");
     private static final ResourceLocation TEX_INVALID = loc("gts/rotomphone_gui_icon_invalid.png");
 
-    private static final float SCALED_TEXT_Y_OFFSET = -7f;
     private static final int PARTY_SLOT_SIZE = 32;
     private static final float PARTY_SLOT_BASE_SCALE = 3.5f;
     private static final float PARTY_SLOT_MODEL_SCALE = 5.5f;
@@ -104,8 +99,8 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
     private static final int CONFIRM_SLOT_CLIP_WIDTH = CONFIRM_SLOT_SIZE * 2;
     private static final float CONFIRM_SLOT_BASE_SCALE = 8.5f;
     private static final float CONFIRM_SLOT_MODEL_SCALE = 6.2f;
-    /** Screen-pixel lift for confirm slots; negative moves the model up. */
-    private static final float CONFIRM_SLOT_MODEL_Y_OFFSET = -30f;
+    /** Screen-pixel lift for confirm slots; negative moves the model up (~1 world block extra, plan 150). */
+    private static final float CONFIRM_SLOT_MODEL_Y_OFFSET = -55f;
     private static final long TRADE_ICON_ROTATION_PERIOD_MS = 4000L;
     private static final int ANIM_DISAPPEAR_FRAME = 4;
     private static final int ANIM_APPEAR_FORWARD_INDEX = 10;
@@ -118,6 +113,8 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
     private static final int SEEK_SUGGESTION_WIDTH = 150;
     /** Dropdown top Y = species box bottom + this offset (4px above prior +2). */
     private static final int SUGGESTION_Y_BELOW_BOX = -2;
+
+    private static final int INPUT_TEXT_COLOR = 0xFF000000;
 
     private static final int CONFIRM_ACTION_Y = 136;
     private static final int HALF_ANIM_EXIT_Y = 136;
@@ -144,12 +141,22 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
     private static final String[] TOOLTIP_STAT_KEYS = {"hp", "atk", "def", "spatk", "spdef", "spd"};
 
     private SubScreen state = SubScreen.LOADING;
-    private BeginBeginMode beginMode = BeginBeginMode.NO_OFFER;
 
     private int offerCount;
     private int ownActiveOfferId = -1;
     private int successCount;
     private int oldestSuccessId = -1;
+    private int usedOffers;
+    private int allowedOffers = 1;
+
+    private List<GtsAppResultPayload.SearchEntry> myOffers = List.of();
+    private int myOffersPage = 1;
+    private int myOffersTotalPages = 1;
+    private int myOffersSelected = -1;
+    private final FloatingState[] myOffersSlotStates = new FloatingState[10];
+    private final Map<Integer, Pokemon> myOffersPokemonCache = new HashMap<>();
+    private int retrieveOfferId = -1;
+    private Component retrievePokemonName = Component.empty();
 
     private int selectedSlot = -1;
 
@@ -221,13 +228,14 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
         }
         for (int i = 0; i < 10; i++) {
             seekSlotStates[i] = new FloatingState();
+            myOffersSlotStates[i] = new FloatingState();
         }
 
-        int pbx = originX + 60;
-        int pby = originY + 58;
-        paramSpeciesBox = new EditBox(this.font, pbx, pby, 226, 28, Component.empty());
+        int pbx = originX + 64;
+        int pby = originY + 68;
+        paramSpeciesBox = new EditBox(this.font, pbx, pby, 220, 12, Component.empty());
         paramSpeciesBox.setMaxLength(64);
-        paramSpeciesBox.setBordered(true);
+        paramSpeciesBox.setBordered(false);
         paramSpeciesBox.setResponder(s -> {
             if (paramSpeciesChecked) {
                 paramSpeciesChecked = false;
@@ -235,11 +243,11 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
             paramSuggestions = SpeciesAutocompleteHelper.suggest(s, 5);
         });
 
-        int sbx = originX + 100;
-        int sby = originY + 58;
-        seekSpeciesBox = new EditBox(this.font, sbx, sby, 144, 28, Component.empty());
+        int sbx = originX + 104;
+        int sby = originY + 68;
+        seekSpeciesBox = new EditBox(this.font, sbx, sby, 136, 12, Component.empty());
         seekSpeciesBox.setMaxLength(64);
-        seekSpeciesBox.setBordered(true);
+        seekSpeciesBox.setBordered(false);
         seekSpeciesBox.setResponder(s -> {
             seekLastTypedAt = System.currentTimeMillis();
             seekDirty = true;
@@ -255,12 +263,13 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
             ownActiveOfferId = p.ownActiveOfferId();
             successCount = p.successCount();
             oldestSuccessId = p.oldestSuccessId();
+            usedOffers = p.usedOffers();
+            allowedOffers = p.allowedOffers();
         }
 
         switch (p.subscreen()) {
             case GtsAppResultPayload.SUB_BEGIN -> {
                 lastErrorKey = "";
-                refreshBeginModeFromServer();
                 if (state == SubScreen.LOADING || state == SubScreen.BEGIN || state == SubScreen.ERROR) {
                     state = SubScreen.BEGIN;
                 }
@@ -286,7 +295,6 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
             }
             case GtsAppResultPayload.SUB_RETRIEVAL -> {
                 retrievePending = false;
-                beginMode = BeginBeginMode.NO_OFFER;
                 if (STATUS_SUCCESS.equals(p.operationResult())) {
                     offeredAnimPokemon = loadPokemon(p.offeredNbt());
                     offeredTradeState = new FloatingState();
@@ -312,6 +320,19 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
                 seekTotalPages = Math.max(1, p.searchTotalPages());
                 seekResults = p.searchEntries() == null ? List.of() : p.searchEntries();
                 seekPokemonCache.clear();
+            }
+            case GtsAppResultPayload.SUB_MY_OFFERS_RESULT -> {
+                successCount = p.successCount();
+                oldestSuccessId = p.oldestSuccessId();
+                usedOffers = p.usedOffers();
+                allowedOffers = p.allowedOffers();
+                myOffersPage = p.searchPage();
+                myOffersTotalPages = Math.max(1, p.searchTotalPages());
+                myOffers = p.searchEntries() == null ? List.of() : p.searchEntries();
+                myOffersPokemonCache.clear();
+                if (myOffersSelected >= myOffers.size()) {
+                    myOffersSelected = -1;
+                }
             }
             case GtsAppResultPayload.SUB_START_TRADE_RESULT -> {
                 if (state != SubScreen.CHECK || !checkLaunched) {
@@ -345,9 +366,6 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
                 tradeConfirmPending = false;
                 resetCheckScreen();
                 lastErrorKey = p.errorKey() == null ? "" : p.errorKey();
-                if (beginMode == BeginBeginMode.CONFIRM_RETRIEVE) {
-                    beginMode = BeginBeginMode.HAS_OFFER;
-                }
                 state = SubScreen.ERROR;
             }
             default -> {
@@ -361,19 +379,6 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
                 || subscreen == GtsAppResultPayload.SUB_DEPOSIT
                 || subscreen == GtsAppResultPayload.SUB_RETRIEVAL
                 || subscreen == GtsAppResultPayload.SUB_ERROR;
-    }
-
-    private void refreshBeginModeFromServer() {
-        if (beginMode == BeginBeginMode.CONFIRM_RETRIEVE) {
-            return;
-        }
-        if (successCount > 0) {
-            beginMode = BeginBeginMode.HAS_SUCCESS;
-        } else if (ownActiveOfferId >= 0) {
-            beginMode = BeginBeginMode.HAS_OFFER;
-        } else {
-            beginMode = BeginBeginMode.NO_OFFER;
-        }
     }
 
     private void applyParamValidateResult(String vr) {
@@ -452,6 +457,14 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
                 renderGtsHeader(graphics, "gui.cobblesafari.rotomphone.gts.title");
                 renderBegin(graphics, mouseX, mouseY);
             }
+            case MY_OFFERS -> {
+                renderGtsHeader(graphics, "gui.cobblesafari.rotomphone.gts.myofferstitle");
+                renderMyOffers(graphics, mouseX, mouseY, partialTick);
+            }
+            case CONFIRM_RETRIEVE -> {
+                renderGtsHeader(graphics, "gui.cobblesafari.rotomphone.gts.title");
+                renderConfirmRetrieve(graphics, mouseX, mouseY);
+            }
             case SELECT -> {
                 renderGtsHeader(graphics, "gui.cobblesafari.rotomphone.gts.selecttitle");
                 renderSelect(graphics, mouseX, mouseY, partialTick);
@@ -491,7 +504,7 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         super.render(graphics, mouseX, mouseY, partialTick);
-        if (state == SubScreen.SELECT && hasShiftDown()) {
+        if (state == SubScreen.SELECT) {
             int slot = hoveredPartySlot(mouseX, mouseY);
             if (slot >= 0) {
                 Pokemon po = getPartyPokemon(slot);
@@ -500,17 +513,31 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
                 }
             }
         }
-        if (state == SubScreen.CONFIRM && hasShiftDown()) {
+        if (state == SubScreen.CONFIRM) {
             if (isInBounds(mouseX, mouseY, originX + 58, originY + 56, CONFIRM_SLOT_SIZE, CONFIRM_SLOT_SIZE)) {
                 Pokemon po = getPartyPokemon(selectedSlot);
                 if (po != null) {
                     graphics.renderComponentTooltip(this.font, buildPokemonTooltip(po), mouseX, mouseY);
                 }
             }
-            if (isInBounds(mouseX, mouseY, originX + 218, originY + 56, CONFIRM_SLOT_SIZE, CONFIRM_SLOT_SIZE)) {
+            if (hasShiftDown() && isInBounds(mouseX, mouseY, originX + 218, originY + 56, CONFIRM_SLOT_SIZE, CONFIRM_SLOT_SIZE)) {
                 Pokemon w = getWishedPreviewPokemon();
                 if (w != null) {
                     graphics.renderComponentTooltip(this.font, buildWishPreviewTooltip(w), mouseX, mouseY);
+                }
+            }
+        }
+        if (state == SubScreen.MY_OFFERS) {
+            int si = hoveredMyOffersSlot(mouseX, mouseY);
+            if (si >= 0 && si < myOffers.size()) {
+                GtsAppResultPayload.SearchEntry e = myOffers.get(si);
+                Pokemon po = getMyOffersPokemon(e);
+                if (po != null) {
+                    if (hasShiftDown()) {
+                        graphics.renderComponentTooltip(this.font, buildPokemonTooltip(po), mouseX, mouseY);
+                    } else {
+                        graphics.renderComponentTooltip(this.font, buildOfferSummaryTooltip(po, e), mouseX, mouseY);
+                    }
                 }
             }
         }
@@ -537,7 +564,7 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
                     graphics.renderComponentTooltip(this.font, buildOfferSummaryTooltip(offered, checkOffer), mouseX, mouseY);
                 }
             }
-            if (hasShiftDown() && !checkCandidates.isEmpty() && matchIndex < checkCandidates.size()) {
+            if (!checkCandidates.isEmpty() && matchIndex < checkCandidates.size()) {
                 Pokemon m = loadPokemon(checkCandidates.get(matchIndex));
                 if (m != null && isInBounds(mouseX, mouseY, originX + 158, originY + 96, 32, 32)) {
                     graphics.renderComponentTooltip(this.font, buildPokemonTooltip(m), mouseX, mouseY);
@@ -563,6 +590,8 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
         }
         return switch (state) {
             case BEGIN -> handleBeginClick(mouseX, mouseY);
+            case MY_OFFERS -> handleMyOffersClick(mouseX, mouseY);
+            case CONFIRM_RETRIEVE -> handleConfirmRetrieveClick(mouseX, mouseY);
             case SELECT -> handleSelectClick(mouseX, mouseY);
             case PARAMETERS -> handleParametersClick(mouseX, mouseY);
             case CONFIRM -> handleConfirmClick(mouseX, mouseY);
@@ -590,9 +619,21 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
     @Override
     protected void onBackButtonClicked() {
         switch (state) {
+            case MY_OFFERS -> {
+                myOffersSelected = -1;
+                state = SubScreen.BEGIN;
+                Services.PLATFORM.sendPayloadToServer(new GtsAppPayload(GtsAppPayload.ACTION_REQUEST_STATE, 0, 0, "", "", ""));
+                return;
+            }
+            case CONFIRM_RETRIEVE -> {
+                if (!retrievePending) {
+                    state = SubScreen.MY_OFFERS;
+                    return;
+                }
+            }
             case SELECT -> {
                 selectedSlot = -1;
-                state = SubScreen.BEGIN;
+                state = SubScreen.MY_OFFERS;
                 return;
             }
             case PARAMETERS -> {
@@ -694,44 +735,130 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
     private void renderBegin(GuiGraphics g, int mx, int my) {
         int theme = getTintColor();
 
-        if (beginMode == BeginBeginMode.CONFIRM_RETRIEVE) {
-            drawScaledCentered(g, Component.translatable("gui.cobblesafari.rotomphone.gts.confirmation"),
-                    originX + 174, originY + 72, 0xFFFFFFFF);
-            if (retrievePending) {
-                drawTinted(g, TEX_DOUBLE, originX + 98, originY + BEGIN_CONFIRM_BUTTON_Y, 72, 32, theme);
-                drawTinted(g, TEX_DOUBLE, originX + 178, originY + BEGIN_CONFIRM_BUTTON_Y, 72, 32, theme);
-            } else {
-                boolean yHov = isInBounds(mx, my, originX + 98, originY + BEGIN_CONFIRM_BUTTON_Y, 72, 32);
-                boolean nHov = isInBounds(mx, my, originX + 178, originY + BEGIN_CONFIRM_BUTTON_Y, 72, 32);
-                drawButton(g, originX + 98, originY + BEGIN_CONFIRM_BUTTON_Y, yHov, theme,
-                        Component.translatable("gui.cobblesafari.rotomphone.gts.yes"));
-                drawButton(g, originX + 178, originY + BEGIN_CONFIRM_BUTTON_Y, nHov, theme,
-                        Component.translatable("gui.cobblesafari.rotomphone.gts.no"));
-            }
-            return;
-        }
-
         drawCenteredStatusLine(g, Component.translatable("gui.cobblesafari.rotomphone.gts.status", offerCount),
                 originX + 174, originY + 72, theme);
 
-        boolean depHov = isInBounds(mx, my, originX + 98, originY + 96, 72, 32);
-        boolean seekHov = isInBounds(mx, my, originX + 178, originY + 96, 72, 32);
-        if (claimPending) {
-            drawTinted(g, TEX_DOUBLE, originX + 98, originY + 96, 72, 32, theme);
-        } else {
-            Component depLabel = switch (beginMode) {
-                case NO_OFFER -> Component.translatable("gui.cobblesafari.rotomphone.gts.deposit");
-                case HAS_OFFER -> Component.translatable("gui.cobblesafari.rotomphone.gts.retrieve");
-                case HAS_SUCCESS -> Component.translatable("gui.cobblesafari.rotomphone.gts.receive");
-                default -> Component.translatable("gui.cobblesafari.rotomphone.gts.deposit");
-            };
-            drawButton(g, originX + 98, originY + 96, depHov, theme, depLabel);
-        }
-        drawButton(g, originX + 178, originY + 96, seekHov, theme, Component.translatable("gui.cobblesafari.rotomphone.gts.seek"));
+        boolean myHov = isInBounds(mx, my, originX + 98, originY + 96, 72, 32);
+        boolean seeHov = isInBounds(mx, my, originX + 178, originY + 96, 72, 32);
+        drawButton(g, originX + 98, originY + 96, myHov, theme,
+                Component.translatable("gui.cobblesafari.rotomphone.gts.myoffers"));
+        drawButton(g, originX + 178, originY + 96, seeHov, theme,
+                Component.translatable("gui.cobblesafari.rotomphone.gts.seeoffers"));
 
         if (!lastErrorKey.isEmpty()) {
             drawScaledCentered(g, Component.translatable(lastErrorKey), originX + 174, originY + 152, 0xFFFFFFFF);
         }
+    }
+
+    private void renderMyOffers(GuiGraphics g, int mx, int my, float partialTick) {
+        int theme = getTintColor();
+
+        if (usedOffers < allowedOffers) {
+            boolean dh = isInBounds(mx, my, originX + 58, originY + 56, 72, 32);
+            drawButton(g, originX + 58, originY + 56, dh, theme,
+                    Component.translatable("gui.cobblesafari.rotomphone.gts.deposit"));
+        } else {
+            drawInactiveButton(g, originX + 58, originY + 56, theme,
+                    Component.translatable("gui.cobblesafari.rotomphone.gts.limit_reached"));
+        }
+
+        if (isMyOffersSelectionValid()) {
+            boolean rh = isInBounds(mx, my, originX + 138, originY + 56, 72, 32);
+            drawButton(g, originX + 138, originY + 56, rh, theme,
+                    Component.translatable("gui.cobblesafari.rotomphone.gts.retrieve"));
+        } else {
+            drawInactiveButton(g, originX + 138, originY + 56, theme,
+                    Component.translatable("gui.cobblesafari.rotomphone.gts.retrieve"));
+        }
+
+        if (isReceiveAvailable()) {
+            boolean ch = isInBounds(mx, my, originX + 218, originY + 56, 72, 32);
+            drawButton(g, originX + 218, originY + 56, ch, theme,
+                    Component.translatable("gui.cobblesafari.rotomphone.gts.receive"));
+        } else {
+            drawInactiveButton(g, originX + 218, originY + 56, theme,
+                    Component.translatable("gui.cobblesafari.rotomphone.gts.receive"));
+        }
+
+        if (myOffers.isEmpty()) {
+            drawScaledCentered(g, Component.translatable("gui.cobblesafari.rotomphone.gts.nooffer"),
+                    originX + 174, originY + 112, 0xFFFFFFFF);
+            return;
+        }
+
+        int slotIdx = 0;
+        for (int slotX : SEEK_SLOT_ROW1_X) {
+            renderMyOffersSlot(g, mx, my, partialTick, theme, slotIdx++, originX + slotX, originY + SEEK_ROW1_Y);
+        }
+        for (int slotX : SEEK_SLOT_ROW2_X) {
+            renderMyOffersSlot(g, mx, my, partialTick, theme, slotIdx++, originX + slotX, originY + SEEK_ROW2_Y);
+        }
+
+        if (myOffersPage > 1) {
+            g.pose().pushPose();
+            g.pose().translate(originX + 58 + 32, originY + 136, 0);
+            g.pose().scale(-1f, 1f, 1f);
+            boolean ph = isInBounds(mx, my, originX + 58, originY + 136, 32, 32);
+            drawTinted(g, TEX_RIGHT, 0, 0, 32, 32, ph ? 0xFFFFFFFF : theme);
+            g.pose().popPose();
+            g.drawCenteredString(this.font, Component.literal(String.valueOf(myOffersPage - 1)),
+                    originX + 58 + 16, originY + 136 + 10, 0xFFFFFFFF);
+        }
+        if (myOffersPage < myOffersTotalPages) {
+            boolean nh = isInBounds(mx, my, originX + 258, originY + 136, 32, 32);
+            drawTinted(g, TEX_RIGHT, originX + 258, originY + 136, 32, 32, nh ? 0xFFFFFFFF : theme);
+            g.drawCenteredString(this.font, Component.literal(String.valueOf(myOffersPage + 1)),
+                    originX + 258 + 16, originY + 136 + 10, 0xFFFFFFFF);
+        }
+    }
+
+    private void renderMyOffersSlot(GuiGraphics g, int mx, int my, float partialTick, int theme, int index, int x, int y) {
+        boolean hovered = isInBounds(mx, my, x, y, 32, 32);
+        boolean selected = index == myOffersSelected;
+        int tint = (hovered || selected) ? 0xFFFFFFFF : theme;
+        drawTinted(g, TEX_EMPTY, x, y, 32, 32, tint);
+        if (index < myOffers.size()) {
+            GtsAppResultPayload.SearchEntry e = myOffers.get(index);
+            Pokemon p = getMyOffersPokemon(e);
+            if (p != null) {
+                drawPokemonInArea(g, p, x, y, PARTY_SLOT_SIZE, PARTY_SLOT_SIZE, 0,
+                        partialTick, myOffersSlotStates[index], PARTY_SLOT_BASE_SCALE, PARTY_SLOT_MODEL_SCALE,
+                        PARTY_SLOT_MODEL_Y_OFFSET);
+            }
+        }
+    }
+
+    private void renderConfirmRetrieve(GuiGraphics g, int mx, int my) {
+        int theme = getTintColor();
+        drawScaledCentered(g, Component.translatable("gui.cobblesafari.rotomphone.gts.confirmation"),
+                originX + 174, originY + 72, 0xFFFFFFFF);
+        if (retrievePending) {
+            drawTinted(g, TEX_DOUBLE, originX + 98, originY + BEGIN_CONFIRM_BUTTON_Y, 72, 32, theme);
+            drawTinted(g, TEX_DOUBLE, originX + 178, originY + BEGIN_CONFIRM_BUTTON_Y, 72, 32, theme);
+        } else {
+            boolean yHov = isInBounds(mx, my, originX + 98, originY + BEGIN_CONFIRM_BUTTON_Y, 72, 32);
+            boolean nHov = isInBounds(mx, my, originX + 178, originY + BEGIN_CONFIRM_BUTTON_Y, 72, 32);
+            drawButton(g, originX + 98, originY + BEGIN_CONFIRM_BUTTON_Y, yHov, theme,
+                    Component.translatable("gui.cobblesafari.rotomphone.gts.yes"));
+            drawButton(g, originX + 178, originY + BEGIN_CONFIRM_BUTTON_Y, nHov, theme,
+                    Component.translatable("gui.cobblesafari.rotomphone.gts.no"));
+        }
+        drawScaledCentered(g, retrievePokemonName, originX + 174, originY + 152, theme);
+    }
+
+    private boolean isMyOffersSelectionValid() {
+        return myOffersSelected >= 0 && myOffersSelected < myOffers.size();
+    }
+
+    private boolean isReceiveAvailable() {
+        return successCount > 0 && oldestSuccessId >= 0 && !claimPending;
+    }
+
+    private void drawInactiveButton(GuiGraphics g, int x, int y, int themeTint, Component label) {
+        int faded = (themeTint & 0x00FFFFFF) | 0x80000000;
+        drawTinted(g, TEX_DOUBLE, x, y, 72, 32, faded);
+        int textY = y + (32 - this.font.lineHeight) / 2;
+        g.drawCenteredString(this.font, label, x + 36, textY, faded);
     }
 
     private void renderSelect(GuiGraphics g, int mx, int my, float partialTick) {
@@ -742,7 +869,8 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
             int y = originY + 56;
             Pokemon p = party.get(i);
             boolean hovered = isInBounds(mx, my, x, y, 32, 32);
-            int tint = hovered ? 0xFFFFFFFF : theme;
+            boolean selected = i == selectedSlot;
+            int tint = (selected || hovered) ? 0xFFFFFFFF : theme;
             drawTinted(g, TEX_EMPTY, x, y, 32, 32, tint);
             if (p != null) {
                 drawPokemonInArea(g, p, x, y, PARTY_SLOT_SIZE, PARTY_SLOT_SIZE, 0,
@@ -763,7 +891,8 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
     private void renderParameters(GuiGraphics g, int mx, int my, float partialTick) {
         int theme = getTintColor();
         syncParamSpeciesBoxLayout();
-        paramSpeciesBox.render(g, mx, my, partialTick);
+        drawTextInputFrame(g, originX + 58, originY + 56, 232, 32, theme);
+        renderSpeciesBoxText(g, paramSpeciesBox);
 
         if (paramSpeciesInvalid) {
             drawBlitWithAlpha(g, TEX_INVALID, originX + 258, originY + 56, 0, 0, 32, 32, 32, 32);
@@ -784,8 +913,10 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
         drawTinted(g, TEX_RIGHT, originX + 218, originY + 96, 32, 32, luHov ? 0xFFFFFFFF : theme);
 
         String levelKey = paramLevelBucket < 0 ? "any" : Integer.toString(paramLevelBucket);
-        drawScaledCentered(g, Component.translatable(GTS_LEVEL_PREFIX + levelKey),
-                originX + 174, originY + 112, theme);
+        // x1 scale, vertically centered on the 32px arrow band at y=96 (same idiom as the countdown digit).
+        int levelTextY = originY + 96 + (32 - this.font.lineHeight) / 2;
+        g.drawCenteredString(this.font, Component.translatable(GTS_LEVEL_PREFIX + levelKey),
+                originX + 174, levelTextY, theme);
 
         if (!paramSpeciesChecked) {
             boolean chHov = isInBounds(mx, my, originX + 138, originY + 136, 72, 32);
@@ -1091,7 +1222,8 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
     private void renderSeek(GuiGraphics g, int mx, int my, float partialTick) {
         int theme = getTintColor();
         syncSeekSpeciesBoxLayout();
-        seekSpeciesBox.render(g, mx, my, partialTick);
+        drawTextInputFrame(g, originX + 98, originY + 56, 152, 32, theme);
+        renderSpeciesBoxText(g, seekSpeciesBox);
 
         boolean gHov = isInBounds(mx, my, originX + 58, originY + 56, 32, 32);
         drawTinted(g, genderTexture(seekGender), originX + 58, originY + 56, 32, 32, gHov ? 0xFFFFFFFF : theme);
@@ -1155,9 +1287,9 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
         }
     }
 
-    /** Offered-pokemon slot X; nudged 40px right in the initial (pre-"Find match") state. */
+    /** Offered-pokemon slot X (same column in both Check states). */
     private int checkOfferedSlotX() {
-        return originX + (checkLaunched ? 178 : 218);
+        return originX + 178;
     }
 
     private void renderCheck(GuiGraphics g, int mx, int my, float partialTick) {
@@ -1176,7 +1308,7 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
         }
 
         g.drawCenteredString(this.font, Component.translatable("gui.cobblesafari.rotomphone.gts.offeredpkmn"),
-                originX + 174, originY + 72, theme);
+                originX + 134, originY + 72, theme);
 
         Pokemon offered = checkOffer == null ? null : getSeekPokemon(checkOffer);
         int ox = checkOfferedSlotX();
@@ -1234,40 +1366,9 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
     }
 
     private boolean handleBeginClick(double mx, double my) {
-        if (beginMode == BeginBeginMode.CONFIRM_RETRIEVE) {
-            if (!retrievePending && isInBounds(mx, my, originX + 98, originY + BEGIN_CONFIRM_BUTTON_Y, 72, 32)) {
-                retrievePending = true;
-                Services.PLATFORM.sendPayloadToServer(
-                        new GtsAppPayload(GtsAppPayload.ACTION_RETRIEVE, ownActiveOfferId, 0, "", "", ""));
-                return true;
-            }
-            if (!retrievePending && isInBounds(mx, my, originX + 178, originY + BEGIN_CONFIRM_BUTTON_Y, 72, 32)) {
-                beginMode = BeginBeginMode.HAS_OFFER;
-                return true;
-            }
-            return super.mouseClicked(mx, my, 0);
-        }
         if (isInBounds(mx, my, originX + 98, originY + 96, 72, 32)) {
-            return switch (beginMode) {
-                case NO_OFFER -> {
-                    selectedSlot = -1;
-                    state = SubScreen.SELECT;
-                    yield true;
-                }
-                case HAS_OFFER -> {
-                    beginMode = BeginBeginMode.CONFIRM_RETRIEVE;
-                    yield true;
-                }
-                case HAS_SUCCESS -> {
-                    if (!claimPending && oldestSuccessId >= 0) {
-                        claimPending = true;
-                        Services.PLATFORM.sendPayloadToServer(
-                                new GtsAppPayload(GtsAppPayload.ACTION_CLAIM, oldestSuccessId, 0, "", "", ""));
-                    }
-                    yield true;
-                }
-                default -> false;
-            };
+            openMyOffers();
+            return true;
         }
         if (isInBounds(mx, my, originX + 178, originY + 96, 72, 32)) {
             state = SubScreen.SEEK;
@@ -1277,6 +1378,82 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
             return true;
         }
         return super.mouseClicked(mx, my, 0);
+    }
+
+    private void openMyOffers() {
+        myOffersPage = 1;
+        myOffersSelected = -1;
+        state = SubScreen.MY_OFFERS;
+        sendMyOffers();
+    }
+
+    private boolean handleMyOffersClick(double mx, double my) {
+        if (usedOffers < allowedOffers && isInBounds(mx, my, originX + 58, originY + 56, 72, 32)) {
+            selectedSlot = -1;
+            state = SubScreen.SELECT;
+            return true;
+        }
+        if (isMyOffersSelectionValid() && isInBounds(mx, my, originX + 138, originY + 56, 72, 32)) {
+            GtsAppResultPayload.SearchEntry e = myOffers.get(myOffersSelected);
+            retrieveOfferId = e.offerId();
+            Pokemon p = getMyOffersPokemon(e);
+            retrievePokemonName = p == null ? Component.empty() : p.getDisplayName(false);
+            retrievePending = false;
+            state = SubScreen.CONFIRM_RETRIEVE;
+            return true;
+        }
+        if (isReceiveAvailable() && isInBounds(mx, my, originX + 218, originY + 56, 72, 32)) {
+            claimPending = true;
+            Services.PLATFORM.sendPayloadToServer(
+                    new GtsAppPayload(GtsAppPayload.ACTION_CLAIM, oldestSuccessId, 0, "", "", ""));
+            return true;
+        }
+        int slot = seekSlotIndexAt((int) mx, (int) my);
+        if (slot >= 0 && slot < myOffers.size()) {
+            myOffersSelected = slot == myOffersSelected ? -1 : slot;
+            return true;
+        }
+        if (myOffersPage > 1 && isInBounds(mx, my, originX + 58, originY + 136, 32, 32)) {
+            myOffersPage--;
+            myOffersSelected = -1;
+            sendMyOffers();
+            return true;
+        }
+        if (myOffersPage < myOffersTotalPages && isInBounds(mx, my, originX + 258, originY + 136, 32, 32)) {
+            myOffersPage++;
+            myOffersSelected = -1;
+            sendMyOffers();
+            return true;
+        }
+        return super.mouseClicked(mx, my, 0);
+    }
+
+    private boolean handleConfirmRetrieveClick(double mx, double my) {
+        if (!retrievePending && isInBounds(mx, my, originX + 98, originY + BEGIN_CONFIRM_BUTTON_Y, 72, 32)) {
+            retrievePending = true;
+            Services.PLATFORM.sendPayloadToServer(
+                    new GtsAppPayload(GtsAppPayload.ACTION_RETRIEVE, retrieveOfferId, 0, "", "", ""));
+            return true;
+        }
+        if (!retrievePending && isInBounds(mx, my, originX + 178, originY + BEGIN_CONFIRM_BUTTON_Y, 72, 32)) {
+            state = SubScreen.MY_OFFERS;
+            return true;
+        }
+        return super.mouseClicked(mx, my, 0);
+    }
+
+    private void sendMyOffers() {
+        Services.PLATFORM.sendPayloadToServer(
+                new GtsAppPayload(GtsAppPayload.ACTION_MY_OFFERS, myOffersPage, 0, "", "", ""));
+    }
+
+    private int hoveredMyOffersSlot(int mx, int my) {
+        int i = seekSlotIndexAt(mx, my);
+        return i < myOffers.size() ? i : -1;
+    }
+
+    private Pokemon getMyOffersPokemon(GtsAppResultPayload.SearchEntry e) {
+        return myOffersPokemonCache.computeIfAbsent(e.offerId(), id -> loadPokemon(e.offeredNbt()));
     }
 
     private boolean handleSelectClick(double mx, double my) {
@@ -1387,7 +1564,7 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
             return false;
         }
         if (isInBounds(mx, my, originX + 138, originY + HALF_ANIM_EXIT_Y, 72, 32)) {
-            finishAnimationReturnBegin();
+            finishAnimationReturnMyOffers();
             return true;
         }
         return super.mouseClicked(mx, my, 0);
@@ -1414,6 +1591,17 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
         claimPending = false;
         state = SubScreen.BEGIN;
         Services.PLATFORM.sendPayloadToServer(new GtsAppPayload(GtsAppPayload.ACTION_REQUEST_STATE, 0, 0, "", "", ""));
+    }
+
+    /** Deposit/retrieval/receive animations return to a refreshed My Offers screen. */
+    private void finishAnimationReturnMyOffers() {
+        resetCheckScreen();
+        selectedSlot = -1;
+        confirmLocked = false;
+        confirmPending = false;
+        retrievePending = false;
+        claimPending = false;
+        openMyOffers();
     }
 
     private boolean handleSeekClick(double mx, double my) {
@@ -1636,20 +1824,20 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
         if (paramSpeciesBox == null) {
             return;
         }
-        paramSpeciesBox.setX(originX + 60);
-        paramSpeciesBox.setY(originY + 58);
-        paramSpeciesBox.setWidth(226);
-        paramSpeciesBox.setHeight(28);
+        paramSpeciesBox.setX(originX + 64);
+        paramSpeciesBox.setY(originY + 68);
+        paramSpeciesBox.setWidth(220);
+        paramSpeciesBox.setHeight(12);
     }
 
     private void syncSeekSpeciesBoxLayout() {
         if (seekSpeciesBox == null) {
             return;
         }
-        seekSpeciesBox.setX(originX + 100);
-        seekSpeciesBox.setY(originY + 58);
-        seekSpeciesBox.setWidth(144);
-        seekSpeciesBox.setHeight(28);
+        seekSpeciesBox.setX(originX + 104);
+        seekSpeciesBox.setY(originY + 68);
+        seekSpeciesBox.setWidth(136);
+        seekSpeciesBox.setHeight(12);
     }
 
     private static String sanitizeSpeciesLine(String raw) {
@@ -1963,22 +2151,6 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
         g.disableScissor();
     }
 
-    private void drawScaledLeftAligned(GuiGraphics g, Component c, int x, int y, int color) {
-        g.pose().pushPose();
-        g.pose().translate(x, y + SCALED_TEXT_Y_OFFSET, 0);
-        g.pose().scale(2f, 2f, 1f);
-        g.drawString(this.font, c, 0, 0, color, false);
-        g.pose().popPose();
-    }
-
-    private void drawScaledCentered(GuiGraphics g, Component c, int x, int y, int color) {
-        g.pose().pushPose();
-        g.pose().translate(x, y + SCALED_TEXT_Y_OFFSET, 0);
-        g.pose().scale(2f, 2f, 1f);
-        g.drawCenteredString(this.font, c, 0, 0, color);
-        g.pose().popPose();
-    }
-
     private void drawBlitWithAlpha(
             GuiGraphics g,
             ResourceLocation tex,
@@ -1998,17 +2170,46 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
         RenderSystem.disableBlend();
     }
 
-    private void drawTinted(GuiGraphics g, ResourceLocation tex, int x, int y, int w, int h, int argb) {
-        float red = ((argb >> 16) & 0xFF) / 255f;
-        float green = ((argb >> 8) & 0xFF) / 255f;
-        float blue = (argb & 0xFF) / 255f;
-        float alpha = ((argb >>> 24) & 0xFF) / 255f;
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        g.setColor(red, green, blue, alpha);
-        g.blit(tex, x, y, 0, 0, w, h, w, h);
-        g.setColor(1f, 1f, 1f, 1f);
-        RenderSystem.disableBlend();
+    /** Input frame: half-opacity white rounded border + half-opacity theme fill, each painted once. */
+    private static void drawTextInputFrame(GuiGraphics g, int x, int y, int w, int h, int theme) {
+        fillRoundedRectWithBorder(g, x, y, w, h, CORNER_R, 0x80FFFFFF, (theme & 0x00FFFFFF) | 0x80000000);
+    }
+
+    /**
+     * Renders an EditBox's text by hand, without the drop shadow vanilla hardcodes (the
+     * NeoForge-only setTextShadow patch is unavailable from common code). Mirrors vanilla's
+     * scrolled view through {@link EditBoxAccessor}; the box itself is never render()ed.
+     */
+    private void renderSpeciesBoxText(GuiGraphics g, EditBox box) {
+        String value = box.getValue();
+        EditBoxAccessor acc = (EditBoxAccessor) (Object) box;
+        int displayPos = Math.min(acc.getDisplayPos(), value.length());
+        String visible = this.font.plainSubstrByWidth(value.substring(displayPos), box.getInnerWidth());
+        int x = box.getX();
+        int y = box.getY();
+
+        if (!visible.isEmpty()) {
+            g.drawString(this.font, visible, x, y, INPUT_TEXT_COLOR, false);
+        }
+
+        int relCursor = box.getCursorPosition() - displayPos;
+        boolean cursorInView = relCursor >= 0 && relCursor <= visible.length();
+        if (box.isFocused() && cursorInView && (System.currentTimeMillis() / 300L) % 2L == 0L) {
+            int caretX = x + this.font.width(visible.substring(0, relCursor));
+            if (box.getCursorPosition() < value.length()) {
+                g.fill(caretX, y - 1, caretX + 1, y + 1 + this.font.lineHeight, INPUT_TEXT_COLOR);
+            } else {
+                g.drawString(this.font, "_", caretX, y, INPUT_TEXT_COLOR, false);
+            }
+        }
+
+        int relHighlight = Math.max(0, Math.min(acc.getHighlightPos() - displayPos, visible.length()));
+        if (cursorInView && relHighlight != relCursor) {
+            int selA = x + this.font.width(visible.substring(0, relCursor));
+            int selB = x + this.font.width(visible.substring(0, relHighlight));
+            g.fill(RenderType.guiTextHighlight(), Math.min(selA, selB), y - 1, Math.max(selA, selB),
+                    y + 1 + this.font.lineHeight, 0xFF0000FF);
+        }
     }
 
     private void drawButton(GuiGraphics g, int x, int y, boolean hovered, int themeTint, Component label) {

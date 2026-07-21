@@ -35,8 +35,9 @@ public class ChatProgressSavedData extends SavedData {
         BEFORE, // 0 — streaming messagesBefore
         TASK, // 1 — task bubble shown, awaiting claim
         AFTER, // 2 — streaming messagesAfter
-        WAIT_NEXT_DAY, // 3 — step done, waiting for the next reset
-        DONE; // 4 — conversation finished
+        WAIT_NEXT_DAY, // 3 — step ready, held until the next daily reset
+        DONE, // 4 — conversation finished
+        WAIT_UNLOCK; // 5 — step held (and hidden) until its unlockingAdvancement is obtained
 
         public static Phase fromInt(int i) {
             Phase[] v = values();
@@ -62,6 +63,12 @@ public class ChatProgressSavedData extends SavedData {
         /** {@code Long.MIN_VALUE} = unset; lazily snapshotted on first progress read of a stat-gated step. */
         public long statBaseline = Long.MIN_VALUE;
         public long lastResetEpochDay = Long.MIN_VALUE;
+        /**
+         * Set while in {@link Phase#WAIT_UNLOCK}: the previous step asked for a {@code waitNextDay}, which
+         * must only start counting once the gate opens. The unlock therefore hands over to
+         * {@link Phase#WAIT_NEXT_DAY} rather than straight to {@link Phase#BEFORE}.
+         */
+        public boolean pendingWaitNextDay;
 
         /** True once the base {@code steps} are finished (the conversation entered the repeatable phase). */
         public boolean baseComplete;
@@ -73,6 +80,18 @@ public class ChatProgressSavedData extends SavedData {
         public final List<ResolvedSeries> history = new ArrayList<>();
         /** Ids of {@code isUnique} series already completed (excluded from future rolls). */
         public final Set<String> completedUnique = new HashSet<>();
+        /**
+         * Ids of <em>every</em> series (unique or not) completed at least once — the ledger the
+         * {@code prerequisite} check reads. Never pruned.
+         */
+        public final Set<String> completedOnce = new HashSet<>();
+        /**
+         * Indices of base steps whose tag reward fell back to the loot pool, so the transcript keeps
+         * showing their {@code fallbackMessagesAfter} forever.
+         */
+        public final Set<Integer> baseFallbackSteps = new HashSet<>();
+        /** Same, for the <em>active</em> series only; frozen into {@link ResolvedSeries} on resolution. */
+        public final Set<Integer> seriesFallbackSteps = new HashSet<>();
 
         /**
          * Appends a resolved series to the transcript while keeping {@link #history} bounded (A3):
@@ -103,6 +122,25 @@ public class ChatProgressSavedData extends SavedData {
         public long resolvedEpochDay = Long.MIN_VALUE;
         /** Frozen {@code doDisapear} flag of the series at resolution time. */
         public boolean doDisapear;
+        /** Frozen set of step indices of this run that resolved through the reward fallback. */
+        public final Set<Integer> fallbackSteps = new HashSet<>();
+    }
+
+    private static int[] toIntArray(Set<Integer> set) {
+        int[] out = new int[set.size()];
+        int i = 0;
+        for (Integer v : set) {
+            out[i++] = v;
+        }
+        return out;
+    }
+
+    private static void readIntArray(CompoundTag tag, String key, Set<Integer> into) {
+        if (tag.contains(key, Tag.TAG_INT_ARRAY)) {
+            for (int v : tag.getIntArray(key)) {
+                into.add(v);
+            }
+        }
     }
 
     private final Map<UUID, Map<String, ProgressEntry>> byPlayer = new ConcurrentHashMap<>();
@@ -163,6 +201,7 @@ public class ChatProgressSavedData extends SavedData {
                     entry.claimed = e.getBoolean("Claimed");
                     entry.statBaseline = e.getLong("Baseline");
                     entry.lastResetEpochDay = e.contains("StepReset") ? e.getLong("StepReset") : Long.MIN_VALUE;
+                    entry.pendingWaitNextDay = e.getBoolean("PendWait");
                     // v2 fields (absent in pre-142 saves → defaults; the service repairs the rest).
                     entry.baseComplete = e.getBoolean("BaseDone");
                     entry.activeSeriesId = e.contains("Series") ? e.getString("Series") : "";
@@ -181,6 +220,7 @@ public class ChatProgressSavedData extends SavedData {
                             rs.stepReached = hc.getInt("Step");
                             rs.resolvedEpochDay = hc.getLong("Day");
                             rs.doDisapear = hc.getBoolean("Hide");
+                            readIntArray(hc, "Fallbacks", rs.fallbackSteps);
                             entry.history.add(rs);
                         }
                         // Compact legacy oversized saves on first load (A3).
@@ -195,6 +235,25 @@ public class ChatProgressSavedData extends SavedData {
                             }
                         }
                     }
+                    if (e.contains("Once", Tag.TAG_LIST)) {
+                        ListTag once = e.getList("Once", Tag.TAG_STRING);
+                        for (int u = 0; u < once.size(); u++) {
+                            String sid = once.getString(u);
+                            if (!sid.isEmpty()) {
+                                entry.completedOnce.add(sid);
+                            }
+                        }
+                    } else {
+                        // Pre-prerequisite save: rebuild the ledger from what was already recorded.
+                        entry.completedOnce.addAll(entry.completedUnique);
+                        for (ResolvedSeries rs : entry.history) {
+                            if (rs.completed) {
+                                entry.completedOnce.add(rs.seriesId);
+                            }
+                        }
+                    }
+                    readIntArray(e, "BaseFallbacks", entry.baseFallbackSteps);
+                    readIntArray(e, "SeriesFallbacks", entry.seriesFallbackSteps);
                     map.put(convId, entry);
                 }
                 if (!map.isEmpty()) {
@@ -221,6 +280,7 @@ public class ChatProgressSavedData extends SavedData {
                 e.putBoolean("Claimed", entry.claimed);
                 e.putLong("Baseline", entry.statBaseline);
                 e.putLong("StepReset", entry.lastResetEpochDay);
+                e.putBoolean("PendWait", entry.pendingWaitNextDay);
                 e.putBoolean("BaseDone", entry.baseComplete);
                 e.putString("Series", entry.activeSeriesId == null ? "" : entry.activeSeriesId);
                 e.putLong("SeriesStart", entry.seriesStartEpochDay);
@@ -233,6 +293,9 @@ public class ChatProgressSavedData extends SavedData {
                         hc.putInt("Step", rs.stepReached);
                         hc.putLong("Day", rs.resolvedEpochDay);
                         hc.putBoolean("Hide", rs.doDisapear);
+                        if (!rs.fallbackSteps.isEmpty()) {
+                            hc.putIntArray("Fallbacks", toIntArray(rs.fallbackSteps));
+                        }
                         hist.add(hc);
                     }
                     e.put("History", hist);
@@ -243,6 +306,19 @@ public class ChatProgressSavedData extends SavedData {
                         uniq.add(net.minecraft.nbt.StringTag.valueOf(sid));
                     }
                     e.put("Unique", uniq);
+                }
+                if (!entry.completedOnce.isEmpty()) {
+                    ListTag once = new ListTag();
+                    for (String sid : entry.completedOnce) {
+                        once.add(net.minecraft.nbt.StringTag.valueOf(sid));
+                    }
+                    e.put("Once", once);
+                }
+                if (!entry.baseFallbackSteps.isEmpty()) {
+                    e.putIntArray("BaseFallbacks", toIntArray(entry.baseFallbackSteps));
+                }
+                if (!entry.seriesFallbackSteps.isEmpty()) {
+                    e.putIntArray("SeriesFallbacks", toIntArray(entry.seriesFallbackSteps));
                 }
                 list.add(e);
             }

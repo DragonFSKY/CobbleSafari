@@ -39,7 +39,7 @@ public class AlphaSpawnBoostInfluence implements SpawningInfluence {
         if (player.getRandom().nextFloat() >= chance) {
             return;
         }
-        CobblemonFishingInterop.alterAlphaAttempt(pe);
+        //CobblemonFishingInterop.alterAlphaAttempt(pe); @TODO ALPHA
     }
 
     private int activeAlphaLevel() {

@@ -46,7 +46,6 @@ public class RotomPhoneChatScreen extends RotomPhoneBaseScreen {
     private static final int BUBBLE_PAD = 4;
     private static final int BUBBLE_PAD_V = 4;
     private static final int BUBBLE_TEXT_W = BUBBLE_W - BUBBLE_PAD * 2;
-    private static final int CORNER_R = 5;
 
     private static final int TYPING_W = 40;
     private static final int TYPING_H = 12;
@@ -225,7 +224,20 @@ public class RotomPhoneChatScreen extends RotomPhoneBaseScreen {
         if (stream == Stream.IDLE || now < nextEventAt) {
             return;
         }
+        advanceStream();
+    }
 
+    /**
+     * Reveals the <em>next</em> streaming message, or finalizes the stream once the last one is shown
+     * (BEFORE → advance to the task ; AFTER → step transition). Shared by the {@link #tick()} timer and
+     * click-to-skip, so a click reveals exactly one message (one click per bubble). No-op when idle.
+     */
+    private void advanceStream() {
+        ChatAppResultPayload.StepView cur = currentStep();
+        if (cur == null || stream == Stream.IDLE || activeConvId == null) {
+            return;
+        }
+        long now = System.currentTimeMillis();
         if (stream == Stream.BEFORE) {
             int total = cur.before().size();
             if (localBeforeShown < total) {
@@ -270,7 +282,7 @@ public class RotomPhoneChatScreen extends RotomPhoneBaseScreen {
         Component title = activeConvId != null
                 ? Component.literal(activeDisplayName())
                 : Component.translatable("gui.cobblesafari.rotomphone.chat.no_contact");
-        drawScaledCentered(g, title, originX + 194, originY + 21, theme);
+        drawScaledCenteredNoShadow(g, title, originX + 194, originY + 21, theme);
 
         renderContacts(g, mouseX, mouseY);
         if (activeConvId != null && state != null) {
@@ -542,6 +554,13 @@ public class RotomPhoneChatScreen extends RotomPhoneBaseScreen {
                     y += CONTACT_BTN_SIZE + CONTACT_GAP;
                 }
             }
+            // Click in the chat area while streaming reveals the next message immediately (one per click).
+            if (stream != Stream.IDLE
+                    && isInBounds(mouseX, mouseY, originX + CHAT_X0, originY + CHAT_Y0,
+                    CHAT_X1 - CHAT_X0, CHAT_Y1 - CHAT_Y0)) {
+                advanceStream();
+                return true;
+            }
             if (tryClickTaskBar((int) mouseX, (int) mouseY)) {
                 return true;
             }
@@ -651,42 +670,6 @@ public class RotomPhoneChatScreen extends RotomPhoneBaseScreen {
         g.fill(x1 - 1, y0, x1, y1, argb);
     }
 
-    /**
-     * Per-row horizontal inset for a rounded corner, indexed by distance (in pixels) from the
-     * corner edge (0 = the outermost row/column of the corner). Mirrored on every axis to round
-     * each of the four corners. Tuned to give a soft, fully-opaque rounded look rather than a
-     * straight diagonal bevel. Length matches {@link #CORNER_R}.
-     */
-    private static final int[] CORNER_INSET = {4, 2, 1, 1, 0};
-
-    private static int cornerInset(int dist) {
-        return dist >= 0 && dist < CORNER_INSET.length ? CORNER_INSET[dist] : 0;
-    }
-
-    /** Filled rectangle with rounded corners selected by the four flags. */
-    private void fillRoundedRect(GuiGraphics g, int x, int y, int w, int h, int r, int argb,
-                                 boolean tl, boolean tr, boolean bl, boolean br) {
-        for (int row = 0; row < h; row++) {
-            int leftInset = 0;
-            int rightInset = 0;
-            int topDist = row;
-            int botDist = h - 1 - row;
-            if (tl && topDist < r) {
-                leftInset = Math.max(leftInset, cornerInset(topDist));
-            }
-            if (bl && botDist < r) {
-                leftInset = Math.max(leftInset, cornerInset(botDist));
-            }
-            if (tr && topDist < r) {
-                rightInset = Math.max(rightInset, cornerInset(topDist));
-            }
-            if (br && botDist < r) {
-                rightInset = Math.max(rightInset, cornerInset(botDist));
-            }
-            g.fill(x + leftInset, y + row, x + w - rightInset, y + row + 1, argb);
-        }
-    }
-
     private void drawTypingFrame(GuiGraphics g, int x, int y, int frame) {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -696,21 +679,8 @@ public class RotomPhoneChatScreen extends RotomPhoneBaseScreen {
         RenderSystem.disableBlend();
     }
 
-    private void drawTinted(GuiGraphics g, ResourceLocation tex, int x, int y, int w, int h, int argb) {
-        float red = ((argb >> 16) & 0xFF) / 255f;
-        float green = ((argb >> 8) & 0xFF) / 255f;
-        float blue = (argb & 0xFF) / 255f;
-        float alpha = ((argb >>> 24) & 0xFF) / 255f;
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        g.setColor(red, green, blue, alpha);
-        g.blit(tex, x, y, 0, 0, w, h, w, h);
-        g.setColor(1f, 1f, 1f, 1f);
-        RenderSystem.disableBlend();
-    }
-
-    /** Contact-name header: ×2 scale, centered, NO drop shadow. */
-    private void drawScaledCentered(GuiGraphics g, Component c, int x, int y, int color) {
+    /** Contact-name header: ×2 scale, centered, NO drop shadow (unlike the shared drawScaledCentered). */
+    private void drawScaledCenteredNoShadow(GuiGraphics g, Component c, int x, int y, int color) {
         g.pose().pushPose();
         g.pose().translate(x, y - 7f, 0);
         g.pose().scale(2f, 2f, 1f);

@@ -26,6 +26,7 @@ public record GtsAppPayload(
     public static final int ACTION_START_TRADE = 6;
     public static final int ACTION_CONFIRM_TRADE = 7;
     public static final int ACTION_ABORT_TRADE = 8;
+    public static final int ACTION_MY_OFFERS = 9;
 
     public static final CustomPacketPayload.Type<GtsAppPayload> TYPE =
             new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(CobbleSafari.MOD_ID, "gts_app_action"));

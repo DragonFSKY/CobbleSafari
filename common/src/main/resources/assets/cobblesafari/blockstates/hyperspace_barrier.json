@@ -1,8 +1,12 @@
 {
   "variants": {
-    "facing=north": { "model": "cobblesafari:block/hyperspace_barrier" },
-    "facing=east":  { "model": "cobblesafari:block/hyperspace_barrier", "y": 90 },
-    "facing=south": { "model": "cobblesafari:block/hyperspace_barrier", "y": 180 },
-    "facing=west":  { "model": "cobblesafari:block/hyperspace_barrier", "y": 270 }
+    "border=false,facing=north": { "model": "cobblesafari:block/hyperspace_barrier" },
+    "border=false,facing=east":  { "model": "cobblesafari:block/hyperspace_barrier", "y": 90 },
+    "border=false,facing=south": { "model": "cobblesafari:block/hyperspace_barrier", "y": 180 },
+    "border=false,facing=west":  { "model": "cobblesafari:block/hyperspace_barrier", "y": 270 },
+    "border=true,facing=north": { "model": "cobblesafari:block/hyperspace_barrier_border" },
+    "border=true,facing=east":  { "model": "cobblesafari:block/hyperspace_barrier_border", "y": 90 },
+    "border=true,facing=south": { "model": "cobblesafari:block/hyperspace_barrier_border", "y": 180 },
+    "border=true,facing=west":  { "model": "cobblesafari:block/hyperspace_barrier_border", "y": 270 }
   }
 }

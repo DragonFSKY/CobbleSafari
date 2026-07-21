@@ -23,6 +23,8 @@ import java.util.List;
 
 public class RotomPhoneItem extends Item {
 
+    private static final String KEY_CUSTOM_WALLPAPER = "customWallpaper";
+
     public RotomPhoneItem(Properties properties) {
         super(properties);
     }
@@ -105,6 +107,13 @@ public class RotomPhoneItem extends Item {
         return tag.getBoolean("rotoGlide");
     }
 
+    public static boolean isCustomWallpaperEnabled(ItemStack stack) {
+        CompoundTag tag = getPhoneTag(stack);
+        // Retro-compat: a phone predating this option has no key; the default is ENABLED.
+        // (CompoundTag.getBoolean returns false for a missing key, hence the explicit contains().)
+        return !tag.contains(KEY_CUSTOM_WALLPAPER) || tag.getBoolean(KEY_CUSTOM_WALLPAPER);
+    }
+
     public static void setRotomName(ItemStack stack, String name) {
         modifyPhoneTag(stack, tag -> tag.putString("name", name));
     }
@@ -123,6 +132,10 @@ public class RotomPhoneItem extends Item {
 
     public static void setRotoGlideEnabled(ItemStack stack, boolean enabled) {
         modifyPhoneTag(stack, tag -> tag.putBoolean("rotoGlide", enabled));
+    }
+
+    public static void setCustomWallpaperEnabled(ItemStack stack, boolean enabled) {
+        modifyPhoneTag(stack, tag -> tag.putBoolean(KEY_CUSTOM_WALLPAPER, enabled));
     }
 
     private static CompoundTag getPhoneTag(ItemStack stack) {

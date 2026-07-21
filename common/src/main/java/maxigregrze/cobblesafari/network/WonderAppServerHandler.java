@@ -111,7 +111,10 @@ public final class WonderAppServerHandler {
         WonderTradeSettings cfg = WonderTradeSettings.get();
         int tickets = cfg.isUnlimitedDailyTrades()
                 ? -1
-                : WonderTradeService.getRemainingCredits(player);
+                : WonderTradeService.getDailyCreditsRemaining(player);
+        int bonusTickets = cfg.isUnlimitedDailyTrades()
+                ? 0
+                : WonderTradeService.getBonusTickets(server, player.getUUID());
 
         WonderTradeSavedData data = WonderTradeSavedData.get(server);
         boolean hasEvent = data.hasActiveEvent();
@@ -152,6 +155,7 @@ public final class WonderAppServerHandler {
                 poolEntries,
                 offeredNbt,
                 receivedNbt,
-                errorKey == null ? "" : errorKey));
+                errorKey == null ? "" : errorKey,
+                bonusTickets));
     }
 }

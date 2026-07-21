@@ -38,6 +38,7 @@ public class ModCreativeTabs {
                 output.accept(ModItems.TICKET_DUNGEON);
                 output.accept(ModItems.TICKET_SAFARI);
                 output.accept(ModItems.TICKET_WONDERTRADE);
+                output.accept(ModItems.TICKET_GTS);
                 output.accept(ModBlocks.LOST_NOTES);
                 output.accept(ModBlocks.LOST_ITEM);
                 output.accept(ModItems.EGG_CREATIVE);
@@ -163,6 +164,7 @@ public class ModCreativeTabs {
                 }
                 output.accept(ModItems.ROTOM_SKIN_UNLOCK_ALL);
                 output.accept(ModItems.TICKET_WONDERTRADE);
+                output.accept(ModItems.TICKET_GTS);
                 output.accept(ModItems.WILD_EGG_BASE);
                 ModItems.WILD_EGGS.values().forEach(output::accept);
             })

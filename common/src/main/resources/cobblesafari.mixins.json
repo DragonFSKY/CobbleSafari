@@ -23,6 +23,7 @@
     "client.LivingEntityRendererRedShackledMixin",
     "client.CsBossEntityRendererRedShackledMixin",
     "client.DimensionSpecialEffectsAccessor",
+    "client.EditBoxAccessor",
     "client.RotomPhoneScreenMixin",
     "client.MarksWidgetMixin"
   ],

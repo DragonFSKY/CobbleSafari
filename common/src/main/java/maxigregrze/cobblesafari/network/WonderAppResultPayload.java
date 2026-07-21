@@ -22,7 +22,8 @@ public record WonderAppResultPayload(
         List<EventPoolEntry> eventPool,
         CompoundTag offeredNbt,
         CompoundTag receivedNbt,
-        String errorKey
+        String errorKey,
+        int bonusTickets
 ) implements CustomPacketPayload {
 
     public static final int SUB_BEGIN = 0;
@@ -52,6 +53,7 @@ public record WonderAppResultPayload(
                 buf.writeNbt(p.offeredNbt() == null ? new CompoundTag() : p.offeredNbt());
                 buf.writeNbt(p.receivedNbt() == null ? new CompoundTag() : p.receivedNbt());
                 buf.writeUtf(p.errorKey() == null ? "" : p.errorKey());
+                buf.writeVarInt(p.bonusTickets());
             },
             buf -> {
                 int sub = buf.readVarInt();
@@ -69,6 +71,7 @@ public record WonderAppResultPayload(
                 CompoundTag offered = buf.readNbt();
                 CompoundTag received = buf.readNbt();
                 String err = buf.readUtf();
+                int bonusTickets = buf.readVarInt();
                 return new WonderAppResultPayload(
                         sub,
                         tickets,
@@ -80,7 +83,8 @@ public record WonderAppResultPayload(
                         Collections.unmodifiableList(pool),
                         offered == null ? new CompoundTag() : offered,
                         received == null ? new CompoundTag() : received,
-                        err
+                        err,
+                        bonusTickets
                 );
             }
     );

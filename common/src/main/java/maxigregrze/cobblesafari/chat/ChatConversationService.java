@@ -1,6 +1,7 @@
 package maxigregrze.cobblesafari.chat;
 
 import maxigregrze.cobblesafari.CobbleSafari;
+import maxigregrze.cobblesafari.compat.EntryFeeHelper;
 import maxigregrze.cobblesafari.data.ChatProgressSavedData;
 import maxigregrze.cobblesafari.data.ChatProgressSavedData.Phase;
 import maxigregrze.cobblesafari.data.ChatProgressSavedData.ProgressEntry;
@@ -22,7 +23,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -93,6 +96,7 @@ public final class ChatConversationService {
             e.claimed = true;
             e.messageIndex = 0;
             e.stepIndex = 0;
+            e.seriesFallbackSteps.clear();
             dirty = true;
         }
         List<ChatStepDefinition> steps = activeSteps(conv, e);
@@ -124,7 +128,8 @@ public final class ChatConversationService {
         long today = LocalDate.now(ZONE).toEpochDay();
         RandomSource rng = player.server.overworld().getRandom();
         sanitize(conv, e, data);
-        maybeRollIdle(conv, e, today, rng, data);
+        tickUnlockGate(player, conv, e, data, today);
+        maybeRollIdle(conv, e, today, rng, data, player);
 
         List<ChatStepDefinition> active = activeSteps(conv, e);
         if (!active.isEmpty()) {
@@ -133,10 +138,10 @@ public final class ChatConversationService {
 
         List<ChatAppResultPayload.StepView> views = new ArrayList<>();
         if (!e.baseComplete) {
-            appendActiveSection(views, player, conv.steps(), e, data);
+            appendActiveSection(views, player, conv.steps(), e, data, e.baseFallbackSteps);
         } else {
-            for (ChatStepDefinition step : conv.steps()) {
-                appendCompletedStep(views, step);
+            for (int i = 0; i < conv.steps().size(); i++) {
+                appendCompletedStep(views, conv.steps().get(i), e.baseFallbackSteps.contains(i));
             }
             for (ResolvedSeries rs : e.history) {
                 if (rs.doDisapear && today > rs.resolvedEpochDay) {
@@ -147,13 +152,13 @@ public final class ChatConversationService {
                     continue;
                 }
                 if (rs.completed) {
-                    for (ChatStepDefinition step : s.steps()) {
-                        appendCompletedStep(views, step);
+                    for (int i = 0; i < s.steps().size(); i++) {
+                        appendCompletedStep(views, s.steps().get(i), rs.fallbackSteps.contains(i));
                     }
                 } else {
                     int failIdx = Math.min(Math.max(0, rs.stepReached), s.steps().size() - 1);
                     for (int i = 0; i < failIdx; i++) {
-                        appendCompletedStep(views, s.steps().get(i));
+                        appendCompletedStep(views, s.steps().get(i), rs.fallbackSteps.contains(i));
                     }
                     appendFailedStep(views, s.steps().get(failIdx), s.failMessage());
                 }
@@ -161,7 +166,7 @@ public final class ChatConversationService {
             if (e.activeSeriesId != null && !e.activeSeriesId.isEmpty()) {
                 RepeatableSeriesDefinition s = conv.series(e.activeSeriesId);
                 if (s != null) {
-                    appendActiveSection(views, player, s.steps(), e, data);
+                    appendActiveSection(views, player, s.steps(), e, data, e.seriesFallbackSteps);
                 }
             }
         }
@@ -170,20 +175,24 @@ public final class ChatConversationService {
     }
 
     private static void appendActiveSection(List<ChatAppResultPayload.StepView> views, ServerPlayer player,
-                                            List<ChatStepDefinition> steps, ProgressEntry e, ChatProgressSavedData data) {
+                                            List<ChatStepDefinition> steps, ProgressEntry e, ChatProgressSavedData data,
+                                            java.util.Set<Integer> fallbackSteps) {
         if (steps.isEmpty()) {
             return;
         }
         int current = Math.min(Math.max(0, e.stepIndex), steps.size() - 1);
+        // The held step (WAIT_UNLOCK / WAIT_NEXT_DAY) is the current, finished step — rendered fully as a
+        // completed step by the phase block below; the next (not-yet-started) step is simply not present.
         for (int i = 0; i <= current; i++) {
             ChatStepDefinition step = steps.get(i);
             if (i < current) {
-                appendCompletedStep(views, step);
+                appendCompletedStep(views, step, fallbackSteps.contains(i));
                 continue;
             }
             String titleKey = taskTitleKey(step);
+            List<String> after = step.messagesAfter(fallbackSteps.contains(i));
             int beforeSize = step.messagesBefore().size();
-            int afterSize = step.messagesAfter().size();
+            int afterSize = after.size();
             ProgressInfo info = computeProgress(player, step, e, data);
             int phase = e.phase.ordinal();
             int beforeShown;
@@ -205,24 +214,26 @@ public final class ChatConversationService {
                 afterShown = Math.min(e.messageIndex, afterSize);
                 taskVisible = true;
                 done = true;
-            } else { // WAIT_NEXT_DAY / DONE
+            } else { // WAIT_UNLOCK / WAIT_NEXT_DAY / DONE — the finished step, shown fully
                 beforeShown = beforeSize;
                 afterShown = afterSize;
                 taskVisible = true;
                 done = true;
             }
             views.add(new ChatAppResultPayload.StepView(
-                    step.messagesBefore(), step.messagesAfter(), titleKey,
+                    step.messagesBefore(), after, titleKey,
                     info.num(), info.den(), done, step.hasRewardItems(), step.hasRewardPersonalTrade(),
                     beforeShown, afterShown, taskVisible, true, false));
         }
     }
 
-    private static void appendCompletedStep(List<ChatAppResultPayload.StepView> views, ChatStepDefinition step) {
+    private static void appendCompletedStep(List<ChatAppResultPayload.StepView> views, ChatStepDefinition step,
+                                            boolean fallbackTriggered) {
+        List<String> after = step.messagesAfter(fallbackTriggered);
         views.add(new ChatAppResultPayload.StepView(
-                step.messagesBefore(), step.messagesAfter(), taskTitleKey(step),
+                step.messagesBefore(), after, taskTitleKey(step),
                 1, 0, true, step.hasRewardItems(), step.hasRewardPersonalTrade(),
-                step.messagesBefore().size(), step.messagesAfter().size(), true, false, false));
+                step.messagesBefore().size(), after.size(), true, false, false));
     }
 
     private static void appendFailedStep(List<ChatAppResultPayload.StepView> views, ChatStepDefinition step, String failMessage) {
@@ -236,6 +247,22 @@ public final class ChatConversationService {
     /** Computes the task progress; lazily snapshots a stat-gated step's baseline if unset. */
     public static ProgressInfo computeProgress(ServerPlayer player, ChatStepDefinition step,
                                                ProgressEntry e, ChatProgressSavedData data) {
+        if (step.isItemGated()) {
+            int total = 0;
+            int held = 0;
+            for (ChatStepDefinition.ItemReq req : step.requiredItems()) {
+                total += req.count();
+                Item item = EntryFeeHelper.resolveItem(req.itemId());
+                if (item == Items.AIR) {
+                    // Broken/removed item id → contributes 0 held, so the step can never be claimed.
+                    CobbleSafari.LOGGER.warn("[Chat] required item '{}' is not a registered item", req.itemId());
+                    continue;
+                }
+                held += Math.min(EntryFeeHelper.countItemInInventory(player, item), req.count());
+            }
+            return new ProgressInfo(held, total, held >= total);
+        }
+
         if (step.isStatGated()) {
             ResourceLocation parsed = ResourceLocation.tryParse(step.statistic());
             ResourceLocation statId = parsed == null ? null : BuiltInRegistries.CUSTOM_STAT.get(parsed);
@@ -282,6 +309,9 @@ public final class ChatConversationService {
     }
 
     private static String taskTitleKey(ChatStepDefinition step) {
+        if (step.isItemGated()) {
+            return "gui.cobblesafari.rotomphone.chat.task.gather.title";
+        }
         if (step.isStatGated()) {
             ResourceLocation statId = ResourceLocation.tryParse(step.statistic());
             return statId == null ? "" : "stat." + statId.getNamespace() + "." + statId.getPath();
@@ -321,7 +351,7 @@ public final class ChatConversationService {
             }
             data.setDirty();
         } else if (e.phase == Phase.AFTER) {
-            int max = step.messagesAfter().size();
+            int max = step.messagesAfter(fallbackSetFor(e).contains(e.stepIndex)).size();
             e.messageIndex = Math.max(0, Math.min(newIndex, max));
             data.setDirty();
         }
@@ -344,15 +374,25 @@ public final class ChatConversationService {
         if (!info.done()) {
             return ClaimResult.NOT_COMPLETE;
         }
-        giveRewards(player, step);
+        // Item objectives consume the exact required counts atomically; a failure here means the player
+        // no longer holds them (dropped between the GUI check and the click) → benign, nothing consumed.
+        if (step.isItemGated() && !consumeRequiredItems(player, step)) {
+            return ClaimResult.NOT_COMPLETE;
+        }
+        if (giveRewards(player, step)) {
+            fallbackSetFor(e).add(e.stepIndex);
+        }
         e.claimed = true;
         e.phase = Phase.AFTER;
         e.messageIndex = 0;
-        // isUnique counts as completed the moment the last reward of the series is obtained.
+        // A series counts as completed the moment the last reward of the series is obtained.
         if (e.baseComplete && !e.activeSeriesId.isEmpty() && e.stepIndex >= steps.size() - 1) {
             RepeatableSeriesDefinition s = conv.series(e.activeSeriesId);
-            if (s != null && s.isUnique()) {
-                e.completedUnique.add(e.activeSeriesId);
+            if (s != null) {
+                e.completedOnce.add(e.activeSeriesId); // unlocks series that list it as prerequisite
+                if (s.isUnique()) {
+                    e.completedUnique.add(e.activeSeriesId);
+                }
             }
         }
         data.setDirty();
@@ -376,19 +416,18 @@ public final class ChatConversationService {
             return;
         }
         ChatStepDefinition step = steps.get(Math.min(e.stepIndex, steps.size() - 1));
-        if (step.waitNextDay()) {
-            e.phase = Phase.WAIT_NEXT_DAY;
-        } else {
-            long today = LocalDate.now(ZONE).toEpochDay();
-            advanceAfterStep(conv, e, today, player.server.overworld().getRandom());
-        }
+        // Hold this step (as the visible, completed step) if a gate on the next step or its own
+        // waitNextDay is owed; otherwise advance now. The reset does the actual waitNextDay advance.
+        long today = LocalDate.now(ZONE).toEpochDay();
+        leaveCurrentStep(conv, e, player, today, player.server.overworld().getRandom(), step.waitNextDay());
         data.setDirty();
     }
 
     // ---------------------------------------------------------------- section / series progression
 
     /** Advances past the current step; rolls into / between repeatable series, or finishes. */
-    private static void advanceAfterStep(ChatConversationDefinition conv, ProgressEntry e, long today, RandomSource rng) {
+    private static void advanceAfterStep(ChatConversationDefinition conv, ProgressEntry e, long today,
+                                         RandomSource rng, ServerPlayer player) {
         List<ChatStepDefinition> steps = activeSteps(conv, e);
         if (steps.isEmpty()) {
             return; // idle
@@ -402,13 +441,13 @@ public final class ChatConversationService {
         if (!e.baseComplete) {
             e.baseComplete = true;
             if (conv.usesRepeatables()) {
-                startRolledSeries(conv, e, today, rng);
+                startRolledSeries(conv, e, today, rng, player);
             } else {
                 finishIdle(conv, e);
             }
         } else {
             recordResolved(conv, e, true, today);
-            startRolledSeries(conv, e, today, rng);
+            startRolledSeries(conv, e, today, rng, player);
         }
     }
 
@@ -418,22 +457,24 @@ public final class ChatConversationService {
      * the pool is genuinely exhausted.
      */
     private static void maybeRollIdle(ChatConversationDefinition conv, ProgressEntry e, long today,
-                                      RandomSource rng, ChatProgressSavedData data) {
+                                      RandomSource rng, ChatProgressSavedData data, ServerPlayer player) {
         if (e.baseComplete && (e.activeSeriesId == null || e.activeSeriesId.isEmpty())
                 && conv.usesRepeatables() && e.phase == Phase.DONE) {
-            String id = rollSeries(conv, e, rng);
+            String id = rollSeries(conv, e, rng, player);
             if (!id.isEmpty()) {
                 e.activeSeriesId = id;
                 e.seriesStartEpochDay = today;
                 e.stepIndex = 0;
+                e.seriesFallbackSteps.clear();
                 startStep(conv.series(id).steps().get(0), e);
                 data.setDirty();
             }
         }
     }
 
-    private static void startRolledSeries(ChatConversationDefinition conv, ProgressEntry e, long today, RandomSource rng) {
-        String id = rollSeries(conv, e, rng);
+    private static void startRolledSeries(ChatConversationDefinition conv, ProgressEntry e, long today,
+                                          RandomSource rng, ServerPlayer player) {
+        String id = rollSeries(conv, e, rng, player);
         if (id.isEmpty()) {
             finishIdle(conv, e);
             return;
@@ -441,22 +482,41 @@ public final class ChatConversationService {
         e.activeSeriesId = id;
         e.seriesStartEpochDay = today;
         e.stepIndex = 0;
+        e.seriesFallbackSteps.clear();
         startStep(conv.series(id).steps().get(0), e);
     }
 
     private static void finishIdle(ChatConversationDefinition conv, ProgressEntry e) {
         e.activeSeriesId = "";
+        e.seriesFallbackSteps.clear();
         e.phase = Phase.DONE;
         e.messageIndex = 0;
         e.claimed = true;
         e.stepIndex = Math.max(0, conv.steps().size() - 1);
     }
 
-    /** Weighted pick among eligible series (excludes completed uniques); {@code ""} if none eligible. */
-    private static String rollSeries(ChatConversationDefinition conv, ProgressEntry e, RandomSource rng) {
+    /**
+     * Weighted pick among eligible series; {@code ""} if none eligible. A series is excluded when it is
+     * an already-completed unique, when its {@code prerequisite} has never been completed by this player
+     * (the loader guarantees the prerequisite exists and that the graph is acyclic, so a pool can never
+     * be deadlocked by prerequisites alone), or when its first step's {@code unlockingAdvancement} is not
+     * yet owned.
+     *
+     * @param player the player being rolled for, or {@code null} when unknown (offline daily reset); a
+     *     null player conservatively excludes every advancement-gated series, leaving the conversation
+     *     idle until {@link #maybeRollIdle} rolls again with the player online
+     */
+    private static String rollSeries(ChatConversationDefinition conv, ProgressEntry e, RandomSource rng,
+                                     ServerPlayer player) {
         List<RepeatableSeriesDefinition> pool = new ArrayList<>();
         for (RepeatableSeriesDefinition s : conv.repeatableStepsLists()) {
             if (s.isUnique() && e.completedUnique.contains(s.id())) {
+                continue;
+            }
+            if (s.hasPrerequisite() && !e.completedOnce.contains(s.prerequisite())) {
+                continue;
+            }
+            if (!isSeriesUnlocked(s, player)) {
                 continue;
             }
             pool.add(s);
@@ -481,6 +541,19 @@ public final class ChatConversationService {
         return pool.get(pool.size() - 1).id();
     }
 
+    /**
+     * Whether a series may be offered at all: its first step's {@code unlockingAdvancement} acts as the
+     * series' entry condition, so a gated series is never rolled before the player owns it (rather than
+     * being rolled and then held). Gates on later steps still hold mid-series as usual.
+     */
+    private static boolean isSeriesUnlocked(RepeatableSeriesDefinition s, ServerPlayer player) {
+        ChatStepDefinition first = s.step(0);
+        if (first == null || !first.hasUnlockingAdvancement()) {
+            return true;
+        }
+        return player != null && hasAdvancement(player, first.unlockingAdvancement());
+    }
+
     private static void recordResolved(ChatConversationDefinition conv, ProgressEntry e, boolean completed, long today) {
         if (e.activeSeriesId == null || e.activeSeriesId.isEmpty()) {
             return;
@@ -492,17 +565,116 @@ public final class ChatConversationService {
         rs.stepReached = e.stepIndex;
         rs.resolvedEpochDay = today;
         rs.doDisapear = s != null && s.doDisapear();
+        rs.fallbackSteps.addAll(e.seriesFallbackSteps);
         e.appendHistory(rs, today);
-        if (completed && s != null && s.isUnique()) {
-            e.completedUnique.add(e.activeSeriesId);
+        if (completed) {
+            e.completedOnce.add(e.activeSeriesId);
+            if (s != null && s.isUnique()) {
+                e.completedUnique.add(e.activeSeriesId);
+            }
         }
     }
 
+    /** Starts a fresh step at its BEFORE messages. Holds are decided before advancing, never here. */
     private static void startStep(ChatStepDefinition step, ProgressEntry e) {
         e.phase = Phase.BEFORE;
         e.messageIndex = 0;
         e.claimed = false;
+        e.pendingWaitNextDay = false;
         e.statBaseline = step.isStatGated() ? Long.MIN_VALUE : 0L; // lazy snapshot for stat-gated
+    }
+
+    /** The step following the current one in the active section, or {@code null} if it is the last. */
+    private static ChatStepDefinition nextStepInSection(ChatConversationDefinition conv, ProgressEntry e) {
+        List<ChatStepDefinition> steps = activeSteps(conv, e);
+        int next = e.stepIndex + 1;
+        return next >= 0 && next < steps.size() ? steps.get(next) : null;
+    }
+
+    /**
+     * Decides what happens once the current step's after-messages are done. The current step is
+     * <em>held</em> (kept as the visible, completed step — {@code stepIndex} unchanged) while a condition
+     * is pending, and only when everything is clear do we advance. Ordering matches the spec: an
+     * {@code unlockingAdvancement} gate on the <em>next</em> step is waited out first, then any
+     * {@code waitNextDay} owed by the finished step; the actual advance happens on the next reset (for
+     * {@code waitNextDay}) via {@link #onDailyReset}, or immediately when neither condition applies.
+     */
+    private static void leaveCurrentStep(ChatConversationDefinition conv, ProgressEntry e, ServerPlayer player,
+                                         long today, RandomSource rng, boolean wantWaitNextDay) {
+        ChatStepDefinition next = nextStepInSection(conv, e);
+        if (next != null && next.hasUnlockingAdvancement()
+                && (player == null || !hasAdvancement(player, next.unlockingAdvancement()))) {
+            e.phase = Phase.WAIT_UNLOCK;
+            e.pendingWaitNextDay = wantWaitNextDay; // the owed wait only begins once the gate opens
+            return;
+        }
+        if (wantWaitNextDay) {
+            e.phase = Phase.WAIT_NEXT_DAY;
+            e.pendingWaitNextDay = false;
+            return;
+        }
+        advanceAfterStep(conv, e, today, rng, player);
+    }
+
+    /** True while the current step is held (finished but not yet advanced past). */
+    private static boolean isHeld(ProgressEntry e) {
+        return e.phase == Phase.WAIT_UNLOCK || e.phase == Phase.WAIT_NEXT_DAY;
+    }
+
+    /**
+     * Resolves a {@link Phase#WAIT_UNLOCK} hold once the player obtains the <em>next</em> step's
+     * {@code unlockingAdvancement}. Requires an online player, so it runs on the app-open/poll path
+     * rather than in the daily reset (which also walks offline players); a gate that opens while the
+     * player is offline is simply picked up the next time they open the conversation. When the gate opens
+     * it either begins the owed {@code waitNextDay} (→ {@link Phase#WAIT_NEXT_DAY}, released by the next
+     * reset) or advances immediately.
+     */
+    private static void tickUnlockGate(ServerPlayer player, ChatConversationDefinition conv,
+                                       ProgressEntry e, ChatProgressSavedData data, long today) {
+        if (e.phase != Phase.WAIT_UNLOCK) {
+            return;
+        }
+        ChatStepDefinition next = nextStepInSection(conv, e);
+        // Gate still shut → keep waiting. An absent next step or a removed gate resolves as satisfied.
+        if (next != null && next.hasUnlockingAdvancement() && !hasAdvancement(player, next.unlockingAdvancement())) {
+            return;
+        }
+        if (e.pendingWaitNextDay) {
+            e.phase = Phase.WAIT_NEXT_DAY;
+            e.pendingWaitNextDay = false;
+        } else {
+            advanceAfterStep(conv, e, today, player.server.overworld().getRandom(), player);
+        }
+        data.setDirty();
+    }
+
+    /** Ids already reported as unusable, so a broken gate warns once instead of on every poll. */
+    private static final java.util.Set<String> WARNED_ADVANCEMENTS = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+    /**
+     * Whether the player owns {@code idStr}. An unparseable or unknown advancement id is treated as
+     * <em>already unlocked</em> (fail-open) and logged once: a datapack typo must never leave a
+     * questline permanently stuck behind a gate that can only ever be closed.
+     */
+    private static boolean hasAdvancement(ServerPlayer player, String idStr) {
+        ResourceLocation id = ResourceLocation.tryParse(idStr);
+        if (id == null) {
+            warnBadGate(idStr, "is not a valid advancement id");
+            return true;
+        }
+        AdvancementHolder holder = player.server.getAdvancements().get(id);
+        if (holder == null) {
+            warnBadGate(idStr, "does not exist on this server");
+            return true;
+        }
+        return player.getAdvancements().getOrStartProgress(holder).isDone();
+    }
+
+    private static void warnBadGate(String idStr, String reason) {
+        if (WARNED_ADVANCEMENTS.add(idStr)) {
+            CobbleSafari.LOGGER.warn("[Chat] unlockingAdvancement '{}' {} — the step is treated as unlocked",
+                    idStr, reason);
+        }
     }
 
     /** Idempotent step-start side effects: unlock the app declared by the step, resync if changed. */
@@ -518,7 +690,49 @@ public final class ChatConversationService {
 
     // ---------------------------------------------------------------- rewards
 
-    private static void giveRewards(ServerPlayer player, ChatStepDefinition step) {
+    /** The fallback-step set of the section the entry is currently playing. */
+    private static java.util.Set<Integer> fallbackSetFor(ProgressEntry e) {
+        return e.baseComplete ? e.seriesFallbackSteps : e.baseFallbackSteps;
+    }
+
+    /**
+     * Consumes an item-gated step's {@code requiredItems}, all-or-nothing: it first resolves and verifies
+     * every requirement against the current inventory, and only when all are satisfied does it remove the
+     * exact counts. Because everything runs on one server tick there is no interleaving between the check
+     * and the removal. The loader guarantees no duplicate item ids, so per-item counting is exact.
+     *
+     * @return {@code true} if every requirement was removed; {@code false} (nothing consumed) if the
+     *     player no longer holds enough or an item id is broken
+     */
+    private static boolean consumeRequiredItems(ServerPlayer player, ChatStepDefinition step) {
+        List<ChatStepDefinition.ItemReq> reqs = step.requiredItems();
+        Item[] items = new Item[reqs.size()];
+        for (int i = 0; i < reqs.size(); i++) {
+            ChatStepDefinition.ItemReq req = reqs.get(i);
+            Item item = EntryFeeHelper.resolveItem(req.itemId());
+            if (item == Items.AIR) {
+                CobbleSafari.LOGGER.warn("[Chat] cannot consume broken required item '{}'", req.itemId());
+                return false;
+            }
+            if (EntryFeeHelper.countItemInInventory(player, item) < req.count()) {
+                return false; // dropped/used between the poll and the claim
+            }
+            items[i] = item;
+        }
+        for (int i = 0; i < reqs.size(); i++) {
+            if (!EntryFeeHelper.removeItemsFromInventory(player, items[i], reqs.get(i).count())) {
+                // Unreachable: counts were just verified on the same tick. Log loudly if it ever happens.
+                CobbleSafari.LOGGER.error("[Chat] failed to remove {}x {} after verification",
+                        reqs.get(i).count(), reqs.get(i).itemId());
+                return false;
+            }
+        }
+        player.inventoryMenu.broadcastChanges(); // push the inventory change to the client
+        return true;
+    }
+
+    /** @return true if a tag reward was requested but exhausted, i.e. the loot fallback was granted. */
+    private static boolean giveRewards(ServerPlayer player, ChatStepDefinition step) {
         MinecraftServer server = player.server;
         if (step.hasRewardItems()) {
             grantLootTable(player, step.rewardItems());
@@ -547,7 +761,9 @@ public final class ChatConversationService {
         }
         if (tagRequested && !tagGranted) {
             grantLootTable(player, step.hasFallbackReward() ? step.fallbackReward() : DEFAULT_FALLBACK);
+            return true;
         }
+        return false;
     }
 
     private static boolean givePersonalTradeByTag(MinecraftServer server, ServerPlayer player, String tag) {
@@ -653,8 +869,9 @@ public final class ChatConversationService {
                 }
                 sanitize(conv, e, data);
 
-                // 1. timed series past their deadline → fail and roll the next.
-                if (e.baseComplete && e.activeSeriesId != null && !e.activeSeriesId.isEmpty()) {
+                // 1. timed series past their deadline → fail and roll the next. A series still held back
+                //    (unlock gate / owed wait) has not started being playable, so it cannot expire yet.
+                if (e.baseComplete && e.activeSeriesId != null && !e.activeSeriesId.isEmpty() && !isHeld(e)) {
                     RepeatableSeriesDefinition s = conv.series(e.activeSeriesId);
                     if (s != null && s.isTimed()) {
                         boolean rewardComplete = e.stepIndex >= s.steps().size() - 1 && e.claimed;
@@ -662,24 +879,33 @@ public final class ChatConversationService {
                                 && e.seriesStartEpochDay < today;
                         if (!rewardComplete && (forceTimedExpiry || overdue)) {
                             recordResolved(conv, e, false, today);
-                            startRolledSeries(conv, e, today, rng);
+                            startRolledSeries(conv, e, today, rng, null);
                             e.lastResetEpochDay = today;
                             continue;
                         }
                     }
                 }
 
-                // 2. waitNextDay steps unblock.
+                // 2. A waitNextDay step advances to the next step on the next reset (natural daily rollover,
+                //    safari reset, or a manual /cobblesafari reset system|hard). The wait only *begins* once
+                //    any owed unlock gate has opened (WAIT_UNLOCK → WAIT_NEXT_DAY): "unlock first, then one
+                //    reset". A held gate (WAIT_UNLOCK) never advances here — it resolves on the app-open path.
                 if (e.phase == Phase.WAIT_NEXT_DAY) {
-                    advanceAfterStep(conv, e, today, rng);
+                    advanceAfterStep(conv, e, today, rng, null);
                     e.lastResetEpochDay = today;
                     continue;
                 }
 
-                // 3. idle pool replenishment (e.g. datapack added series).
+                // 3. WAIT_UNLOCK is resolved on the app-open path (it needs the online player).
+                if (e.phase == Phase.WAIT_UNLOCK) {
+                    continue;
+                }
+
+                // 4. idle pool replenishment (e.g. datapack added series). Advancement-gated series are
+                //    skipped here (no online player to check) and picked up by maybeRollIdle on open.
                 if (e.baseComplete && (e.activeSeriesId == null || e.activeSeriesId.isEmpty())
                         && conv.usesRepeatables() && e.phase == Phase.DONE) {
-                    startRolledSeries(conv, e, today, rng);
+                    startRolledSeries(conv, e, today, rng, null);
                     e.lastResetEpochDay = today;
                 }
             }

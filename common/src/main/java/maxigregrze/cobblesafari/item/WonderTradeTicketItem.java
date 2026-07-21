@@ -40,9 +40,16 @@ public class WonderTradeTicketItem extends Item {
             return InteractionResultHolder.fail(stack);
         }
 
-        WonderTradeService.addPlayerTickets(server, player.getUUID(), 1);
-        int after = WonderTradeService.getEffectiveTicketCount(server, player.getUUID());
-        player.sendSystemMessage(Component.translatable("cobblesafari.item.ticket_wondertrade.used", after));
+        WonderTradeService.UseTicketResult result =
+                WonderTradeService.tryUseWonderTicket(server, player.getUUID());
+        if (result == WonderTradeService.UseTicketResult.AT_MAX) {
+            player.sendSystemMessage(Component.translatable(
+                    "cobblesafari.item.ticket_wondertrade.at_max", WonderTradeService.MAX_BONUS_TICKETS));
+            return InteractionResultHolder.fail(stack);
+        }
+
+        int bonus = WonderTradeService.getBonusTickets(server, player.getUUID());
+        player.sendSystemMessage(Component.translatable("cobblesafari.item.ticket_wondertrade.used", bonus));
         stack.consume(1, player);
 
         return InteractionResultHolder.sidedSuccess(stack, false);

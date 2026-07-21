@@ -207,6 +207,8 @@ public class ClientNetworking {
                 OpenRotomPhonePayload.TYPE,
                 (payload, context) -> {
                     context.client().execute(() -> {
+                        maxigregrze.cobblesafari.rotomphone.RotomPhoneClientCache
+                                .setCurrentWallpaperEnabled(payload.customWallpaper());
                         Minecraft.getInstance().setScreen(
                                 new maxigregrze.cobblesafari.client.screen.rotomphone.RotomPhoneMenuScreen(
                                         payload.rotomName(), payload.shinyStatus(),

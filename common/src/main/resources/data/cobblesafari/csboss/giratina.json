@@ -3,7 +3,7 @@
     "displayName": "Distorted Shadow",
     "tags": ["test_tag"],
     "maximumDuration": 300,
-    "minimumDuration": 120,
+    "minimumDuration": 180,
     "specie": "giratina distortion",
     "minion": "giratina distortion",
     "size": 2,

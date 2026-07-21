@@ -13,7 +13,9 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,6 +26,9 @@ public class GtsSavedData extends SavedData {
     private static final String KEY_LAST_DAILY_EPOCH_DAY = "LastDailyEpochDay";
     private static final String KEY_OFFERS = "Offers";
     private static final String KEY_SUCCESSES = "Successes";
+    private static final String KEY_EXTRA_SLOTS = "ExtraSlots";
+    private static final String KEY_EXTRA_SLOT_UUID = "Uuid";
+    private static final String KEY_EXTRA_SLOT_COUNT = "Count";
 
     private int nextOfferId = 1;
     private int nextSuccessId = 1;
@@ -31,6 +36,7 @@ public class GtsSavedData extends SavedData {
 
     private final List<GtsOffer> offers = new ArrayList<>();
     private final List<GtsSuccess> successes = new ArrayList<>();
+    private final Map<UUID, Integer> extraOfferSlots = new HashMap<>();
 
     public GtsSavedData() {
         // Required by the SavedData factory; state is populated in load().
@@ -59,6 +65,15 @@ public class GtsSavedData extends SavedData {
                 data.successes.add(GtsSuccess.fromNbt(list.getCompound(i)));
             }
         }
+        if (tag.contains(KEY_EXTRA_SLOTS, Tag.TAG_LIST)) {
+            ListTag list = tag.getList(KEY_EXTRA_SLOTS, Tag.TAG_COMPOUND);
+            for (int i = 0; i < list.size(); i++) {
+                CompoundTag entry = list.getCompound(i);
+                if (entry.hasUUID(KEY_EXTRA_SLOT_UUID) && entry.getInt(KEY_EXTRA_SLOT_COUNT) > 0) {
+                    data.extraOfferSlots.put(entry.getUUID(KEY_EXTRA_SLOT_UUID), entry.getInt(KEY_EXTRA_SLOT_COUNT));
+                }
+            }
+        }
         return data;
     }
 
@@ -77,6 +92,14 @@ public class GtsSavedData extends SavedData {
             succList.add(s.toNbt());
         }
         tag.put(KEY_SUCCESSES, succList);
+        ListTag extraList = new ListTag();
+        for (Map.Entry<UUID, Integer> e : extraOfferSlots.entrySet()) {
+            CompoundTag entry = new CompoundTag();
+            entry.putUUID(KEY_EXTRA_SLOT_UUID, e.getKey());
+            entry.putInt(KEY_EXTRA_SLOT_COUNT, e.getValue());
+            extraList.add(entry);
+        }
+        tag.put(KEY_EXTRA_SLOTS, extraList);
         return tag;
     }
 
@@ -145,6 +168,19 @@ public class GtsSavedData extends SavedData {
 
     public List<GtsSuccess> findSuccessesByRecipient(UUID u) {
         return successes.stream().filter(s -> u.equals(s.getRecipientUuid())).toList();
+    }
+
+    public int getExtraOfferSlots(UUID playerId) {
+        return extraOfferSlots.getOrDefault(playerId, 0);
+    }
+
+    public void setExtraOfferSlots(UUID playerId, int count) {
+        if (count <= 0) {
+            extraOfferSlots.remove(playerId);
+        } else {
+            extraOfferSlots.put(playerId, count);
+        }
+        setDirty();
     }
 
     public long getLastDailyResetEpochDay() {

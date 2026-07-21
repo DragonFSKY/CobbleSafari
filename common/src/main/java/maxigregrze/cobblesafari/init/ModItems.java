@@ -6,6 +6,7 @@ import maxigregrze.cobblesafari.item.BaitItem;
 import maxigregrze.cobblesafari.item.BalmItem;
 import maxigregrze.cobblesafari.item.CreativeEggItem;
 import maxigregrze.cobblesafari.item.CreativeFlagItem;
+import maxigregrze.cobblesafari.item.GtsTicketItem;
 import maxigregrze.cobblesafari.item.IncenseItem;
 import maxigregrze.cobblesafari.item.LuckyMiningHelmetItem;
 import maxigregrze.cobblesafari.item.MudBallItem;
@@ -123,6 +124,7 @@ public class ModItems {
     public static final Item TICKET_SAFARI = new Item(new Item.Properties());
     public static final Item TICKET_DUNGEON = new Item(new Item.Properties());
     public static final Item TICKET_WONDERTRADE = new WonderTradeTicketItem(new Item.Properties());
+    public static final Item TICKET_GTS = new GtsTicketItem(new Item.Properties());
 
     public static final Item FLAG_REGULAR = new Item(new Item.Properties().stacksTo(1));
     public static final Item FLAG_BRONZE = new Item(new Item.Properties().stacksTo(1));
@@ -347,6 +349,7 @@ public class ModItems {
         registerItem("ticket_safari", TICKET_SAFARI);
         registerItem("ticket_dungeon", TICKET_DUNGEON);
         registerItem("ticket_wondertrade", TICKET_WONDERTRADE);
+        registerItem("ticket_gts", TICKET_GTS);
 
         registerItem("fossil_random", FOSSIL_RANDOM);
         registerItem("fossil_perfect", FOSSIL_PERFECT);

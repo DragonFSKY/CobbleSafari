@@ -2,6 +2,7 @@ package maxigregrze.cobblesafari.event;
 
 import com.cobblemon.mod.common.api.Priority;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import kotlin.Unit;
 import maxigregrze.cobblesafari.CobbleSafari;
 import maxigregrze.cobblesafari.effect.RedShackledPlayerGuard;
@@ -14,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -33,6 +35,8 @@ public class DimensionalBanEventHandler {
 
     private static final TagKey<Item> TUMBLESTONES_TAG = TagKey.create(
             Registries.ITEM, ResourceLocation.fromNamespaceAndPath("cobblemon", "tumblestones"));
+
+    private static final int MOUNT_CHECK_INTERVAL = 20;
 
     private DimensionalBanEventHandler() {}
 
@@ -201,7 +205,32 @@ public class DimensionalBanEventHandler {
         return BannedItemsManager.isBlockBreakingAllowed(world.dimension());
     }
 
+    /** Dismounts any player riding a Pokémon inside a dimension where forbidMounting is active. */
+    public static void tickMountEnforcement(MinecraftServer server) {
+        if ((server.getTickCount() % MOUNT_CHECK_INTERVAL) != 0) {
+            return;
+        }
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            if (player.getVehicle() instanceof PokemonEntity
+                    && !BannedItemsManager.isMountingAllowed(player.level().dimension())) {
+                player.stopRiding();
+                player.sendSystemMessage(Component.translatable("cobblesafari.ban.mounting_banned"));
+            }
+        }
+    }
+
     public static void registerCobblemonEvents() {
+        registerBattleStartBan();
+        registerSendOutBan();
+        registerMountBan();
+        registerFishingBan();
+
+        RedShackledPlayerGuard.registerCobblemonEvents();
+
+        CobbleSafari.LOGGER.info("CobbleSafari >> Dimensional ban event handlers registered!");
+    }
+
+    private static void registerBattleStartBan() {
         CobblemonEvents.BATTLE_STARTED_PRE.subscribe(Priority.HIGHEST, event -> {
             for (var actor : event.getBattle().getActors()) {
                 for (var pokemon : actor.getPokemonList()) {
@@ -217,7 +246,9 @@ public class DimensionalBanEventHandler {
             }
             return Unit.INSTANCE;
         });
+    }
 
+    private static void registerSendOutBan() {
         CobblemonEvents.POKEMON_SENT_PRE.subscribe(Priority.HIGHEST, event -> {
             var level = event.getLevel();
             if (level != null && !BannedItemsManager.isBattleAllowed(level.dimension())) {
@@ -226,7 +257,20 @@ public class DimensionalBanEventHandler {
             }
             return Unit.INSTANCE;
         });
+    }
 
+    private static void registerMountBan() {
+        CobblemonEvents.RIDE_EVENT_PRE.subscribe(Priority.HIGHEST, event -> {
+            ServerPlayer player = event.getPlayer();
+            if (!BannedItemsManager.isMountingAllowed(player.level().dimension())) {
+                player.sendSystemMessage(Component.translatable("cobblesafari.ban.mounting_banned"));
+                event.cancel();
+            }
+            return Unit.INSTANCE;
+        });
+    }
+
+    private static void registerFishingBan() {
         CobblemonEvents.POKEROD_CAST_PRE.subscribe(Priority.HIGHEST, event -> {
             var bobber = event.getBobber();
             if (bobber != null) {
@@ -242,9 +286,5 @@ public class DimensionalBanEventHandler {
             }
             return Unit.INSTANCE;
         });
-
-        RedShackledPlayerGuard.registerCobblemonEvents();
-
-        CobbleSafari.LOGGER.info("CobbleSafari >> Dimensional ban event handlers registered!");
     }
 }

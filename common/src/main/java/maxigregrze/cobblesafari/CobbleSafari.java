@@ -27,7 +27,7 @@ import maxigregrze.cobblesafari.init.ModProcessors;
 import maxigregrze.cobblesafari.item.donut.DonutPowerRegistry;
 import maxigregrze.cobblesafari.item.donut.DonutSeasoningProcessor;
 import maxigregrze.cobblesafari.init.ModPowerEffects;
-import maxigregrze.cobblesafari.influence.AlphaSpawnBoostInfluence;
+// import maxigregrze.cobblesafari.influence.AlphaSpawnBoostInfluence; @TODO ALPHA
 import maxigregrze.cobblesafari.influence.GuaranteedShinyInfluence;
 import maxigregrze.cobblesafari.influence.BucketBoostInfluence;
 import maxigregrze.cobblesafari.influence.HiddenAbilityBoostInfluence;
@@ -96,10 +96,13 @@ public class CobbleSafari {
         UndergroundMinigame.registerCommon();
         ShinyBoostEvent.register();
         DimensionalBanEventHandler.registerCobblemonEvents();
+        maxigregrze.cobblesafari.event.CsBossArenaRestrictionHandler.registerCobblemonEvents();
         PlayerSpawnerFactory.INSTANCE.getInfluenceBuilders().add(RepelInfluence::new);
+        PlayerSpawnerFactory.INSTANCE.getInfluenceBuilders()
+                .add(maxigregrze.cobblesafari.influence.CsBossArenaSpawnBlockInfluence::new);
         PlayerSpawnerFactory.INSTANCE.getInfluenceBuilders().add(BucketBoostInfluence::new);
         PlayerSpawnerFactory.INSTANCE.getInfluenceBuilders().add(TypedAtypicalBoostInfluence::new);
-        PlayerSpawnerFactory.INSTANCE.getInfluenceBuilders().add(AlphaSpawnBoostInfluence::new);
+        // PlayerSpawnerFactory.INSTANCE.getInfluenceBuilders().add(AlphaSpawnBoostInfluence::new); @TODO ALPHA
         PlayerSpawnerFactory.INSTANCE.getInfluenceBuilders().add(HiddenAbilityBoostInfluence::new);
         PlayerSpawnerFactory.INSTANCE.getInfluenceBuilders().add(TypedEncounterBoostInfluence::new);
         PlayerSpawnerFactory.INSTANCE.getInfluenceBuilders().add(WildLevelModifierInfluence::new);

@@ -66,8 +66,9 @@ public final class ChatAppServerHandler {
             sendState(player, convId);
         } else if (r == ChatConversationService.ClaimResult.NOT_COMPLETE) {
             LAST_CLAIM_MS.remove(player.getUUID()); // allow immediate retry after a benign failure
-            Services.PLATFORM.sendPayloadToPlayer(player,
-                    ChatAppResultPayload.error("gui.cobblesafari.rotomphone.chat.error.not_complete"));
+            // Resend fresh state so a regressed item objective (items dropped between the poll and the
+            // click) re-renders its bar and resumes polling, instead of leaving a stale "Confirm".
+            sendState(player, convId);
         } else {
             LAST_CLAIM_MS.remove(player.getUUID());
             sendState(player, convId);

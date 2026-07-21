@@ -64,6 +64,7 @@ public final class GtsAppServerHandler {
             case GtsAppPayload.ACTION_REQUEST_STATE -> 250L;
             case GtsAppPayload.ACTION_VALIDATE_SPECIES -> 500L;
             case GtsAppPayload.ACTION_SEARCH -> 500L;
+            case GtsAppPayload.ACTION_MY_OFFERS -> 500L;
             case GtsAppPayload.ACTION_START_TRADE -> 1_000L;
             default -> 0L;
         };
@@ -91,6 +92,7 @@ public final class GtsAppServerHandler {
             case GtsAppPayload.ACTION_RETRIEVE -> doRetrieve(player, payload);
             case GtsAppPayload.ACTION_CLAIM -> doClaim(player, payload);
             case GtsAppPayload.ACTION_SEARCH -> doSearch(player, payload);
+            case GtsAppPayload.ACTION_MY_OFFERS -> doMyOffers(player, payload);
             case GtsAppPayload.ACTION_START_TRADE -> doStartTrade(player, payload);
             case GtsAppPayload.ACTION_CONFIRM_TRADE -> doConfirmTrade(player, payload);
             case GtsAppPayload.ACTION_ABORT_TRADE -> doAbortTrade(player);
@@ -121,7 +123,9 @@ public final class GtsAppServerHandler {
                         List.of(),
                         new CompoundTag(),
                         new CompoundTag(),
-                        ""));
+                        "",
+                        0,
+                        0));
     }
 
     private static void doDeposit(ServerPlayer player, GtsAppPayload pl) {
@@ -162,7 +166,9 @@ public final class GtsAppServerHandler {
                             List.of(),
                             offered,
                             new CompoundTag(),
-                            ""));
+                            "",
+                            data.findOffersByDepositor(player.getUUID()).size(),
+                            GtsService.getAllowedOfferCount(player.getServer(), player.getUUID())));
         } else {
             sendBegin(player, depositErrorKey(r));
         }
@@ -176,7 +182,7 @@ public final class GtsAppServerHandler {
             case BANNED_WISH -> "gui.cobblesafari.rotomphone.gts.error.banned";
             case INVALID_LEVEL_BUCKET -> "gui.cobblesafari.rotomphone.gts.error.invalid_level_bucket";
             case INCOMPATIBLE_GENDER -> "gui.cobblesafari.rotomphone.gts.error.incompatible_gender";
-            case ALREADY_HAS_OFFER -> "gui.cobblesafari.rotomphone.gts.error.already_has_offer";
+            case LIMIT_REACHED -> "gui.cobblesafari.rotomphone.gts.error.limit_reached";
             default -> ERR_GENERIC;
         };
     }
@@ -222,7 +228,9 @@ public final class GtsAppServerHandler {
                             List.of(),
                             pokemonNbt,
                             new CompoundTag(),
-                            ""));
+                            "",
+                            data.findOffersByDepositor(player.getUUID()).size(),
+                            GtsService.getAllowedOfferCount(player.getServer(), player.getUUID())));
         } else {
             sendBegin(player, retrieveErrorKey(r));
         }
@@ -271,7 +279,9 @@ public final class GtsAppServerHandler {
                             List.of(),
                             new CompoundTag(),
                             pokemonNbt,
-                            ""));
+                            "",
+                            0,
+                            0));
         } else {
             sendBegin(player, claimErrorKey(r));
         }
@@ -320,7 +330,47 @@ public final class GtsAppServerHandler {
                         List.of(),
                         new CompoundTag(),
                         new CompoundTag(),
-                        ""));
+                        "",
+                        0,
+                        0));
+    }
+
+    private static void doMyOffers(ServerPlayer player, GtsAppPayload pl) {
+        int page = Math.max(1, pl.intArg1());
+        GtsService.SearchResult result = GtsService.myOffers(player, page);
+        List<GtsAppResultPayload.SearchEntry> entries = new ArrayList<>();
+        for (GtsOffer offer : result.offers()) {
+            entries.add(
+                    new GtsAppResultPayload.SearchEntry(
+                            offer.getId(),
+                            offer.getPokemonData().copy(),
+                            offer.getWishSpecies(),
+                            offer.getWishLevelBucket(),
+                            offer.getWishGender().name(),
+                            offer.getWishShiny().name()));
+        }
+        GtsSavedData data = GtsSavedData.get(player.getServer());
+        List<GtsSuccess> waiting = data.findSuccessesByRecipient(player.getUUID());
+        send(
+                player,
+                new GtsAppResultPayload(
+                        GtsAppResultPayload.SUB_MY_OFFERS_RESULT,
+                        0,
+                        -1,
+                        waiting.size(),
+                        waiting.isEmpty() ? -1 : waiting.get(0).getId(),
+                        "",
+                        "",
+                        result.page(),
+                        result.totalPages(),
+                        entries,
+                        "",
+                        List.of(),
+                        new CompoundTag(),
+                        new CompoundTag(),
+                        "",
+                        data.findOffersByDepositor(player.getUUID()).size(),
+                        GtsService.getAllowedOfferCount(player.getServer(), player.getUUID())));
     }
 
     private static void doAbortTrade(ServerPlayer player) {
@@ -369,7 +419,9 @@ public final class GtsAppServerHandler {
                         candidateNbts,
                         new CompoundTag(),
                         new CompoundTag(),
-                        ""));
+                        "",
+                        0,
+                        0));
     }
 
     private static String startTradeErrorKey(GtsService.StartTradeKind k) {
@@ -418,7 +470,9 @@ public final class GtsAppServerHandler {
                             List.of(),
                             givenNbt,
                             offeredNbt,
-                            ""));
+                            "",
+                            0,
+                            0));
         } else {
             sendBegin(player, confirmErrorKey(r));
         }
@@ -465,7 +519,9 @@ public final class GtsAppServerHandler {
                         List.of(),
                         new CompoundTag(),
                         new CompoundTag(),
-                        errorKey == null ? "" : errorKey));
+                        errorKey == null ? "" : errorKey,
+                        data.findOffersByDepositor(player.getUUID()).size(),
+                        GtsService.getAllowedOfferCount(player.getServer(), player.getUUID())));
     }
 
     private static void send(ServerPlayer player, GtsAppResultPayload payload) {

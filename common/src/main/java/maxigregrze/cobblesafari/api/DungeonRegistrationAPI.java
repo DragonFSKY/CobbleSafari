@@ -137,10 +137,30 @@ public final class DungeonRegistrationAPI {
                                                        boolean allowBlockBreaking,
                                                        boolean allowBlockPlacing,
                                                        boolean allowBattle) {
+        registerDimensionalRestrictions(dimensionId, allowBlockBreaking, allowBlockPlacing, allowBattle, false);
+    }
+
+    /**
+     * Registers dimensional restrictions (block breaking/placing ban, battle toggle, mount ban)
+     * for a dimension. Creates a new entry in the dimensional restrictions config if one does
+     * not already exist.
+     *
+     * @param dimensionId the full dimension id (e.g. "cobblemonraiddens:raid_dimension")
+     * @param allowBlockBreaking whether block breaking is allowed
+     * @param allowBlockPlacing whether block placing is allowed
+     * @param allowBattle whether battles are allowed
+     * @param forbidMounting whether riding Cobblemon mounts is forbidden
+     */
+    public static void registerDimensionalRestrictions(String dimensionId,
+                                                       boolean allowBlockBreaking,
+                                                       boolean allowBlockPlacing,
+                                                       boolean allowBattle,
+                                                       boolean forbidMounting) {
         DimensionalBanData.DimensionRestrictions restrictions = new DimensionalBanData.DimensionRestrictions();
         restrictions.allowBlockBreaking = allowBlockBreaking;
         restrictions.allowBlockPlacing = allowBlockPlacing;
         restrictions.allowBattle = allowBattle;
+        restrictions.forbidMounting = forbidMounting;
         DimensionalBanConfig.ensureDimensionEntry(dimensionId, restrictions);
     }
 

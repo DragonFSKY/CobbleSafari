@@ -41,7 +41,6 @@ public class RotomPhoneWonderScreen extends RotomPhoneBaseScreen {
     private static final ResourceLocation TEX_BANNER_DEF = loc("wonder/rotomphone_gui_event_default.png");
     private static final ResourceLocation TEX_TRADEANIM = loc("wonder/rotomphone_gui_tradeanim.png");
 
-    private static final float SCALED_TEXT_Y_OFFSET = -7f;
     private static final int PARTY_SLOT_SIZE = 32;
     private static final float PARTY_SLOT_BASE_SCALE = 3.5f;
     private static final float PARTY_SLOT_MODEL_SCALE = 5.5f;
@@ -77,6 +76,7 @@ public class RotomPhoneWonderScreen extends RotomPhoneBaseScreen {
 
     private SubScreen state = SubScreen.LOADING;
     private int ticketsRemaining;
+    private int bonusTickets;
     private long nextResetEpochSeconds;
     private boolean hasEvent;
     private String eventName = "";
@@ -122,6 +122,7 @@ public class RotomPhoneWonderScreen extends RotomPhoneBaseScreen {
 
     public void applyServerSnapshot(WonderAppResultPayload p) {
         this.ticketsRemaining = p.ticketsRemaining();
+        this.bonusTickets = p.bonusTickets();
         this.nextResetEpochSeconds = p.nextResetEpochSeconds();
         this.hasEvent = p.hasEvent();
         this.eventName = p.eventName() == null ? "" : p.eventName();
@@ -199,7 +200,7 @@ public class RotomPhoneWonderScreen extends RotomPhoneBaseScreen {
                 && isInBounds(mouseX, mouseY, originX + 46, originY + 136, 255, 32)) {
             graphics.renderComponentTooltip(this.font, buildEventTooltipLines(), mouseX, mouseY);
         }
-        if (state == SubScreen.SELECT && hasShiftDown()) {
+        if (state == SubScreen.SELECT) {
             int slot = hoveredPartySlot(mouseX, mouseY);
             if (slot >= 0) {
                 Pokemon p = getPartyPokemon(slot);
@@ -262,13 +263,19 @@ public class RotomPhoneWonderScreen extends RotomPhoneBaseScreen {
         int theme = getTintColor();
         boolean unlimited = ticketsRemaining < 0;
 
-        Component ticketLine = unlimited
-                ? Component.translatable("gui.cobblesafari.rotomphone.wonder.ticket.unlimited")
-                : Component.translatable("gui.cobblesafari.rotomphone.wonder.ticket",
-                        ticketsRemaining, formatCountdown(nextResetEpochSeconds));
+        Component ticketLine;
+        if (unlimited) {
+            ticketLine = Component.translatable("gui.cobblesafari.rotomphone.wonder.ticket.unlimited");
+        } else if (bonusTickets > 0) {
+            ticketLine = Component.translatable("gui.cobblesafari.rotomphone.wonder.ticket.bonus",
+                    ticketsRemaining, bonusTickets, formatCountdown(nextResetEpochSeconds));
+        } else {
+            ticketLine = Component.translatable("gui.cobblesafari.rotomphone.wonder.ticket",
+                    ticketsRemaining, formatCountdown(nextResetEpochSeconds));
+        }
         g.drawCenteredString(this.font, ticketLine, originX + 174, originY + 72, theme);
 
-        boolean showStart = unlimited || ticketsRemaining >= 1;
+        boolean showStart = unlimited || ticketsRemaining + bonusTickets >= 1;
         if (showStart) {
             boolean hov = isInBounds(mx, my, originX + 138, originY + 96, 72, 32);
             drawButton(g, originX + 138, originY + 96, hov, theme,
@@ -465,7 +472,7 @@ public class RotomPhoneWonderScreen extends RotomPhoneBaseScreen {
 
     private boolean handleBeginClick(double mx, double my) {
         boolean unlimited = ticketsRemaining < 0;
-        if ((unlimited || ticketsRemaining >= 1)
+        if ((unlimited || ticketsRemaining + bonusTickets >= 1)
                 && isInBounds(mx, my, originX + 138, originY + 96, 72, 32)) {
             lastErrorKey = "";
             selectedSlot = -1;
@@ -512,7 +519,7 @@ public class RotomPhoneWonderScreen extends RotomPhoneBaseScreen {
             return false;
         }
         if (isInBounds(mx, my, originX + 138, originY + 136, 72, 32)) {
-            if (ticketsRemaining == 0) {
+            if (ticketsRemaining + bonusTickets == 0) {
                 state = SubScreen.BEGIN;
             } else {
                 selectedSlot = -1;
@@ -698,22 +705,6 @@ public class RotomPhoneWonderScreen extends RotomPhoneBaseScreen {
         g.pose().popPose();
     }
 
-    private void drawScaledLeftAligned(GuiGraphics g, Component c, int x, int y, int color) {
-        g.pose().pushPose();
-        g.pose().translate(x, y + SCALED_TEXT_Y_OFFSET, 0);
-        g.pose().scale(2f, 2f, 1f);
-        g.drawString(this.font, c, 0, 0, color, false);
-        g.pose().popPose();
-    }
-
-    private void drawScaledCentered(GuiGraphics g, Component c, int x, int y, int color) {
-        g.pose().pushPose();
-        g.pose().translate(x, y + SCALED_TEXT_Y_OFFSET, 0);
-        g.pose().scale(2f, 2f, 1f);
-        g.drawCenteredString(this.font, c, 0, 0, color);
-        g.pose().popPose();
-    }
-
     private void drawBlitWithAlpha(
             GuiGraphics g,
             ResourceLocation tex,
@@ -729,19 +720,6 @@ public class RotomPhoneWonderScreen extends RotomPhoneBaseScreen {
         RenderSystem.defaultBlendFunc();
         g.setColor(1f, 1f, 1f, 1f);
         g.blit(tex, x, y, u, v, w, h, texW, texH);
-        g.setColor(1f, 1f, 1f, 1f);
-        RenderSystem.disableBlend();
-    }
-
-    private void drawTinted(GuiGraphics g, ResourceLocation tex, int x, int y, int w, int h, int argb) {
-        float red = ((argb >> 16) & 0xFF) / 255f;
-        float green = ((argb >> 8) & 0xFF) / 255f;
-        float blue = (argb & 0xFF) / 255f;
-        float alpha = ((argb >>> 24) & 0xFF) / 255f;
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        g.setColor(red, green, blue, alpha);
-        g.blit(tex, x, y, 0, 0, w, h, w, h);
         g.setColor(1f, 1f, 1f, 1f);
         RenderSystem.disableBlend();
     }

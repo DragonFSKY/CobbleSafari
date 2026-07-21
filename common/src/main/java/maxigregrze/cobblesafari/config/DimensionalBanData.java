@@ -77,6 +77,7 @@ public class DimensionalBanData {
         dungeonDistortionRestrictions.allowBlockBreaking = false;
         dungeonDistortionRestrictions.allowBlockPlacing = false;
         dungeonDistortionRestrictions.bannedItems.add("minecraft:firework_rocket");
+        dungeonDistortionRestrictions.forbidMounting = true;
         dimensions.put("cobblesafari:dungeon_distortion", dungeonDistortionRestrictions);
     }
 
@@ -86,6 +87,7 @@ public class DimensionalBanData {
         public boolean allowBattle = true;
         public boolean allowBlockBreaking = true;
         public boolean allowBlockPlacing = true;
+        public boolean forbidMounting = false;
 
         public DimensionRestrictions() {
             // Required no-arg constructor for GSON deserialization.

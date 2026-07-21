@@ -39,8 +39,10 @@ public final class RotomPhoneBackdropRenderer {
                 RotomPhoneBaseScreen.MAIN_W, RotomPhoneBaseScreen.BOTTOM_H);
 
         RotomPhoneConfigSyncPayload.SkinData skinData = skinDataFor(currentSkin);
+        boolean wallpaper = RotomPhoneClientCache.isCurrentWallpaperEnabled();
         ResourceLocation screenTex;
-        if (skinData != null && skinData.hasCustomScreen() && currentSkin != null && !currentSkin.isEmpty()) {
+        if (skinData != null && skinData.hasCustomScreen() && wallpaper
+                && currentSkin != null && !currentSkin.isEmpty()) {
             screenTex = loc("gui_rotomphone_screen_skin_" + currentSkin + ".png");
         } else if (shinyStatus) {
             screenTex = loc("gui_rotomphone_screen-s.png");

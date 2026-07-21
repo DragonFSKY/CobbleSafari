@@ -21,6 +21,7 @@ public class WonderTradeSavedData extends SavedData {
     private static final String DATA_NAME = CobbleSafari.MOD_ID + "_wonder_trade";
     private static final String KEY_POOL = "Pool";
     private static final String KEY_CREDITS = "Credits";
+    private static final String KEY_BONUS_TICKETS = "BonusTickets";
     private static final String KEY_LAST_DAILY_EPOCH_DAY = "LastDailyEpochDay";
     private static final String KEY_EVENT = "Event";
 
@@ -29,6 +30,8 @@ public class WonderTradeSavedData extends SavedData {
 
     private final List<WonderTradePoolEntry> pool = new ArrayList<>();
     private final Map<UUID, Integer> tradeCreditsRemaining = new HashMap<>();
+    /** Persistent bonus tickets (item-granted); never cleared by the daily reset. Absent key = 0. */
+    private final Map<UUID, Integer> bonusTickets = new HashMap<>();
 
     private String activeEventId = "";
     private byte activeEventMode = 0;
@@ -52,6 +55,19 @@ public class WonderTradeSavedData extends SavedData {
                 try {
                     UUID id = UUID.fromString(key);
                     data.tradeCreditsRemaining.put(id, credits.getInt(key));
+                } catch (IllegalArgumentException ignored) {
+                    // Skip entries whose key is not a valid UUID (corrupt/legacy data).
+                }
+            }
+        }
+        if (tag.contains(KEY_BONUS_TICKETS, Tag.TAG_COMPOUND)) {
+            CompoundTag bonus = tag.getCompound(KEY_BONUS_TICKETS);
+            for (String key : bonus.getAllKeys()) {
+                try {
+                    UUID id = UUID.fromString(key);
+                    if (bonus.getInt(key) > 0) {
+                        data.bonusTickets.put(id, bonus.getInt(key));
+                    }
                 } catch (IllegalArgumentException ignored) {
                     // Skip entries whose key is not a valid UUID (corrupt/legacy data).
                 }
@@ -82,6 +98,12 @@ public class WonderTradeSavedData extends SavedData {
             credits.putInt(e.getKey().toString(), e.getValue());
         }
         tag.put(KEY_CREDITS, credits);
+
+        CompoundTag bonus = new CompoundTag();
+        for (Map.Entry<UUID, Integer> e : bonusTickets.entrySet()) {
+            bonus.putInt(e.getKey().toString(), e.getValue());
+        }
+        tag.put(KEY_BONUS_TICKETS, bonus);
         tag.putLong(KEY_LAST_DAILY_EPOCH_DAY, lastDailyResetEpochDay);
 
         CompoundTag ev = new CompoundTag();
@@ -146,6 +168,19 @@ public class WonderTradeSavedData extends SavedData {
 
     public void clearTradeCredits() {
         tradeCreditsRemaining.clear();
+        setDirty();
+    }
+
+    public int getBonusTickets(UUID playerId) {
+        return bonusTickets.getOrDefault(playerId, 0);
+    }
+
+    public void setBonusTickets(UUID playerId, int value) {
+        if (value <= 0) {
+            bonusTickets.remove(playerId);
+        } else {
+            bonusTickets.put(playerId, value);
+        }
         setDirty();
     }
 

@@ -507,6 +507,8 @@ public class CobbleSafariFabric implements ModInitializer {
             if (!(entity instanceof ServerPlayer player)) {
                 return true;
             }
+            // Pre-drop: strip balm items from boss-fight participants before the inventory drops.
+            maxigregrze.cobblesafari.csboss.BossBattleManager.onPlayerDeath(player);
             return DimensionTimerDeathHandler.allowVanillaDeath(player);
         });
     }

@@ -11,7 +11,8 @@ public record OpenRotomPhonePayload(
         boolean shinyStatus,
         String currentSkin,
         boolean safetyMode,
-        boolean rotoGlide
+        boolean rotoGlide,
+        boolean customWallpaper
 ) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<OpenRotomPhonePayload> TYPE =
@@ -24,11 +25,13 @@ public record OpenRotomPhonePayload(
                 buf.writeUtf(payload.currentSkin());
                 buf.writeBoolean(payload.safetyMode());
                 buf.writeBoolean(payload.rotoGlide());
+                buf.writeBoolean(payload.customWallpaper());
             },
             buf -> new OpenRotomPhonePayload(
                     buf.readUtf(),
                     buf.readBoolean(),
                     buf.readUtf(),
+                    buf.readBoolean(),
                     buf.readBoolean(),
                     buf.readBoolean()
             )

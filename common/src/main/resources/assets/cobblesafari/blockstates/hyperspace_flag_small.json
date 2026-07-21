@@ -1,8 +1,12 @@
 {
   "variants": {
-    "facing=north": { "model": "cobblesafari:block/hyperspace_flag_small", "y": 180 },
-    "facing=east":  { "model": "cobblesafari:block/hyperspace_flag_small", "y": 270 },
-    "facing=south": { "model": "cobblesafari:block/hyperspace_flag_small" },
-    "facing=west":  { "model": "cobblesafari:block/hyperspace_flag_small", "y": 90 }
+    "dyed=false,facing=north": { "model": "cobblesafari:block/hyperspace_flag_small", "y": 180 },
+    "dyed=false,facing=east":  { "model": "cobblesafari:block/hyperspace_flag_small", "y": 270 },
+    "dyed=false,facing=south": { "model": "cobblesafari:block/hyperspace_flag_small" },
+    "dyed=false,facing=west":  { "model": "cobblesafari:block/hyperspace_flag_small", "y": 90 },
+    "dyed=true,facing=north":  { "model": "cobblesafari:block/hyperspace_flag_small_colored", "y": 180 },
+    "dyed=true,facing=east":   { "model": "cobblesafari:block/hyperspace_flag_small_colored", "y": 270 },
+    "dyed=true,facing=south":  { "model": "cobblesafari:block/hyperspace_flag_small_colored" },
+    "dyed=true,facing=west":   { "model": "cobblesafari:block/hyperspace_flag_small_colored", "y": 90 }
   }
 }
