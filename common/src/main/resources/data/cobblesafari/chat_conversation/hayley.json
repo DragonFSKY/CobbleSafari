@@ -119,11 +119,10 @@
   "repeatableStepsLists": [
     {
       "id": "unique_phione",
-      "weight": 1000,
+      "weight": 10000,
       "isUnique": true,
       "isTimed": false,
       "doDisapear": false,
-      "failMessage": "cobblesafari.chat.hayley.rep.fail",
       "steps": [
         {
           "unlockingAdvancement": "cobblesafari:safari_legend",
@@ -145,8 +144,18 @@
             "cobblesafari.chat.hayley.rep.unique.phione.b15",
             "cobblesafari.chat.hayley.rep.unique.phione.b16"
           ],
-          "statistic": "cobblesafari:pokemon_caught_safari",
-          "statisticAmount": 5,
+          "requiredItems": [
+            { "item": "cobblemon:dawn_stone_block", "count": 1 },
+            { "item": "cobblemon:dusk_stone_block", "count": 1 },
+            { "item": "cobblemon:fire_stone_block", "count": 1 },
+            { "item": "cobblemon:ice_stone_block", "count": 1 },
+            { "item": "cobblemon:leaf_stone_block", "count": 1 },
+            { "item": "cobblemon:moon_stone_block", "count": 1 },
+            { "item": "cobblemon:shiny_stone_block", "count": 1 },
+            { "item": "cobblemon:sun_stone_block", "count": 1 },
+            { "item": "cobblemon:thunder_stone_block", "count": 1 },
+            { "item": "cobblemon:water_stone_block", "count": 1 }
+          ],
           "rewardPersonalTrade": "hayley_phione",
           "messagesAfter": [
             "cobblesafari.chat.hayley.rep.unique.phione.a1",

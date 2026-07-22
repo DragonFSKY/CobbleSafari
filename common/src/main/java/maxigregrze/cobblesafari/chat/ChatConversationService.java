@@ -247,6 +247,18 @@ public final class ChatConversationService {
     /** Computes the task progress; lazily snapshots a stat-gated step's baseline if unset. */
     public static ProgressInfo computeProgress(ServerPlayer player, ChatStepDefinition step,
                                                ProgressEntry e, ChatProgressSavedData data) {
+        return computeProgress(player, step, e, data, true);
+    }
+
+    /**
+     * @param snapshotBaseline when {@code false}, an unset stat baseline is left alone and the step
+     *     simply reads as 0 progress — the exact value the snapshot would have produced
+     *     ({@code now - now}), but without writing to the save. Used by the read-only notification
+     *     path ({@link #hasPendingAttention}), which runs for every conversation on every poll.
+     */
+    private static ProgressInfo computeProgress(ServerPlayer player, ChatStepDefinition step,
+                                                ProgressEntry e, ChatProgressSavedData data,
+                                                boolean snapshotBaseline) {
         if (step.isItemGated()) {
             int total = 0;
             int held = 0;
@@ -272,6 +284,9 @@ public final class ChatConversationService {
             }
             long now = ModStats.value(player, statId);
             if (e.statBaseline == Long.MIN_VALUE) {
+                if (!snapshotBaseline) {
+                    return new ProgressInfo(0, step.statisticAmount(), false);
+                }
                 e.statBaseline = now;
                 data.setDirty();
             }
@@ -323,6 +338,71 @@ public final class ChatConversationService {
         String path = advId.getPath().replace('/', '.');
         String base = advId.getNamespace().equals("minecraft") ? path : advId.getNamespace() + "." + path;
         return "advancements." + base + ".title";
+    }
+
+    // ---------------------------------------------------------------- notification dot (read-only)
+
+    /**
+     * Whether this conversation currently asks for the player's attention: unread messages, or a task
+     * whose objective is met and whose reward has not been claimed yet.
+     *
+     * <p><strong>Strictly read-only.</strong> It peeks the entry instead of creating one, never
+     * sanitizes, never rolls a series, never snapshots a stat baseline and never marks the save dirty,
+     * because it runs for every conversation on every notification poll. A held step
+     * ({@link Phase#WAIT_NEXT_DAY} / {@link Phase#WAIT_UNLOCK}) is deliberately <em>not</em> pending:
+     * there is nothing new to read until the hold is released.
+     */
+    public static boolean hasPendingAttention(ServerPlayer player, ChatConversationDefinition conv,
+                                              ChatProgressSavedData data) {
+        ProgressEntry e = data.peek(player.getUUID(), conv.id());
+        if (e == null) {
+            // Never opened: the very first step is waiting to be read. Peeking (rather than
+            // getOrInit) is what keeps the poll from materialising an entry per conversation.
+            return !conv.steps().isEmpty();
+        }
+        return switch (e.phase) {
+            // activeSteps is itself pure; an entry left incoherent by datapack drift resolves to an
+            // empty section here (no dot) and is repaired by sanitize on the real open path.
+            case BEFORE, AFTER -> !activeSteps(conv, e).isEmpty();
+            case TASK -> isTaskClaimable(player, conv, e, data);
+            case WAIT_NEXT_DAY, WAIT_UNLOCK -> false;
+            case DONE -> hasEligibleSeries(conv, e, player);
+        };
+    }
+
+    /** Objective met and reward not taken — i.e. the task bar is showing "Complete". */
+    private static boolean isTaskClaimable(ServerPlayer player, ChatConversationDefinition conv,
+                                           ProgressEntry e, ChatProgressSavedData data) {
+        if (e.claimed) {
+            return false;
+        }
+        List<ChatStepDefinition> steps = activeSteps(conv, e);
+        if (steps.isEmpty()) {
+            return false;
+        }
+        int idx = Math.max(0, Math.min(e.stepIndex, steps.size() - 1));
+        return computeProgress(player, steps.get(idx), e, data, false).done();
+    }
+
+    /**
+     * Read-only probe: would {@link #maybeRollIdle} start a series if the app were opened right now?
+     *
+     * <p>Needed because {@link #onDailyReset} walks offline players and therefore cannot roll an
+     * advancement-gated series ({@code isSeriesUnlocked} excludes them when the player is unknown).
+     * Without this, a series that became eligible would sit there with no dot to prompt the player to
+     * open the app. The probe never rolls anything — {@code maybeRollIdle} still does that on open.
+     */
+    private static boolean hasEligibleSeries(ChatConversationDefinition conv, ProgressEntry e, ServerPlayer player) {
+        if (!e.baseComplete || !conv.usesRepeatables()
+                || e.activeSeriesId == null || !e.activeSeriesId.isEmpty()) {
+            return false;
+        }
+        for (RepeatableSeriesDefinition s : conv.repeatableStepsLists()) {
+            if (s.weight() > 0 && isSeriesEligible(s, e, player)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // ---------------------------------------------------------------- mutations
@@ -510,16 +590,9 @@ public final class ChatConversationService {
                                      ServerPlayer player) {
         List<RepeatableSeriesDefinition> pool = new ArrayList<>();
         for (RepeatableSeriesDefinition s : conv.repeatableStepsLists()) {
-            if (s.isUnique() && e.completedUnique.contains(s.id())) {
-                continue;
+            if (isSeriesEligible(s, e, player)) {
+                pool.add(s);
             }
-            if (s.hasPrerequisite() && !e.completedOnce.contains(s.prerequisite())) {
-                continue;
-            }
-            if (!isSeriesUnlocked(s, player)) {
-                continue;
-            }
-            pool.add(s);
         }
         if (pool.isEmpty()) {
             return "";
@@ -539,6 +612,21 @@ public final class ChatConversationService {
             }
         }
         return pool.get(pool.size() - 1).id();
+    }
+
+    /**
+     * Whether {@code s} may be offered to {@code player} right now: not an already-completed unique,
+     * prerequisite satisfied, and entry advancement owned. Shared by the weighted roll and by the
+     * read-only {@link #hasEligibleSeries} probe so the two can never drift apart.
+     */
+    private static boolean isSeriesEligible(RepeatableSeriesDefinition s, ProgressEntry e, ServerPlayer player) {
+        if (s.isUnique() && e.completedUnique.contains(s.id())) {
+            return false;
+        }
+        if (s.hasPrerequisite() && !e.completedOnce.contains(s.prerequisite())) {
+            return false;
+        }
+        return isSeriesUnlocked(s, player);
     }
 
     /**
@@ -861,6 +949,10 @@ public final class ChatConversationService {
         long today = LocalDate.now(ZONE).toEpochDay();
         RandomSource rng = server.overworld().getRandom();
         for (Map.Entry<UUID, Map<String, ProgressEntry>> pe : data.all().entrySet()) {
+            // Resolve the player when they are online so advancement-gated series can be evaluated by the
+            // rolls below; offline players stay null (gated series are then skipped and picked up by
+            // maybeRollIdle on their next open).
+            ServerPlayer online = server.getPlayerList().getPlayer(pe.getKey());
             for (Map.Entry<String, ProgressEntry> ce : pe.getValue().entrySet()) {
                 ProgressEntry e = ce.getValue();
                 ChatConversationDefinition conv = ChatConversationRegistry.get(ce.getKey());
@@ -879,7 +971,7 @@ public final class ChatConversationService {
                                 && e.seriesStartEpochDay < today;
                         if (!rewardComplete && (forceTimedExpiry || overdue)) {
                             recordResolved(conv, e, false, today);
-                            startRolledSeries(conv, e, today, rng, null);
+                            startRolledSeries(conv, e, today, rng, online);
                             e.lastResetEpochDay = today;
                             continue;
                         }
@@ -891,7 +983,7 @@ public final class ChatConversationService {
                 //    any owed unlock gate has opened (WAIT_UNLOCK → WAIT_NEXT_DAY): "unlock first, then one
                 //    reset". A held gate (WAIT_UNLOCK) never advances here — it resolves on the app-open path.
                 if (e.phase == Phase.WAIT_NEXT_DAY) {
-                    advanceAfterStep(conv, e, today, rng, null);
+                    advanceAfterStep(conv, e, today, rng, online);
                     e.lastResetEpochDay = today;
                     continue;
                 }
@@ -902,10 +994,10 @@ public final class ChatConversationService {
                 }
 
                 // 4. idle pool replenishment (e.g. datapack added series). Advancement-gated series are
-                //    skipped here (no online player to check) and picked up by maybeRollIdle on open.
+                //    skipped only for offline players and picked up by maybeRollIdle on their next open.
                 if (e.baseComplete && (e.activeSeriesId == null || e.activeSeriesId.isEmpty())
                         && conv.usesRepeatables() && e.phase == Phase.DONE) {
-                    startRolledSeries(conv, e, today, rng, null);
+                    startRolledSeries(conv, e, today, rng, online);
                     e.lastResetEpochDay = today;
                 }
             }

@@ -238,6 +238,12 @@ public class ClientNetworking {
         );
 
         ClientPlayNetworking.registerGlobalReceiver(
+                maxigregrze.cobblesafari.network.RotomPhoneNotificationPayload.TYPE,
+                (payload, context) -> context.client().execute(() ->
+                        maxigregrze.cobblesafari.rotomphone.RotomPhoneNotificationCache.apply(payload))
+        );
+
+        ClientPlayNetworking.registerGlobalReceiver(
                 maxigregrze.cobblesafari.network.UnionAppResultPayload.TYPE,
                 (payload, context) -> {
                     context.client().execute(() -> {

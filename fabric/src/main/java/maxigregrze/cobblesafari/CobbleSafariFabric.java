@@ -129,6 +129,7 @@ public class CobbleSafariFabric implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(maxigregrze.cobblesafari.network.GtsAppResultPayload.TYPE, maxigregrze.cobblesafari.network.GtsAppResultPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(maxigregrze.cobblesafari.network.ChatAppResultPayload.TYPE, maxigregrze.cobblesafari.network.ChatAppResultPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(maxigregrze.cobblesafari.network.ChatConversationSyncPayload.TYPE, maxigregrze.cobblesafari.network.ChatConversationSyncPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playS2C().register(maxigregrze.cobblesafari.network.RotomPhoneNotificationPayload.TYPE, maxigregrze.cobblesafari.network.RotomPhoneNotificationPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(maxigregrze.cobblesafari.network.ObjectivesHudSyncPayload.TYPE, maxigregrze.cobblesafari.network.ObjectivesHudSyncPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(maxigregrze.cobblesafari.network.HudConfigRefreshPayload.TYPE, maxigregrze.cobblesafari.network.HudConfigRefreshPayload.STREAM_CODEC);
 

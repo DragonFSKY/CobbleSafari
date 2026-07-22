@@ -4,6 +4,7 @@ import maxigregrze.cobblesafari.network.RotomPhoneActionPayload;
 import maxigregrze.cobblesafari.network.RotomPhoneConfigSyncPayload;
 import maxigregrze.cobblesafari.platform.Services;
 import maxigregrze.cobblesafari.rotomphone.RotomPhoneClientCache;
+import maxigregrze.cobblesafari.rotomphone.RotomPhoneNotificationCache;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -77,7 +78,22 @@ public class RotomPhoneMenuScreen extends RotomPhoneBaseScreen {
             graphics.blit(iconTex, ix, iy, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
             graphics.setColor(1.0f, 1.0f, 1.0f, 1.0f);
             RenderSystem.disableBlend();
+
+            // Drawn after the icon so it always sits on top. Only visible apps are iterated here, so a
+            // locked app can never carry a dot.
+            if (hasNotification(appId)) {
+                drawNotificationDot(graphics, ix, iy);
+            }
         }
+    }
+
+    /** Which app icons carry a notification dot; everything else is silent. */
+    private static boolean hasNotification(String appId) {
+        return switch (appId) {
+            case "chatApp" -> RotomPhoneNotificationCache.isAnyConversationPending();
+            case "gtsApp" -> RotomPhoneNotificationCache.isGtsPending();
+            default -> false;
+        };
     }
 
     @Override

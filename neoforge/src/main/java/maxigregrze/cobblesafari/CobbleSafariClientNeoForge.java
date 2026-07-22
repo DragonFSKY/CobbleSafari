@@ -580,6 +580,11 @@ public class CobbleSafariClientNeoForge {
                 maxigregrze.cobblesafari.rotomphone.ChatConversationClientCache.setConversations(payload.conversations()));
     }
 
+    public static void handleRotomPhoneNotification(maxigregrze.cobblesafari.network.RotomPhoneNotificationPayload payload, IPayloadContext context) {
+        context.enqueueWork(() ->
+                maxigregrze.cobblesafari.rotomphone.RotomPhoneNotificationCache.apply(payload));
+    }
+
     public static void handleChatAppResult(maxigregrze.cobblesafari.network.ChatAppResultPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (Minecraft.getInstance().screen

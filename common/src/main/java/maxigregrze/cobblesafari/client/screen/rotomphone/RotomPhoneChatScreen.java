@@ -7,6 +7,7 @@ import maxigregrze.cobblesafari.network.ChatAppResultPayload;
 import maxigregrze.cobblesafari.network.ChatConversationSyncPayload;
 import maxigregrze.cobblesafari.platform.Services;
 import maxigregrze.cobblesafari.rotomphone.ChatConversationClientCache;
+import maxigregrze.cobblesafari.rotomphone.RotomPhoneNotificationCache;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -322,6 +323,11 @@ public class RotomPhoneChatScreen extends RotomPhoneBaseScreen {
                         true, true, true, true);
             }
             drawTinted(g, tex, bx, y, CONTACT_BTN_SIZE, CONTACT_BTN_SIZE, COL_WHITE);
+            // Inside the scissor, after the icon: the dot clips with its contact when scrolling and
+            // stays on top of the selected/hovered white background.
+            if (RotomPhoneNotificationCache.isConversationPending(e.id())) {
+                drawNotificationDot(g, bx, y);
+            }
             y += CONTACT_BTN_SIZE + CONTACT_GAP;
         }
         g.disableScissor();

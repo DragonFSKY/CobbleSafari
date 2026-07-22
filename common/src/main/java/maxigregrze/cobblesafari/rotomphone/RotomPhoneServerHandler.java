@@ -12,6 +12,12 @@ import net.minecraft.world.item.ItemStack;
 
 public class RotomPhoneServerHandler {
 
+    /**
+     * Minimum gap between two notification polls. The client polls at 1 s; the margin absorbs jitter
+     * without ever rejecting a legitimate poll.
+     */
+    private static final long NOTIFICATION_POLL_MIN_GAP_MS = 500L;
+
     private RotomPhoneServerHandler() {}
 
     public static void openFromInventory(ServerPlayer player) {
@@ -22,6 +28,8 @@ public class RotomPhoneServerHandler {
 
     public static void openPhone(ServerPlayer player, ItemStack phoneStack) {
         RotomPhoneConfigSync.syncToPlayer(player);
+        // Pushed before the screen opens so the home screen shows its dots on the very first frame.
+        RotomPhoneNotificationSync.syncToPlayer(player);
         String name = RotomPhoneItem.getRotomName(phoneStack);
         boolean shiny = RotomPhoneItem.isShiny(phoneStack);
         String skin = RotomPhoneItem.getCurrentSkin(phoneStack);
@@ -74,6 +82,18 @@ public class RotomPhoneServerHandler {
                     openPCPacket.sendToPlayer(player);
                 } catch (Exception e) {
                     CobbleSafari.LOGGER.error("Failed to open PC for {}", player.getName().getString(), e);
+                }
+            }
+            case RotomPhoneActionPayload.ACTION_REQUEST_NOTIFICATIONS -> {
+                // Read-only poll from the open phone screen; the phone-possession check above already
+                // rejects forged payloads, the rate limit caps the cost of a spamming client.
+                if (maxigregrze.cobblesafari.security.RateLimiter.allow(
+                        player.getUUID(),
+                        maxigregrze.cobblesafari.security.RateLimiter.key(
+                                maxigregrze.cobblesafari.security.RateLimiter.SERVICE_ROTOMPHONE,
+                                RotomPhoneActionPayload.ACTION_REQUEST_NOTIFICATIONS),
+                        NOTIFICATION_POLL_MIN_GAP_MS)) {
+                    RotomPhoneNotificationSync.syncToPlayer(player);
                 }
             }
             case RotomPhoneActionPayload.ACTION_CLOSE -> {

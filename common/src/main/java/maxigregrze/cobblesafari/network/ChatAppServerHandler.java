@@ -5,6 +5,7 @@ import maxigregrze.cobblesafari.chat.ChatConversationRegistry;
 import maxigregrze.cobblesafari.chat.ChatConversationService;
 import maxigregrze.cobblesafari.platform.Services;
 import maxigregrze.cobblesafari.rotomphone.ChatConversationSync;
+import maxigregrze.cobblesafari.rotomphone.RotomPhoneNotificationSync;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.UUID;
@@ -84,6 +85,9 @@ public final class ChatAppServerHandler {
             return;
         }
         Services.PLATFORM.sendPayloadToPlayer(player, ChatAppResultPayload.state(state));
+        // The transcript just moved: refresh the dots so the active contact's badge clears (or
+        // appears) immediately instead of waiting for the next poll.
+        RotomPhoneNotificationSync.syncToPlayer(player);
     }
 
     /** Conversation exists and is unlocked for this player. */

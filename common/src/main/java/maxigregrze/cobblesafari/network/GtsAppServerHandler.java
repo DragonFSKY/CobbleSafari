@@ -262,6 +262,8 @@ public final class GtsAppServerHandler {
             clearMutationAttempt(LAST_CLAIM_MS, player.getUUID());
         }
         if (r == GtsService.ClaimResult.SUCCESS) {
+            // One less Pokémon waiting: refresh the app-icon dot right away.
+            maxigregrze.cobblesafari.rotomphone.RotomPhoneNotificationSync.syncToPlayer(player);
             send(
                     player,
                     new GtsAppResultPayload(

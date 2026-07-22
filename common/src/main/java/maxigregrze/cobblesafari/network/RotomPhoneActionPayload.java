@@ -17,6 +17,8 @@ public record RotomPhoneActionPayload(
     public static final int ACTION_CLOSE = 3;
     public static final int ACTION_TOGGLE_ROTO_GLIDE = 4;
     public static final int ACTION_TOGGLE_WALLPAPER = 5;
+    /** Read-only poll for the notification dots; answered with a {@code RotomPhoneNotificationPayload}. */
+    public static final int ACTION_REQUEST_NOTIFICATIONS = 6;
 
     private static final int MAX_DATA_LEN = 128;
 

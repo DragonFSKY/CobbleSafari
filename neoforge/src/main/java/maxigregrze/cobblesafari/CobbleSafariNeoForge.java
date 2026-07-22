@@ -403,6 +403,9 @@ public class CobbleSafariNeoForge {
             registrar.playToClient(maxigregrze.cobblesafari.network.ChatConversationSyncPayload.TYPE,
                     maxigregrze.cobblesafari.network.ChatConversationSyncPayload.STREAM_CODEC,
                     CobbleSafariClientNeoForge::handleChatConversationSync);
+            registrar.playToClient(maxigregrze.cobblesafari.network.RotomPhoneNotificationPayload.TYPE,
+                    maxigregrze.cobblesafari.network.RotomPhoneNotificationPayload.STREAM_CODEC,
+                    CobbleSafariClientNeoForge::handleRotomPhoneNotification);
         } else {
             registrar.playToClient(maxigregrze.cobblesafari.network.OpenRotomPhonePayload.TYPE,
                     maxigregrze.cobblesafari.network.OpenRotomPhonePayload.STREAM_CODEC,
@@ -427,6 +430,9 @@ public class CobbleSafariNeoForge {
                     (payload, context) -> {});
             registrar.playToClient(maxigregrze.cobblesafari.network.ChatConversationSyncPayload.TYPE,
                     maxigregrze.cobblesafari.network.ChatConversationSyncPayload.STREAM_CODEC,
+                    (payload, context) -> {});
+            registrar.playToClient(maxigregrze.cobblesafari.network.RotomPhoneNotificationPayload.TYPE,
+                    maxigregrze.cobblesafari.network.RotomPhoneNotificationPayload.STREAM_CODEC,
                     (payload, context) -> {});
         }
 

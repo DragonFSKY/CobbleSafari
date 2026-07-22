@@ -3,7 +3,9 @@ package maxigregrze.cobblesafari.client.screen.rotomphone;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import maxigregrze.cobblesafari.CobbleSafari;
+import maxigregrze.cobblesafari.network.RotomPhoneActionPayload;
 import maxigregrze.cobblesafari.network.RotomPhoneConfigSyncPayload;
+import maxigregrze.cobblesafari.platform.Services;
 import maxigregrze.cobblesafari.rotomphone.RotomPhoneClientCache;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -36,6 +38,10 @@ public abstract class RotomPhoneBaseScreen extends Screen {
 
     protected int originX;
     protected int originY;
+
+    /** Gap between two notification-dot polls; 0 on construction so the first tick polls at once. */
+    private static final long NOTIFICATION_POLL_MS = 1000L;
+    private long nextNotificationPollAt;
 
     protected RotomPhoneBaseScreen(Component title, String rotomName, boolean shinyStatus,
                                     String currentSkin, boolean safetyMode, boolean rotoGlide) {
@@ -118,6 +124,23 @@ public abstract class RotomPhoneBaseScreen extends Screen {
 
     protected boolean showBackButton() {
         return true;
+    }
+
+    /**
+     * Polls the notification dots while any phone screen is open. Lives here so every app inherits it
+     * with no wiring of its own; the poll stops on its own once the phone closes (no more ticks).
+     * The server rate-limits the action, so the redundant first poll (the open push already sent one)
+     * is dropped silently.
+     */
+    @Override
+    public void tick() {
+        super.tick();
+        long now = System.currentTimeMillis();
+        if (now >= nextNotificationPollAt) {
+            nextNotificationPollAt = now + NOTIFICATION_POLL_MS;
+            Services.PLATFORM.sendPayloadToServer(new RotomPhoneActionPayload(
+                    RotomPhoneActionPayload.ACTION_REQUEST_NOTIFICATIONS, ""));
+        }
     }
 
     protected int getTintColor() {
@@ -275,6 +298,31 @@ public abstract class RotomPhoneBaseScreen extends Screen {
             inset = Math.max(inset, cornerInset(botDist));
         }
         return inset;
+    }
+
+    /** Notification dot: pure red, 5x5 with the four corner pixels removed. */
+    private static final int DOT_COLOR = 0xFFFF0000;
+    private static final int DOT_SIZE = 5;
+    /** Blink period: 500 ms lit, 500 ms dark. */
+    private static final long DOT_BLINK_MS = 500L;
+
+    /** Shared blink phase, so every dot on screen lights and darkens in step. */
+    private static boolean isNotificationDotLit() {
+        return (System.currentTimeMillis() / DOT_BLINK_MS) % 2L == 0L;
+    }
+
+    /**
+     * Draws the blinking notification dot with its top-left pixel at ({@code x}, {@code y}) — flush
+     * inside the icon's own top-left corner. Drawn with {@code fill} rather than a texture so it stays
+     * pure red whatever the phone's theme tint. No-op during the dark half of the blink.
+     */
+    protected static void drawNotificationDot(GuiGraphics g, int x, int y) {
+        if (!isNotificationDotLit()) {
+            return;
+        }
+        g.fill(x + 1, y, x + DOT_SIZE - 1, y + 1, DOT_COLOR);
+        g.fill(x, y + 1, x + DOT_SIZE, y + DOT_SIZE - 1, DOT_COLOR);
+        g.fill(x + 1, y + DOT_SIZE - 1, x + DOT_SIZE - 1, y + DOT_SIZE, DOT_COLOR);
     }
 
     /** Blits a white-on-transparent texture tinted with the given ARGB colour (alpha included). */
