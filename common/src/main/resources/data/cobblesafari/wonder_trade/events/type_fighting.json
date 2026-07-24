@@ -1,0 +1,12 @@
+{
+  "eventId": "type_fighting",
+  "eventName": "Fighting Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "fighting",
+      "weight": 100
+    }
+  ]
+}

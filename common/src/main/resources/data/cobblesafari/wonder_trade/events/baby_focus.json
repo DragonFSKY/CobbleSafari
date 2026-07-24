@@ -1,0 +1,20 @@
+{
+  "eventId": "baby_focus",
+  "eventName": "Baby Boom",
+  "hasCustomBanner": true,
+  "customBannerName": "green",
+  "eventPools": [
+    {
+      "groupId": "common",
+      "weight": 49
+    },
+    {
+      "groupId": "legendaries",
+      "weight": 1
+    },
+    {
+      "groupId": "baby",
+      "weight": 50
+    }
+  ]
+}

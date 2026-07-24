@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Client csmusic player built on a custom OpenAL backend ({@link CsMusicVoice}) instead of the
@@ -45,7 +46,8 @@ public final class CsMusicPlayer {
     @Nullable
     private static ResourceLocation currentOutroId = null;      // outro sound event of the current track
     private static final List<CsMusicVoice> retiring = new ArrayList<>();
-    private static volatile long generation = 0L;
+    // Bumped on every load/outro so a late async callback can tell it has been superseded.
+    private static final AtomicLong GENERATION = new AtomicLong();
     private static boolean wasPaused = false;
 
     // Outro state: while the outgoing track's outro one-shot plays, hold the next instruction.
@@ -87,7 +89,7 @@ public final class CsMusicPlayer {
     }
 
     private static void loadAndApply(SetCsMusicPayload payload) {
-        final long gen = ++generation;
+        final long gen = GENERATION.incrementAndGet();
         final String id = payload.id();
         final int mode = payload.outgoingMode();
         final int startMs = payload.startMs();
@@ -105,7 +107,7 @@ public final class CsMusicPlayer {
             byte[] loopBytes = readOggBytes(loopFile);
             byte[] introBytes = introFile != null ? readOggBytes(introFile) : null;
             mc.execute(() -> {
-                if (gen != generation) {
+                if (gen != GENERATION.get()) {
                     return; // superseded
                 }
                 if (loopBytes == null) {
@@ -243,12 +245,12 @@ public final class CsMusicPlayer {
         inOutro = true;
         pendingAfterOutro = pending;
 
-        final long gen = ++generation;
+        final long gen = GENERATION.incrementAndGet();
         final Minecraft mc = Minecraft.getInstance();
         LOADER.submit(() -> {
             byte[] bytes = readOggBytes(outroFile);
             mc.execute(() -> {
-                if (gen != generation) {
+                if (gen != GENERATION.get()) {
                     return;
                 }
                 if (bytes == null) {

@@ -102,12 +102,14 @@ public final class BattleMusicTracker {
             if (actor.getType() != ActorType.WILD) {
                 continue;
             }
-            for (BattlePokemon bp : actor.getPokemonList()) {
-                Pokemon p = bp.getEffectedPokemon();
-                String species = p.getSpecies().getResourceIdentifier().toString();
-                String form = p.getForm().getName();
-                return new WildInfo(species, form);
+            List<BattlePokemon> team = actor.getPokemonList();
+            if (team.isEmpty()) {
+                continue; // wild actor without a team — keep looking
             }
+            Pokemon p = team.get(0).getEffectedPokemon();
+            String species = p.getSpecies().getResourceIdentifier().toString();
+            String form = p.getForm().getName();
+            return new WildInfo(species, form);
         }
         return null;
     }

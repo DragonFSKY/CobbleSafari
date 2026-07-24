@@ -102,12 +102,10 @@ public class WonderTradeSettings {
 
     private void ensureDefaults() {
         if (autoFillFromPools.isEmpty()) {
-            addPool("normal", 80);
-            addPool("starter", 9);
-            addPool("paradox", 4);
-            addPool("ultrabeast", 4);
-            addPool("legendaries", 2);
-            addPool("mythical", 1);
+            // Vanilla-only pools by design: a fresh install without a species sidemod must never
+            // roll one of the 174 Pokemon Cobblemon ships data for but has no model for.
+            addPool("common_vanilla", 98);
+            addPool("legendaries_vanilla", 2);
         }
     }
 

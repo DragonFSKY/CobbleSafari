@@ -36,4 +36,8 @@ public class ModNetworking {
     public static void sendCloseTpAccept(ServerPlayer player) {
         Services.PLATFORM.sendPayloadToPlayer(player, new CloseTpAcceptPayload());
     }
+
+    public static void sendCloseEmptyPhoneConfirm(ServerPlayer player) {
+        Services.PLATFORM.sendPayloadToPlayer(player, new CloseEmptyPhoneConfirmPayload());
+    }
 }

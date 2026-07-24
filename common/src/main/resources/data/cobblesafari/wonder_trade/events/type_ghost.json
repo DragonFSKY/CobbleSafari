@@ -1,0 +1,12 @@
+{
+  "eventId": "type_ghost",
+  "eventName": "Ghost Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "ghost",
+      "weight": 100
+    }
+  ]
+}

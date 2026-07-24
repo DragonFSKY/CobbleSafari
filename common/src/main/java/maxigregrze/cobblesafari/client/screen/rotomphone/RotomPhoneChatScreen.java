@@ -1,6 +1,7 @@
 package maxigregrze.cobblesafari.client.screen.rotomphone;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.ChatFormatting;
 import maxigregrze.cobblesafari.data.ChatProgressSavedData;
 import maxigregrze.cobblesafari.network.ChatAppPayload;
 import maxigregrze.cobblesafari.network.ChatAppResultPayload;
@@ -9,9 +10,15 @@ import maxigregrze.cobblesafari.platform.Services;
 import maxigregrze.cobblesafari.rotomphone.ChatConversationClientCache;
 import maxigregrze.cobblesafari.rotomphone.RotomPhoneNotificationCache;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import org.joml.Vector2ic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +63,14 @@ public class RotomPhoneChatScreen extends RotomPhoneBaseScreen {
     private static final int COL_WHITE = 0xFFFFFFFF;
     private static final int COL_BUBBLE_TEXT = 0xFF2C2C2C;
     private static final int COL_FAILED = 0xFFD64545;
+    // Gather-objective tooltip. TIP_LINE_H / TIP_LINE_GAP mirror vanilla's tooltip line geometry (a text
+    // line is 10px tall and the first one is followed by 2 extra pixels); TIP_INDENT is three spaces,
+    // just wide enough to clear the icon drawn over the start of each line.
+    private static final int TIP_LINE_H = 10;
+    private static final int TIP_LINE_GAP = 2;
+    private static final int TIP_ICON = 10;
+    private static final String TIP_INDENT = "   ";
+    private static final int TIP_Z = 400;
 
     private static final long STREAM_STEP_MS = 3000L;
     private static final long POLL_MS = 1000L;
@@ -77,6 +92,9 @@ public class RotomPhoneChatScreen extends RotomPhoneBaseScreen {
     private boolean taskVisible;
     private boolean claimPending;
     private long nextPollAt;
+
+    /** Gather objective under the cursor this frame, drawn after the chat scissor closes (null = none). */
+    private List<ChatAppResultPayload.ItemLine> hoveredGatherItems;
 
     // scrolling
     private int scrollContacts;
@@ -276,6 +294,7 @@ public class RotomPhoneChatScreen extends RotomPhoneBaseScreen {
     @Override
     protected void renderPhoneContent(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
         int theme = getTintColor();
+        hoveredGatherItems = null;
 
         fillRect(g, SEP_V_X0, CONTACTS_Y0, SEP_V_X1, CONTACTS_Y1, COL_WHITE);
         fillRect(g, CHAT_X0, 32, CHAT_X1, 33, COL_WHITE);
@@ -288,6 +307,19 @@ public class RotomPhoneChatScreen extends RotomPhoneBaseScreen {
         renderContacts(g, mouseX, mouseY);
         if (activeConvId != null && state != null) {
             renderChat(g, mouseX, mouseY, theme);
+        }
+    }
+
+    /**
+     * The task bubbles record the hovered gather objective while the phone content draws; the tooltip
+     * itself is drawn here, once everything else is done, so it escapes the chat scissor and covers the
+     * whole phone frame (back button included).
+     */
+    @Override
+    public void render(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+        super.render(g, mouseX, mouseY, partialTick);
+        if (hoveredGatherItems != null) {
+            renderGatherTooltip(g, hoveredGatherItems, mouseX, mouseY);
         }
     }
 
@@ -472,9 +504,28 @@ public class RotomPhoneChatScreen extends RotomPhoneBaseScreen {
                     && taskStep != null && taskStep.done() && !claimPending;
         }
 
+        /**
+         * Whether hovering this bubble should list the objective's items. Only while the gathering is
+         * actually in progress: once every item is held the bar turns into the claim button, and after
+         * the claim the step is history — in both cases the shopping list is no longer useful.
+         */
+        private boolean hasGatherTooltip() {
+            return type == 1 && taskCurrent && state != null
+                    && state.phase() == ChatProgressSavedData.Phase.TASK.ordinal()
+                    && taskStep != null && !taskStep.requiredItems().isEmpty()
+                    && !taskStep.done() && !taskStep.failed();
+        }
+
         private void renderTask(GuiGraphics g, int x, int y, int theme, int mouseX, int mouseY) {
             fillRoundedRect(g, x, y, BUBBLE_W, height, CORNER_R, theme, true, true, true, false);
             drawLines(g, lines, x + BUBBLE_PAD, y, COL_BUBBLE_TEXT);
+
+            // Whole bubble (description + progress bar) is the hover target for the item list.
+            if (hasGatherTooltip() && isInBounds(mouseX, mouseY, x, y, BUBBLE_W, height)
+                    && isInBounds(mouseX, mouseY, originX + CHAT_X0, originY + CHAT_Y0,
+                    CHAT_X1 - CHAT_X0, CHAT_Y1 - CHAT_Y0)) {
+                hoveredGatherItems = taskStep.requiredItems();
+            }
 
             int n = taskLineCount == null ? 1 : taskLineCount;
             int yb = n * 8 + (n + 1) * 2 + 2;
@@ -531,6 +582,61 @@ public class RotomPhoneChatScreen extends RotomPhoneBaseScreen {
                 g.drawString(font, ls.get(i), x, top + BUBBLE_PAD_V + i * 10, color, false);
             }
         }
+    }
+
+    // ---------------------------------------------------------------- gather tooltip
+
+    /**
+     * Tooltip listing an item-gathering objective, one requirement per line: item icon, item name and
+     * the required count. The line is green once the player holds enough of that item, white while it
+     * is still missing.
+     *
+     * <p>The box itself goes through {@link GuiGraphics#renderComponentTooltip}, exactly like the GTS
+     * and Wonder Trade tooltips, so the background is the shared one (and stays shared if a loader or
+     * another mod restyles it). Only the icons are drawn on top, over the rows vanilla just laid out —
+     * hence the indent reserved at the start of every line and the line geometry mirrored below.
+     */
+    private void renderGatherTooltip(GuiGraphics g, List<ChatAppResultPayload.ItemLine> items, int mouseX, int mouseY) {
+        List<ItemStack> icons = new ArrayList<>(items.size());
+        List<Component> lines = new ArrayList<>(items.size());
+        int w = 0;
+        for (ChatAppResultPayload.ItemLine line : items) {
+            ResourceLocation id = ResourceLocation.tryParse(line.itemId());
+            Item item = id == null ? Items.AIR : BuiltInRegistries.ITEM.get(id);
+            ItemStack stack = new ItemStack(item);
+            // Unknown/removed item id: show the raw id rather than "Air", so the objective stays readable.
+            Component name = item == Items.AIR ? Component.literal(line.itemId()) : stack.getHoverName();
+            Component row = Component.literal(TIP_INDENT).append(Component
+                    .translatable("gui.cobblesafari.rotomphone.chat.task.gather.entry", name, line.required())
+                    .withStyle(line.held() >= line.required() ? ChatFormatting.GREEN : ChatFormatting.WHITE));
+            icons.add(stack);
+            lines.add(row);
+            w = Math.max(w, this.font.width(row));
+        }
+        g.renderComponentTooltip(this.font, lines, mouseX, mouseY);
+
+        // Same width/height and positioner vanilla just used, so the icons land on their own line.
+        int h = lines.size() * TIP_LINE_H + (lines.size() == 1 ? -TIP_LINE_GAP : 0);
+        Vector2ic pos = DefaultTooltipPositioner.INSTANCE.positionTooltip(
+                g.guiWidth(), g.guiHeight(), mouseX, mouseY, w, h);
+        g.pose().pushPose();
+        g.pose().translate(0f, 0f, TIP_Z);
+        for (int i = 0; i < icons.size(); i++) {
+            // Vanilla leaves an extra gap after the first line only.
+            int ry = pos.y() + (i == 0 ? 0 : TIP_LINE_H + TIP_LINE_GAP + (i - 1) * TIP_LINE_H);
+            drawTooltipIcon(g, icons.get(i), pos.x(), ry - 1);
+        }
+        g.pose().popPose();
+    }
+
+    /** Item icon shrunk from its native 16px to {@link #TIP_ICON} so it fits one tooltip text line. */
+    private static void drawTooltipIcon(GuiGraphics g, ItemStack stack, int x, int y) {
+        float scale = TIP_ICON / 16f;
+        g.pose().pushPose();
+        g.pose().translate(x, y, 0f);
+        g.pose().scale(scale, scale, 1f);
+        g.renderFakeItem(stack, 0, 0);
+        g.pose().popPose();
     }
 
     // ---------------------------------------------------------------- input

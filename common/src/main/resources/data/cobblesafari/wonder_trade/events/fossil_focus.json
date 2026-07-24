@@ -1,0 +1,20 @@
+{
+  "eventId": "fossil_focus",
+  "eventName": "Fossils Ressurection",
+  "hasCustomBanner": true,
+  "customBannerName": "orange",
+  "eventPools": [
+    {
+      "groupId": "common",
+      "weight": 49
+    },
+    {
+      "groupId": "legendaries",
+      "weight": 1
+    },
+    {
+      "groupId": "fossil",
+      "weight": 50
+    }
+  ]
+}

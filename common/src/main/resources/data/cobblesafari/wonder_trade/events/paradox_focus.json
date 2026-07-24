@@ -1,0 +1,16 @@
+{
+  "eventId": "paradox_focus",
+  "eventName": "Paradox Rift",
+  "hasCustomBanner": true,
+  "customBannerName": "blue",
+  "eventPools": [
+    {
+      "groupId": "common",
+      "weight": 95
+    },
+    {
+      "groupId": "paradox",
+      "weight": 5
+    }
+  ]
+}

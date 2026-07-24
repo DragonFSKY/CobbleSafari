@@ -223,7 +223,20 @@ public class ClientNetworking {
                     context.client().execute(() -> {
                         Minecraft.getInstance().setScreen(
                                 new maxigregrze.cobblesafari.client.screen.rotomphone.EmptyPhoneConfirmScreen(
-                                        payload.rotomName(), payload.rotomLevel(), payload.rotomIsShiny()));
+                                        payload.rotomName(), payload.rotomLevel(), payload.rotomIsShiny(),
+                                        payload.speciesId(), payload.aspects()));
+                    });
+                }
+        );
+
+        ClientPlayNetworking.registerGlobalReceiver(
+                CloseEmptyPhoneConfirmPayload.TYPE,
+                (payload, context) -> {
+                    context.client().execute(() -> {
+                        if (Minecraft.getInstance().screen
+                                instanceof maxigregrze.cobblesafari.client.screen.rotomphone.EmptyPhoneConfirmScreen confirmScreen) {
+                            confirmScreen.closeFromServer();
+                        }
                     });
                 }
         );

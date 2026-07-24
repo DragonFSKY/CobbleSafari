@@ -134,7 +134,7 @@ public final class ObjectivesHudController {
             maxText = Math.max(maxText, font.width(ObjectivesHudOverlay.formatTaskText(objectives.get(i))));
         }
         int openWidth = Math.min(AREA_WIDTH, TASK_TEXT_X + maxText + OPEN_TEXT_PADDING);
-        return AREA_WIDTH - openWidth;
+        return (float) AREA_WIDTH - openWidth;
     }
 
     public static boolean isVisible() {

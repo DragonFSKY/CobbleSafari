@@ -1,0 +1,12 @@
+{
+  "eventId": "type_water",
+  "eventName": "Water Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "water",
+      "weight": 100
+    }
+  ]
+}

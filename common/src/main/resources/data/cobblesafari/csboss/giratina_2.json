@@ -1,9 +1,9 @@
 {
     "bossId": "giratina_2",
     "displayName": "Distorted Shadow",
-    "tags": ["test_tag"],
-    "maximumDuration": 300,
-    "minimumDuration": 120,
+    "tags": ["giratinaBoss"],
+    "maximumDuration": 420,
+    "minimumDuration": 240,
     "specie": "giratina distortion",
     "minion": "giratina distortion",
     "size": 2.2,

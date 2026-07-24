@@ -25,6 +25,13 @@ public record ChatAppResultPayload(int kind, StateData state, String errorKey) i
                             List<StepView> steps) {}
 
     /**
+     * One line of an item-gathering objective: the item to hold, how many are required and how many
+     * the player currently holds (clamped to {@code required}). Only filled for the current step of an
+     * item-gated task — it feeds the hover tooltip that details the otherwise opaque "gather items" bar.
+     */
+    public record ItemLine(String itemId, int required, int held) {}
+
+    /**
      * One step's render data. For steps before the current one everything is fully shown and done.
      * For the current step, {@code beforeShown}/{@code afterShown}/{@code taskVisible} reflect the
      * persisted position and {@code progressNum/Den/done} the live task progress.
@@ -34,7 +41,7 @@ public record ChatAppResultPayload(int kind, StateData state, String errorKey) i
                            int progressNum, int progressDen, boolean done,
                            boolean rewardItems, boolean rewardTrade,
                            int beforeShown, int afterShown, boolean taskVisible, boolean current,
-                           boolean failed) {}
+                           boolean failed, List<ItemLine> requiredItems) {}
 
     public static final CustomPacketPayload.Type<ChatAppResultPayload> TYPE =
             new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(CobbleSafari.MOD_ID, "chat_app_result"));
@@ -73,6 +80,12 @@ public record ChatAppResultPayload(int kind, StateData state, String errorKey) i
                 buf.writeBoolean(v.taskVisible());
                 buf.writeBoolean(v.current());
                 buf.writeBoolean(v.failed());
+                buf.writeVarInt(v.requiredItems().size());
+                for (ItemLine line : v.requiredItems()) {
+                    buf.writeUtf(line.itemId());
+                    buf.writeVarInt(line.required());
+                    buf.writeVarInt(line.held());
+                }
             }
         } else {
             buf.writeUtf(p.errorKey == null ? "" : p.errorKey);
@@ -102,8 +115,13 @@ public record ChatAppResultPayload(int kind, StateData state, String errorKey) i
                 boolean taskVisible = buf.readBoolean();
                 boolean current = buf.readBoolean();
                 boolean failed = buf.readBoolean();
+                int itemCount = buf.readVarInt();
+                List<ItemLine> required = new ArrayList<>(itemCount);
+                for (int k = 0; k < itemCount; k++) {
+                    required.add(new ItemLine(buf.readUtf(), buf.readVarInt(), buf.readVarInt()));
+                }
                 steps.add(new StepView(before, after, title, num, den, done, rItems, rTrade,
-                        beforeShown, afterShown, taskVisible, current, failed));
+                        beforeShown, afterShown, taskVisible, current, failed, required));
             }
             return state(new StateData(convId, currentStep, phase, claimed, steps));
         }

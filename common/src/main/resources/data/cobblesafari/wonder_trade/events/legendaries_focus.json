@@ -1,0 +1,16 @@
+{
+  "eventId": "legendaries_focus",
+  "eventName": "Call of Legends",
+  "hasCustomBanner": true,
+  "customBannerName": "red",
+  "eventPools": [
+    {
+      "groupId": "common",
+      "weight": 95
+    },
+    {
+      "groupId": "legendaries",
+      "weight": 5
+    }
+  ]
+}

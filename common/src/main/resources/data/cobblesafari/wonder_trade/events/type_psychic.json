@@ -1,0 +1,12 @@
+{
+  "eventId": "type_psychic",
+  "eventName": "Psychic Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "psychic",
+      "weight": 100
+    }
+  ]
+}

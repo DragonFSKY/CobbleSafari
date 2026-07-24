@@ -110,48 +110,6 @@
         "cobblesafari.chat.rotom.s5.a5"
       ],
       "waitNextDay": true
-    },
-    {
-      "messagesBefore": [
-        "cobblesafari.chat.rotom.s6.b1",
-        "cobblesafari.chat.rotom.s6.b2",
-        "cobblesafari.chat.rotom.s6.b3",
-        "cobblesafari.chat.rotom.s6.b4",
-        "cobblesafari.chat.rotom.s6.b5",
-        "cobblesafari.chat.rotom.s6.b6"
-      ],
-      "unlockApp": "unionApp",
-      "advancement": "cobblesafari:sociable",
-      "rewardSkinTag": "color",
-      "messagesAfter": [
-        "cobblesafari.chat.rotom.s6.a1",
-        "cobblesafari.chat.rotom.s6.a2",
-        "cobblesafari.chat.rotom.s6.a3",
-        "cobblesafari.chat.rotom.s6.a4",
-        "cobblesafari.chat.rotom.s6.a5"
-      ],
-      "waitNextDay": true
-    },
-    {
-      "messagesBefore": [
-        "cobblesafari.chat.rotom.s6.b1",
-        "cobblesafari.chat.rotom.s6.b2",
-        "cobblesafari.chat.rotom.s6.b3",
-        "cobblesafari.chat.rotom.s6.b4",
-        "cobblesafari.chat.rotom.s6.b5",
-        "cobblesafari.chat.rotom.s6.b6"
-      ],
-      "unlockApp": "unionApp",
-      "advancement": "cobblesafari:sociable",
-      "rewardSkinTag": "color",
-      "messagesAfter": [
-        "cobblesafari.chat.rotom.s6.a1",
-        "cobblesafari.chat.rotom.s6.a2",
-        "cobblesafari.chat.rotom.s6.a3",
-        "cobblesafari.chat.rotom.s6.a4",
-        "cobblesafari.chat.rotom.s6.a5"
-      ],
-      "waitNextDay": true
     }
   ]
 }

@@ -189,10 +189,6 @@ public class ModCreativeTabs {
                 output.accept(ModBlocks.VOLCANIC_CRATER);
                 output.accept(ModBlocks.HOT_GEYSER);
                 output.accept(ModBlocks.DRACONIC_CRATER);
-                output.accept(ModBlocks.PUNCHINGBAG);
-                output.accept(ModBlocks.KARATE_MANNEQUIN);
-                output.accept(ModBlocks.TOMBSTONE);
-                output.accept(ModBlocks.TOMBSTONE_SMALL);
                 output.accept(ModBlocks.TRAP_DARKNESS);
                 output.accept(ModBlocks.TRAP_DARKNESS_HARD);
                 output.accept(ModBlocks.TRAP_EXPLOSION);
@@ -311,6 +307,10 @@ public class ModCreativeTabs {
                 output.accept(ModBlocks.CHARMANDER_STATUE);
                 output.accept(ModBlocks.PIKACHU_STATUE);
                 output.accept(ModBlocks.SQUIRTLE_STATUE);
+                output.accept(ModBlocks.PUNCHINGBAG);
+                output.accept(ModBlocks.KARATE_MANNEQUIN);
+                output.accept(ModBlocks.TOMBSTONE);
+                output.accept(ModBlocks.TOMBSTONE_SMALL);
                 output.accept(ModBlocks.UNION_ROOM_BRICKS_GREEN);
                 output.accept(ModBlocks.UNION_ROOM_BRICKS_YELLOW);
                 output.accept(ModBlocks.UNION_ROOM_BRICKS_BLUE);

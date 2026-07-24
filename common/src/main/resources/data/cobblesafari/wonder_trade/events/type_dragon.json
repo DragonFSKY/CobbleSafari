@@ -1,0 +1,12 @@
+{
+  "eventId": "type_dragon",
+  "eventName": "Dragon Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "dragon",
+      "weight": 100
+    }
+  ]
+}

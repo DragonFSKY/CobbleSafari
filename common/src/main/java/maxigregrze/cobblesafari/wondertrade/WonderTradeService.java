@@ -154,6 +154,7 @@ public final class WonderTradeService {
             return null;
         }
         String speciesLine = group.getPopulation().get(random.nextInt(group.getPopulation().size()));
+        speciesLine = WonderTradeFormRandomizer.apply(speciesLine, random);
         int level = random.nextIntBetweenInclusive(cfg.getMinLevel(), cfg.getMaxLevel());
         String propsLine = speciesLine + " level=" + level;
         PokemonProperties props = PokemonProperties.Companion.parse(propsLine);

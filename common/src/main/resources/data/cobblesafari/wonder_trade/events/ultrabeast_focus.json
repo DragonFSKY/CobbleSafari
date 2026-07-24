@@ -1,0 +1,16 @@
+{
+  "eventId": "ultrabeast_focus",
+  "eventName": "Ultra Invasion",
+  "hasCustomBanner": true,
+  "customBannerName": "purple",
+  "eventPools": [
+    {
+      "groupId": "common",
+      "weight": 95
+    },
+    {
+      "groupId": "ultrabeast",
+      "weight": 5
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "eventId": "mythical_focus",
+  "eventName": "Mythical Dream",
+  "hasCustomBanner": true,
+  "customBannerName": "purple",
+  "eventPools": [
+    {
+      "groupId": "common",
+      "weight": 95
+    },
+    {
+      "groupId": "mythical",
+      "weight": 5
+    }
+  ]
+}

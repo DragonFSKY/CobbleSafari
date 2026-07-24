@@ -1,0 +1,12 @@
+{
+  "eventId": "type_fairy",
+  "eventName": "Fairy Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "fairy",
+      "weight": 100
+    }
+  ]
+}

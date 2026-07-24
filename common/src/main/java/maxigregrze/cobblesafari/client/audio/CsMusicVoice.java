@@ -5,6 +5,7 @@ import org.lwjgl.openal.AL10;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * One non-positional OpenAL source driven by a background streaming thread. Plays a sequence of
@@ -18,7 +19,7 @@ import java.nio.ByteBuffer;
  *
  * <p>Threading: the pump thread owns all per-frame AL calls on this source. The client thread only
  * calls {@link #setVolume}, {@link #rampTo}, {@link #setPaused}, {@link #requestStop} and reads
- * {@link #loopPositionMs}/{@link #isFinished} — all via volatile fields.</p>
+ * {@link #loopPositionMs}/{@link #isFinished} — all via volatile (or atomic) fields.</p>
  */
 final class CsMusicVoice {
 
@@ -47,7 +48,8 @@ final class CsMusicVoice {
     private volatile float volume;
 
     // Wall-clock instant that maps to loop-playhead 0 (accounts for intro length + synced start).
-    private volatile long loopAnchorWallMs = 0L;
+    // Atomic: the pump thread anchors it at track start while the client thread shifts it on resume.
+    private final AtomicLong loopAnchorWallMs = new AtomicLong(0L);
 
     // Pause bookkeeping.
     private volatile boolean pausedFlag = false;
@@ -105,14 +107,14 @@ final class CsMusicVoice {
             pauseStartMs = System.currentTimeMillis();
             safeSourcePause();
         } else {
-            loopAnchorWallMs += System.currentTimeMillis() - pauseStartMs; // keep playhead coherent
+            loopAnchorWallMs.addAndGet(System.currentTimeMillis() - pauseStartMs); // keep playhead coherent
             safeSourcePlay();
         }
     }
 
     /** Current loop playhead in ms (folded modulo the loop duration). */
     long loopPositionMs() {
-        long anchor = loopAnchorWallMs;
+        long anchor = loopAnchorWallMs.get();
         if (anchor == 0L) {
             return startLoopMs;
         }
@@ -167,7 +169,7 @@ final class CsMusicVoice {
             for (int i = 0; i < segments.length - 1; i++) {
                 introDur += Math.max(0L, segments[i].durationMs);
             }
-            loopAnchorWallMs = System.currentTimeMillis() + introDur - startLoopMs;
+            loopAnchorWallMs.set(System.currentTimeMillis() + introDur - startLoopMs);
 
             AL10.alSourcePlay(source);
 
@@ -197,7 +199,7 @@ final class CsMusicVoice {
                 Thread.sleep(POLL_SLEEP_MS);
             }
         } catch (InterruptedException ignored) {
-            // stop requested
+            Thread.currentThread().interrupt(); // stop requested — restore the flag for teardown
         } catch (RuntimeException e) {
             CobbleSafari.LOGGER.error("[CSMusic] voice {} streaming error", source, e);
         } finally {

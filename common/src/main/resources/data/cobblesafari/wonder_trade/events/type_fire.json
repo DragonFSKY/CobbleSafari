@@ -1,0 +1,12 @@
+{
+  "eventId": "type_fire",
+  "eventName": "Fire Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "fire",
+      "weight": 100
+    }
+  ]
+}

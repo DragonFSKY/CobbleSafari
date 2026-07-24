@@ -168,6 +168,7 @@ public class DimensionEvents {
         maxigregrze.cobblesafari.csmusic.DimensionalMusicManager.onPlayerDisconnect(player.getUUID());
         DungeonTeleportHandler.clearPlayerData(player.getUUID());
         RotoGlideServerLogic.removeState(player.getUUID());
+        maxigregrze.cobblesafari.rotomphone.EmptyPhoneServerHandler.clear(player.getUUID());
         LAST_DIMENSION.remove(player.getUUID());
         maxigregrze.cobblesafari.objectives.ObjectivesManager.onPlayerDisconnect(player.getUUID());
     }

@@ -1,0 +1,12 @@
+{
+  "eventId": "type_poison",
+  "eventName": "Poison Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "poison",
+      "weight": 100
+    }
+  ]
+}

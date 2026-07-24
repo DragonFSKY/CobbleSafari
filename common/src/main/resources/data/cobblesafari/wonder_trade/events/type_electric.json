@@ -1,0 +1,12 @@
+{
+  "eventId": "type_electric",
+  "eventName": "Electric Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "electric",
+      "weight": 100
+    }
+  ]
+}

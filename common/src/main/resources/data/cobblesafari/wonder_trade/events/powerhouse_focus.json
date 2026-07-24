@@ -1,0 +1,20 @@
+{
+  "eventId": "powerhouse_focus",
+  "eventName": "Rise of Powerhouse",
+  "hasCustomBanner": true,
+  "customBannerName": "red",
+  "eventPools": [
+    {
+      "groupId": "common",
+      "weight": 49
+    },
+    {
+      "groupId": "legendaries",
+      "weight": 1
+    },
+    {
+      "groupId": "powerhouse",
+      "weight": 50
+    }
+  ]
+}

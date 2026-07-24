@@ -1,0 +1,12 @@
+{
+  "eventId": "type_normal",
+  "eventName": "Normal Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "normal",
+      "weight": 100
+    }
+  ]
+}

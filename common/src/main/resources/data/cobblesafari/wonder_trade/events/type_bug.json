@@ -1,0 +1,12 @@
+{
+  "eventId": "type_bug",
+  "eventName": "Bug Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "bug",
+      "weight": 100
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "eventId": "type_ground",
+  "eventName": "Ground Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "ground",
+      "weight": 100
+    }
+  ]
+}

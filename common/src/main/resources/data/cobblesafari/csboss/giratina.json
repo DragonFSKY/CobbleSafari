@@ -1,7 +1,7 @@
 {
     "bossId": "giratina",
     "displayName": "Distorted Shadow",
-    "tags": ["test_tag"],
+    "tags": ["giratinaBoss"],
     "maximumDuration": 300,
     "minimumDuration": 180,
     "specie": "giratina distortion",
@@ -14,8 +14,6 @@
     "moveCooldownMin": 2,
     "moveCooldownMax": 3,
     "isStatic": true,
-    "uniqueReward": "cobblesafari:csboss/test_unique",
-    "rewards": "cobblesafari:csboss/test_common",
     "music": "cobblesafari:giratina1",
     "healthStyle": "notched_10",
     "healthColor": "red",

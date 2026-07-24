@@ -1,0 +1,12 @@
+{
+  "eventId": "type_grass",
+  "eventName": "Grass Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "grass",
+      "weight": 100
+    }
+  ]
+}

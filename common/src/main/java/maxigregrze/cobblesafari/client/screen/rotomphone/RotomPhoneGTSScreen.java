@@ -26,6 +26,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -2180,7 +2181,10 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
      * NeoForge-only setTextShadow patch is unavailable from common code). Mirrors vanilla's
      * scrolled view through {@link EditBoxAccessor}; the box itself is never render()ed.
      */
-    private void renderSpeciesBoxText(GuiGraphics g, EditBox box) {
+    private void renderSpeciesBoxText(GuiGraphics g, @Nullable EditBox box) {
+        if (box == null) {
+            return; // laid out in init(); guard the (theoretical) render-before-init path
+        }
         String value = box.getValue();
         EditBoxAccessor acc = (EditBoxAccessor) (Object) box;
         int displayPos = Math.min(acc.getDisplayPos(), value.length());

@@ -534,7 +534,17 @@ public class CobbleSafariClientNeoForge {
     public static void handleOpenEmptyPhoneConfirm(maxigregrze.cobblesafari.network.OpenEmptyPhoneConfirmPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             Minecraft.getInstance().setScreen(new maxigregrze.cobblesafari.client.screen.rotomphone.EmptyPhoneConfirmScreen(
-                    payload.rotomName(), payload.rotomLevel(), payload.rotomIsShiny()));
+                    payload.rotomName(), payload.rotomLevel(), payload.rotomIsShiny(),
+                    payload.speciesId(), payload.aspects()));
+        });
+    }
+
+    public static void handleCloseEmptyPhoneConfirm(maxigregrze.cobblesafari.network.CloseEmptyPhoneConfirmPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (Minecraft.getInstance().screen
+                    instanceof maxigregrze.cobblesafari.client.screen.rotomphone.EmptyPhoneConfirmScreen confirmScreen) {
+                confirmScreen.closeFromServer();
+            }
         });
     }
 

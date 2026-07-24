@@ -223,7 +223,7 @@ public final class ChatConversationService {
             views.add(new ChatAppResultPayload.StepView(
                     step.messagesBefore(), after, titleKey,
                     info.num(), info.den(), done, step.hasRewardItems(), step.hasRewardPersonalTrade(),
-                    beforeShown, afterShown, taskVisible, true, false));
+                    beforeShown, afterShown, taskVisible, true, false, itemLines(player, step)));
         }
     }
 
@@ -233,7 +233,7 @@ public final class ChatConversationService {
         views.add(new ChatAppResultPayload.StepView(
                 step.messagesBefore(), after, taskTitleKey(step),
                 1, 0, true, step.hasRewardItems(), step.hasRewardPersonalTrade(),
-                step.messagesBefore().size(), after.size(), true, false, false));
+                step.messagesBefore().size(), after.size(), true, false, false, List.of()));
     }
 
     private static void appendFailedStep(List<ChatAppResultPayload.StepView> views, ChatStepDefinition step, String failMessage) {
@@ -241,7 +241,25 @@ public final class ChatConversationService {
         views.add(new ChatAppResultPayload.StepView(
                 step.messagesBefore(), after, taskTitleKey(step),
                 0, 0, false, false, false,
-                step.messagesBefore().size(), after.size(), true, false, true));
+                step.messagesBefore().size(), after.size(), true, false, true, List.of()));
+    }
+
+    /**
+     * Per-item breakdown of an item-gated step (empty for any other gating), so the client can list the
+     * shopping list in the task bubble's tooltip. An unresolvable item id is still listed — with 0 held,
+     * matching {@link #computeProgress} — so the objective stays visible instead of silently vanishing.
+     */
+    private static List<ChatAppResultPayload.ItemLine> itemLines(ServerPlayer player, ChatStepDefinition step) {
+        if (!step.isItemGated()) {
+            return List.of();
+        }
+        List<ChatAppResultPayload.ItemLine> lines = new ArrayList<>(step.requiredItems().size());
+        for (ChatStepDefinition.ItemReq req : step.requiredItems()) {
+            Item item = EntryFeeHelper.resolveItem(req.itemId());
+            int held = item == Items.AIR ? 0 : Math.min(EntryFeeHelper.countItemInInventory(player, item), req.count());
+            lines.add(new ChatAppResultPayload.ItemLine(req.itemId(), req.count(), held));
+        }
+        return lines;
     }
 
     /** Computes the task progress; lazily snapshots a stat-gated step's baseline if unset. */

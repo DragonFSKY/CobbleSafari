@@ -1,0 +1,12 @@
+{
+  "eventId": "type_ice",
+  "eventName": "Ice Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "ice",
+      "weight": 100
+    }
+  ]
+}

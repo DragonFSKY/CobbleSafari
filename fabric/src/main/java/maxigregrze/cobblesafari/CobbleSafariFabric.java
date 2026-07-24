@@ -123,6 +123,7 @@ public class CobbleSafariFabric implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(DimensionalBanSyncPayload.TYPE, DimensionalBanSyncPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(maxigregrze.cobblesafari.network.OpenRotomPhonePayload.TYPE, maxigregrze.cobblesafari.network.OpenRotomPhonePayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(maxigregrze.cobblesafari.network.OpenEmptyPhoneConfirmPayload.TYPE, maxigregrze.cobblesafari.network.OpenEmptyPhoneConfirmPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playS2C().register(maxigregrze.cobblesafari.network.CloseEmptyPhoneConfirmPayload.TYPE, maxigregrze.cobblesafari.network.CloseEmptyPhoneConfirmPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(maxigregrze.cobblesafari.network.RotomPhoneConfigSyncPayload.TYPE, maxigregrze.cobblesafari.network.RotomPhoneConfigSyncPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(maxigregrze.cobblesafari.network.UnionAppResultPayload.TYPE, maxigregrze.cobblesafari.network.UnionAppResultPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(maxigregrze.cobblesafari.network.WonderAppResultPayload.TYPE, maxigregrze.cobblesafari.network.WonderAppResultPayload.STREAM_CODEC);
@@ -471,6 +472,7 @@ public class CobbleSafariFabric implements ModInitializer {
             BalloonSpawnHandler.onServerTick(server);
             server.getPlayerList().getPlayers().forEach(LuckyMiningHelmetItem::tickEffect);
             maxigregrze.cobblesafari.rotomphone.RotoGlideServerLogic.tickAll(server);
+            maxigregrze.cobblesafari.rotomphone.EmptyPhoneServerHandler.tickExpirations(server);
         });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {

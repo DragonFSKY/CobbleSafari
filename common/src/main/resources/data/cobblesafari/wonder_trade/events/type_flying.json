@@ -1,0 +1,12 @@
+{
+  "eventId": "type_flying",
+  "eventName": "Flying Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "flying",
+      "weight": 100
+    }
+  ]
+}

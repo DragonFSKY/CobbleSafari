@@ -1,0 +1,12 @@
+{
+  "eventId": "type_steel",
+  "eventName": "Steel Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "steel",
+      "weight": 100
+    }
+  ]
+}

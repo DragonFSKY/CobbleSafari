@@ -385,6 +385,9 @@ public class CobbleSafariNeoForge {
             registrar.playToClient(maxigregrze.cobblesafari.network.OpenEmptyPhoneConfirmPayload.TYPE,
                     maxigregrze.cobblesafari.network.OpenEmptyPhoneConfirmPayload.STREAM_CODEC,
                     CobbleSafariClientNeoForge::handleOpenEmptyPhoneConfirm);
+            registrar.playToClient(maxigregrze.cobblesafari.network.CloseEmptyPhoneConfirmPayload.TYPE,
+                    maxigregrze.cobblesafari.network.CloseEmptyPhoneConfirmPayload.STREAM_CODEC,
+                    CobbleSafariClientNeoForge::handleCloseEmptyPhoneConfirm);
             registrar.playToClient(maxigregrze.cobblesafari.network.RotomPhoneConfigSyncPayload.TYPE,
                     maxigregrze.cobblesafari.network.RotomPhoneConfigSyncPayload.STREAM_CODEC,
                     CobbleSafariClientNeoForge::handleRotomPhoneConfigSync);
@@ -412,6 +415,9 @@ public class CobbleSafariNeoForge {
                     (payload, context) -> {});
             registrar.playToClient(maxigregrze.cobblesafari.network.OpenEmptyPhoneConfirmPayload.TYPE,
                     maxigregrze.cobblesafari.network.OpenEmptyPhoneConfirmPayload.STREAM_CODEC,
+                    (payload, context) -> {});
+            registrar.playToClient(maxigregrze.cobblesafari.network.CloseEmptyPhoneConfirmPayload.TYPE,
+                    maxigregrze.cobblesafari.network.CloseEmptyPhoneConfirmPayload.STREAM_CODEC,
                     (payload, context) -> {});
             registrar.playToClient(maxigregrze.cobblesafari.network.RotomPhoneConfigSyncPayload.TYPE,
                     maxigregrze.cobblesafari.network.RotomPhoneConfigSyncPayload.STREAM_CODEC,
@@ -557,6 +563,7 @@ public class CobbleSafariNeoForge {
         BalloonSpawnHandler.onServerTick(event.getServer());
         event.getServer().getPlayerList().getPlayers().forEach(LuckyMiningHelmetItem::tickEffect);
         maxigregrze.cobblesafari.rotomphone.RotoGlideServerLogic.tickAll(event.getServer());
+        maxigregrze.cobblesafari.rotomphone.EmptyPhoneServerHandler.tickExpirations(event.getServer());
     }
 
     private void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {

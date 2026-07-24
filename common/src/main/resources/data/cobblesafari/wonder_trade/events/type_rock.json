@@ -1,0 +1,12 @@
+{
+  "eventId": "type_rock",
+  "eventName": "Rock Safari",
+  "hasCustomBanner": false,
+  "customBannerName": "",
+  "eventPools": [
+    {
+      "groupId": "rock",
+      "weight": 100
+    }
+  ]
+}

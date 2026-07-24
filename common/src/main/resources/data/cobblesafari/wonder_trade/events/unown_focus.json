@@ -1,0 +1,20 @@
+{
+  "eventId": "unown_rush",
+  "eventName": "Unown Forces",
+  "hasCustomBanner": true,
+  "customBannerName": "green",
+  "eventPools": [
+    {
+      "groupId": "common",
+      "weight": 49
+    },
+    {
+      "groupId": "legendaries",
+      "weight": 1
+    },
+    {
+      "groupId": "unown",
+      "weight": 50
+    }
+  ]
+}
