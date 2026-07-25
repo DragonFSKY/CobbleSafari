@@ -84,7 +84,12 @@ public final class BossBattleManager {
         // 3. resolve boss BEFORE any consumption
         CsBossDefinition def = CsBossRegistry.resolve(be.getBossRef());
         if (def == null) {
-            feedback(sp, "no_boss");
+            // Distinguish "nothing set" from "set, but no boss id/tag matches it".
+            if (be.getBossRef().isBlank()) {
+                feedback(sp, "no_boss");
+            } else {
+                feedback(sp, "unknown_boss", Component.literal(be.getBossRef()));
+            }
             return InteractionResult.CONSUME;
         }
         // 4. cost item
@@ -875,6 +880,20 @@ public final class BossBattleManager {
         int yTol = CsBossSettings.get().getArenaYTolerance();
         for (BossBattleSession s : SESSIONS.values()) {
             if (s.getDimension().equals(dim) && s.withinArena(pos, yTol)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * True if {@code uuid} is a participant of any live fight (discarded participants included).
+     * Used by csmusic as a failsafe: a boss music override always wins arbitration, so it must not
+     * be able to outlive the fight if an end-of-fight hook is ever missed.
+     */
+    public static boolean isParticipant(UUID uuid) {
+        for (BossBattleSession s : SESSIONS.values()) {
+            if (s.getParticipants().containsKey(uuid)) {
                 return true;
             }
         }

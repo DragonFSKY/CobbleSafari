@@ -2,10 +2,10 @@ package maxigregrze.cobblesafari.client.audio;
 
 import maxigregrze.cobblesafari.CobbleSafari;
 import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.AL11;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * One non-positional OpenAL source driven by a background streaming thread. Plays a sequence of
@@ -17,20 +17,29 @@ import java.util.concurrent.atomic.AtomicLong;
  * offset - the synced crossfade starts the child at the parent's exact playhead - and (b) run
  * two voices at once with independent gain envelopes.</p>
  *
- * <p>Threading: the pump thread owns all per-frame AL calls on this source. The client thread only
- * calls {@link #setVolume}, {@link #rampTo}, {@link #setPaused}, {@link #requestStop} and reads
- * {@link #loopPositionMs}/{@link #isFinished} - all via volatile (or atomic) fields.</p>
+ * <p>The playhead is derived from <b>OpenAL</b> (consumed samples + {@code AL_SAMPLE_OFFSET}), not
+ * from wall clock: an underrun (the pump recovers from those) or a pause would otherwise leave a
+ * permanent phase error, and the synced crossfade reads this value.</p>
+ *
+ * <p>Threading: the pump thread owns all per-frame AL calls on this source, and publishes the
+ * playhead through volatile fields. The client thread only calls {@link #setVolume},
+ * {@link #rampTo}, {@link #setPaused}, {@link #requestStop} and reads
+ * {@link #loopPositionMs}/{@link #isFinished}.</p>
  */
 final class CsMusicVoice {
 
     private static final int BUFFER_BYTES = 32768;
     private static final int BUFFER_COUNT = 4;
     private static final long POLL_SLEEP_MS = 10L;
+    /** Consecutive erroring iterations tolerated before assuming the AL context is gone. */
+    private static final int MAX_AL_ERROR_STREAK = 20;
 
     private final int source;
     private final CsMusicAudioStream[] segments;
     private final boolean loopLast;
     private final long startLoopMs;
+    /** Total duration of the leading (non-looping) segments, i.e. the intro. */
+    private final long introDurationMs;
     private final Thread pump;
 
     private volatile boolean stopRequested = false;
@@ -47,18 +56,17 @@ final class CsMusicVoice {
     // External volume (MUSIC × MASTER), 0..1.
     private volatile float volume;
 
-    // Wall-clock instant that maps to loop-playhead 0 (accounts for intro length + synced start).
-    // Atomic: the pump thread anchors it at track start while the client thread shifts it on resume.
-    private final AtomicLong loopAnchorWallMs = new AtomicLong(0L);
+    // Playhead published by the pump: samples consumed since the voice started, -1 before playback.
+    private volatile long positionSamples = -1L;
+    private volatile int positionRate = 0;
 
-    // Pause bookkeeping.
     private volatile boolean pausedFlag = false;
-    private volatile long pauseStartMs = 0L;
 
     // Pump-thread-only decode state.
     private int segIndex = 0;
     private int lastFormat;
     private int lastRate;
+    private long playedSamples = 0L;
 
     CsMusicVoice(int source, CsMusicAudioStream[] segments, boolean loopLast,
                  long startLoopMs, float envelope, float volume) {
@@ -66,6 +74,11 @@ final class CsMusicVoice {
         this.segments = segments;
         this.loopLast = loopLast;
         this.startLoopMs = Math.max(0L, startLoopMs);
+        long intro = 0L;
+        for (int i = 0; i < segments.length - 1; i++) {
+            intro += Math.max(0L, segments[i].durationMs);
+        }
+        this.introDurationMs = intro;
         this.baseEnvelope = envelope;
         this.volume = volume;
         this.pump = new Thread(this::run, "CsMusic-Voice-" + source);
@@ -103,23 +116,25 @@ final class CsMusicVoice {
             return;
         }
         pausedFlag = p;
+        // No playhead bookkeeping needed: a paused source consumes no buffers and freezes its
+        // sample offset, so the published position simply stops advancing.
         if (p) {
-            pauseStartMs = System.currentTimeMillis();
             safeSourcePause();
         } else {
-            loopAnchorWallMs.addAndGet(System.currentTimeMillis() - pauseStartMs); // keep playhead coherent
             safeSourcePlay();
         }
     }
 
-    /** Current loop playhead in ms (folded modulo the loop duration). */
+    /** Current loop playhead in ms (folded modulo the loop duration), derived from OpenAL. */
     long loopPositionMs() {
-        long anchor = loopAnchorWallMs.get();
-        if (anchor == 0L) {
+        long samples = positionSamples;
+        int rate = positionRate;
+        if (samples < 0L || rate <= 0) {
             return startLoopMs;
         }
+        long streamMs = samples * 1000L / rate;
         long dur = segments[segments.length - 1].durationMs;
-        long pos = System.currentTimeMillis() - anchor;
+        long pos = startLoopMs + streamMs - introDurationMs;
         return dur > 0 ? Math.floorMod(pos, dur) : Math.max(0L, pos);
     }
 
@@ -163,16 +178,10 @@ final class CsMusicVoice {
                 return;
             }
 
-            // Anchor loop-playhead-0 to a wall-clock instant, derived from intro length so the
-            // position query stays accurate regardless of how far ahead the decoder runs.
-            long introDur = 0L;
-            for (int i = 0; i < segments.length - 1; i++) {
-                introDur += Math.max(0L, segments[i].durationMs);
-            }
-            loopAnchorWallMs.set(System.currentTimeMillis() + introDur - startLoopMs);
-
             AL10.alSourcePlay(source);
+            publishPosition();
 
+            int errorStreak = 0;
             while (!stopRequested) {
                 AL10.alSourcef(source, AL10.AL_GAIN, computeEnvelope() * volume);
                 if (stopWhenSilent && rampDone() && computeEnvelope() <= 0.001f) {
@@ -182,6 +191,7 @@ final class CsMusicVoice {
                 int processed = AL10.alGetSourcei(source, AL10.AL_BUFFERS_PROCESSED);
                 while (processed-- > 0 && !stopRequested) {
                     int buf = AL10.alSourceUnqueueBuffers(source);
+                    playedSamples += samplesIn(buf);
                     if (decodeNext(pcm)) {
                         AL10.alBufferData(buf, lastFormat, pcm, lastRate);
                         AL10.alSourceQueueBuffers(source, buf);
@@ -196,6 +206,24 @@ final class CsMusicVoice {
                     }
                 }
 
+                publishPosition();
+
+                // The AL context is destroyed when the sound engine reloads (F3+T) or the output
+                // device changes; bail out instead of spinning on a dead context.
+                if (!AL10.alIsSource(source)) {
+                    CobbleSafari.LOGGER.debug("[CSMusic] voice {} source is gone - stopping", source);
+                    break;
+                }
+                if (AL10.alGetError() != AL10.AL_NO_ERROR) {
+                    if (++errorStreak >= MAX_AL_ERROR_STREAK) {
+                        CobbleSafari.LOGGER.warn("[CSMusic] voice {} stopped after {} consecutive AL errors",
+                                source, errorStreak);
+                        break;
+                    }
+                } else {
+                    errorStreak = 0;
+                }
+
                 Thread.sleep(POLL_SLEEP_MS);
             }
         } catch (InterruptedException ignored) {
@@ -206,6 +234,25 @@ final class CsMusicVoice {
             teardown(pcm, buffers);
             finished = true;
         }
+    }
+
+    /** Publishes the playhead for the client thread: consumed samples + offset in the live buffer. */
+    private void publishPosition() {
+        if (lastRate <= 0) {
+            return;
+        }
+        int offset = AL10.alGetSourcei(source, AL11.AL_SAMPLE_OFFSET);
+        positionRate = lastRate;
+        positionSamples = playedSamples + Math.max(0, offset);
+    }
+
+    /** Sample count of an AL buffer, read back from the buffer itself (chunks are not all full). */
+    private static long samplesIn(int buffer) {
+        int bytes = AL10.alGetBufferi(buffer, AL10.AL_SIZE);
+        int channels = AL10.alGetBufferi(buffer, AL10.AL_CHANNELS);
+        int bits = AL10.alGetBufferi(buffer, AL10.AL_BITS);
+        int frameBytes = Math.max(1, channels * bits / 8);
+        return Math.max(0, bytes) / frameBytes;
     }
 
     /** Fills {@code pcm} with the next chunk, advancing segments and looping the last one. */

@@ -62,9 +62,14 @@ public final class CsBossDataLoader {
     }
 
     private static CsBossDefinition parse(JsonObject json, String source) {
-        if (!json.has("bossId") || !json.has("maximumDuration")
-                || !json.has("minimumDuration") || !json.has("specie") || !json.has("rewards")) {
-            CobbleSafari.LOGGER.warn("[CSBoss] {} missing required field(s)", source);
+        List<String> missing = new ArrayList<>();
+        for (String required : new String[]{"bossId", "maximumDuration", "minimumDuration", "specie"}) {
+            if (!json.has(required)) {
+                missing.add(required);
+            }
+        }
+        if (!missing.isEmpty()) {
+            CobbleSafari.LOGGER.warn("[CSBoss] {} missing required field(s): {}", source, missing);
             return null;
         }
 
@@ -99,10 +104,15 @@ public final class CsBossDataLoader {
 
         String minion = readMinionSpecie(json, source);
 
-        ResourceLocation rewards = ResourceLocation.tryParse(json.get("rewards").getAsString().trim());
-        if (rewards == null) {
-            CobbleSafari.LOGGER.warn("[CSBoss] {} invalid rewards loot table id", source);
-            return null;
+        // 'rewards' is optional: a phase that chains into another one without granting
+        // anything (giveRewardsBeforeSecondPhase = false) has no loot table of its own.
+        ResourceLocation rewards = null;
+        if (json.has("rewards") && !json.get("rewards").getAsString().isBlank()) {
+            rewards = ResourceLocation.tryParse(json.get("rewards").getAsString().trim());
+            if (rewards == null) {
+                CobbleSafari.LOGGER.warn("[CSBoss] {} invalid rewards loot table id", source);
+                return null;
+            }
         }
 
         List<String> tags = readStringList(json, "tags");
@@ -139,6 +149,11 @@ public final class CsBossDataLoader {
                 && json.get("giveRewardsBeforeSecondPhase").getAsBoolean();
         boolean allowSimultaneousAttacks = json.has("allowSimultaneousAttacks")
                 && json.get("allowSimultaneousAttacks").getAsBoolean();
+
+        if (rewards == null && uniqueReward == null
+                && (secondPhase == null || giveRewardsBeforeSecondPhase)) {
+            CobbleSafari.LOGGER.warn("[CSBoss] {} has no 'rewards' loot table: this boss grants nothing on victory", source);
+        }
 
         int portalType = json.has("portalType")
                 ? Math.max(1, json.get("portalType").getAsInt()) : CsBossDefinition.DEFAULT_PORTAL_TYPE;

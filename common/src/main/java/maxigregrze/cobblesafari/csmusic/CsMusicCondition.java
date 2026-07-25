@@ -1,11 +1,10 @@
 package maxigregrze.cobblesafari.csmusic;
 
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,19 +12,26 @@ import java.util.Locale;
 
 /**
  * Compiled, immutable AND-combination of play conditions for a {@link CsMusicRule}. A null field
- * means "don't care". Evaluated server-side against a player each tick.
+ * means "don't care". Evaluated server-side against a player each arbitration sweep.
+ *
+ * <p>Every axis is <b>compiled at load time</b>: dimension, biome and biome tag are resolved keys,
+ * never strings reparsed per evaluation - {@code ResourceKey.create} and {@code TagKey.create} both
+ * hit weak intern tables, which has no business running in the sweep.</p>
  *
  * <p>The {@code battle} axis is a single enum (never / any / in_battle / wild / npc / pvp) rather
  * than a boolean plus a separate type: folding the battle <i>type</i> into the same field makes
- * contradictory or redundant combinations impossible to express.</p>
+ * contradictory or redundant combinations impossible to express. The {@code structure} axis is
+ * likewise a single compiled filter (any / id / tag).</p>
  */
 public record CsMusicCondition(
-        @Nullable String dimension,
-        @Nullable String biome,
-        @Nullable String biomeTag,
+        @Nullable ResourceKey<Level> dimension,
+        @Nullable ResourceKey<Biome> biome,
+        @Nullable TagKey<Biome> biomeTag,
         BattleMode battle,
         @Nullable String species,
-        @Nullable String form
+        @Nullable String form,
+        @Nullable CsMusicStructureFilter structure,
+        @Nullable CsMusicPiecePattern structurePiece
 ) {
     /**
      * Where, relative to a Cobblemon battle, a rule is allowed to play.
@@ -78,30 +84,28 @@ public record CsMusicCondition(
         }
     }
 
+    /** Convenience for the single off-sweep caller (battle start): builds a throwaway context. */
     public boolean matches(ServerPlayer player) {
-        if (dimension != null
-                && !player.level().dimension().location().toString().equals(dimension)) {
+        return matches(new CsMusicEvalContext(player));
+    }
+
+    public boolean matches(CsMusicEvalContext ctx) {
+        ServerPlayer player = ctx.player();
+        if (dimension != null && !player.level().dimension().equals(dimension)) {
             return false;
         }
         if (biome != null || biomeTag != null) {
-            Holder<Biome> holder = player.serverLevel().getBiome(player.blockPosition());
-            if (biome != null) {
-                ResourceLocation rl = ResourceLocation.tryParse(biome);
-                if (rl == null || !holder.is(ResourceKey.create(Registries.BIOME, rl))) {
-                    return false;
-                }
+            Holder<Biome> holder = ctx.biome();
+            if (biome != null && !holder.is(biome)) {
+                return false;
             }
-            if (biomeTag != null) {
-                String raw = biomeTag.startsWith("#") ? biomeTag.substring(1) : biomeTag;
-                ResourceLocation rl = ResourceLocation.tryParse(raw);
-                if (rl == null || !holder.is(TagKey.create(Registries.BIOME, rl))) {
-                    return false;
-                }
+            if (biomeTag != null && !holder.is(biomeTag)) {
+                return false;
             }
         }
 
-        BattleMusicTracker.BattleCtx ctx = BattleMusicTracker.of(player.getUUID());
-        boolean inBattle = ctx != null;
+        BattleMusicTracker.BattleCtx battleCtx = BattleMusicTracker.of(player.getUUID());
+        boolean inBattle = battleCtx != null;
         switch (battle) {
             case NEVER -> {
                 if (inBattle) {
@@ -115,17 +119,26 @@ public record CsMusicCondition(
                 }
             }
             case WILD, NPC, PVP -> {
-                if (!inBattle || ctx.kind() != battle.requiredKind()) {
+                if (!inBattle || battleCtx.kind() != battle.requiredKind()) {
                     return false;
                 }
             }
         }
 
-        if (species != null && (ctx == null || !species.equals(ctx.species()))) {
+        if (species != null && (battleCtx == null || !species.equals(battleCtx.species()))) {
             return false;
         }
-        return form == null
-                || (ctx != null && ctx.form() != null && form.equalsIgnoreCase(ctx.form()));
+        if (form != null
+                && (battleCtx == null || battleCtx.form() == null
+                        || !form.equalsIgnoreCase(battleCtx.form()))) {
+            return false;
+        }
+        // Evaluated last: the only axes that can touch chunk storage (memoized per chunk).
+        if (structurePiece != null) {
+            // matchesPiece applies the structure filter itself, so it is not tested twice.
+            return CsMusicStructureTracker.matchesPiece(player, structure, structurePiece);
+        }
+        return structure == null || CsMusicStructureTracker.matches(player, structure);
     }
 
     /**

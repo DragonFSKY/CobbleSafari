@@ -25,7 +25,8 @@ public record CsBossDefinition(
         int moveCooldownMax,
         boolean isStatic,
         @Nullable ResourceLocation uniqueReward,
-        ResourceLocation rewards,
+        /** Common loot table granted to every winner, or {@code null} if this phase grants nothing. */
+        @Nullable ResourceLocation rewards,
         @Nullable String music,
         BossEvent.BossBarOverlay healthStyle,
         BossEvent.BossBarColor healthColor,

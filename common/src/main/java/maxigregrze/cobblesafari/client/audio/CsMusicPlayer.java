@@ -165,6 +165,13 @@ public final class CsMusicPlayer {
         float startEnv = fadingIn ? 0f : 1f;
 
         int alSource = AL10.alGenSources();
+        if (alSource == 0 || AL10.alGetError() != AL10.AL_NO_ERROR) {
+            CobbleSafari.LOGGER.error("[CSMusic] no free OpenAL source for {} - track skipped", id);
+            for (CsMusicAudioStream segment : segments) {
+                segment.close();     // otherwise the decoded streams leak native memory
+            }
+            return;
+        }
         CsMusicVoice voice = new CsMusicVoice(alSource, segments, true, startLoopMs, startEnv, musicVolume());
 
         switch (effectiveMode) {
@@ -185,6 +192,11 @@ public final class CsMusicPlayer {
         }
 
         voice.start();
+        // wasPaused only tracks *changes*, so a voice created while the game is already paused
+        // would otherwise start playing behind the pause menu.
+        if (Minecraft.getInstance().isPaused()) {
+            voice.setPaused(true);
+        }
         currentVoice = voice;
         currentId = id;
         currentOutroId = outroId;
@@ -213,7 +225,8 @@ public final class CsMusicPlayer {
         currentOutroId = null;
     }
 
-    private static void forceStop() {
+    /** Stops every voice at once. Safe to call from a resource-reload / device-change hook. */
+    public static void forceStop() {
         if (currentVoice != null) {
             currentVoice.requestStop();
             currentVoice = null;
@@ -266,9 +279,18 @@ public final class CsMusicPlayer {
                     return;
                 }
                 int src = AL10.alGenSources();
+                if (src == 0 || AL10.alGetError() != AL10.AL_NO_ERROR) {
+                    CobbleSafari.LOGGER.error("[CSMusic] no free OpenAL source for outro - skipped");
+                    outro.close();
+                    finishOutro();
+                    return;
+                }
                 CsMusicVoice voice = new CsMusicVoice(src,
                         new CsMusicAudioStream[]{outro}, false, 0L, 1f, musicVolume());
                 voice.start();
+                if (mc.isPaused()) {
+                    voice.setPaused(true);
+                }
                 currentVoice = voice;
             });
         });

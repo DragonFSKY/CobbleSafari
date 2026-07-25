@@ -28,5 +28,18 @@ public class CsMusicTriggerFileData {
         public String battle;
         public String species;
         public String form;
+        /**
+         * Naturally generated structure the player must stand in: a structure id
+         * ({@code minecraft:village_plains}), a structure tag ({@code #minecraft:village}),
+         * or {@code *} / {@code any} for any structure. Omitted ⇒ no constraint.
+         */
+        public String structure;
+        /**
+         * Piece of a naturally generated structure the player must stand in, as a pattern over the
+         * piece id where {@code *} matches any run of characters (including {@code /}). Jigsaw
+         * pieces are identified by their template ({@code minecraft:village/plains/houses/...}),
+         * legacy pieces by their piece type ({@code minecraft:mscorridor}). Omitted ⇒ no constraint.
+         */
+        public String structure_piece;
     }
 }

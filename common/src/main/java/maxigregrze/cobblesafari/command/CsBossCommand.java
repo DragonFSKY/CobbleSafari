@@ -226,8 +226,10 @@ public final class CsBossCommand {
                 : Component.literal(def.moveSet().toString());
         ctx.getSource().sendSuccess(
                 () -> Component.translatable("cobblesafari.command.csboss.bosses.info.move_set", moveSet), false);
-        ctx.getSource().sendSuccess(
-                () -> Component.translatable("cobblesafari.command.csboss.bosses.info.rewards", def.rewards()), false);
+        if (def.rewards() != null) {
+            ctx.getSource().sendSuccess(
+                    () -> Component.translatable("cobblesafari.command.csboss.bosses.info.rewards", def.rewards()), false);
+        }
         if (def.uniqueReward() != null) {
             ctx.getSource().sendSuccess(
                     () -> Component.translatable(

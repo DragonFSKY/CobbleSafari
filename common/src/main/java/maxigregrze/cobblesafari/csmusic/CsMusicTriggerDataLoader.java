@@ -3,10 +3,16 @@ package maxigregrze.cobblesafari.csmusic;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import maxigregrze.cobblesafari.CobbleSafari;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -15,13 +21,18 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Loads trigger rules from {@code data/<ns>/csmusic/definition/*.json}. A file holds a list of
+ * Loads trigger rules from {@code data/<ns>/csmusic/<SUBDIR>/*.json}. A file holds a list of
  * cumulable rules; each rule proposes a track when its {@link CsMusicCondition} matches a player.
+ *
+ * <p>Every condition constant is resolved here, once, so the per-sweep evaluation stays free of
+ * parsing and interning.</p>
  */
 public final class CsMusicTriggerDataLoader {
 
     private static final Gson GSON = new GsonBuilder().create();
-    private static final String PREFIX = "csmusic/definition";
+    /** Subdirectory of {@code csmusic/} holding trigger files - shared so the two loaders agree. */
+    public static final String SUBDIR = "definition";
+    private static final String PREFIX = "csmusic/" + SUBDIR;
 
     private CsMusicTriggerDataLoader() {}
 
@@ -74,18 +85,79 @@ public final class CsMusicTriggerDataLoader {
             battle = CsMusicCondition.BattleMode.ANY;
         }
 
+        String rawStructure = blankToNull(w.structure);
+        CsMusicStructureFilter structure = null;
+        if (rawStructure != null) {
+            structure = CsMusicStructureFilter.fromJson(rawStructure);
+            if (structure == null) {
+                CobbleSafari.LOGGER.warn(
+                        "[CSMusic] {} rule#{} invalid structure filter '{}' - constraint ignored",
+                        file, idx, rawStructure);
+            }
+        }
+
+        String rawPiece = blankToNull(w.structure_piece);
+        CsMusicPiecePattern structurePiece = rawPiece == null ? null : CsMusicPiecePattern.fromJson(rawPiece);
+
         CsMusicCondition cond = new CsMusicCondition(
-                blankToNull(w.dimension),
-                blankToNull(w.biome),
-                blankToNull(w.biome_tag),
+                dimensionKey(file, idx, blankToNull(w.dimension)),
+                biomeKey(file, idx, blankToNull(w.biome)),
+                biomeTagKey(file, idx, blankToNull(w.biome_tag)),
                 battle,
                 blankToNull(w.species),
-                blankToNull(w.form));
+                blankToNull(w.form),
+                structure,
+                structurePiece);
 
         String source = "definition:" + file.getPath() + "#" + idx;
         String musicId = hasMusic ? raw.music.trim() : null;
         String poolTag = hasTag ? raw.tag.trim().toLowerCase(Locale.ROOT) : null;
+
+        // The registry is already populated: CsMusicDataLoader.load runs before this loader in
+        // DimensionEvents.onServerStarted, so an unresolvable target can be reported here.
+        if (musicId != null && !CsMusicRegistry.has(musicId)) {
+            CobbleSafari.LOGGER.warn("[CSMusic] {} rule#{} targets unknown music '{}' - it will never play",
+                    file, idx, musicId);
+        }
+        if (poolTag != null && CsMusicRegistry.byTag(poolTag).isEmpty()) {
+            CobbleSafari.LOGGER.warn("[CSMusic] {} rule#{} targets empty tag pool '{}' - it will never play",
+                    file, idx, poolTag);
+        }
         return new CsMusicRule(source, musicId, poolTag, Math.max(0, raw.priority), cond);
+    }
+
+    @Nullable
+    private static ResourceKey<Level> dimensionKey(ResourceLocation file, int idx, @Nullable String raw) {
+        ResourceLocation rl = parseOrWarn(file, idx, raw, "dimension");
+        return rl == null ? null : ResourceKey.create(Registries.DIMENSION, rl);
+    }
+
+    @Nullable
+    private static ResourceKey<Biome> biomeKey(ResourceLocation file, int idx, @Nullable String raw) {
+        ResourceLocation rl = parseOrWarn(file, idx, raw, "biome");
+        return rl == null ? null : ResourceKey.create(Registries.BIOME, rl);
+    }
+
+    @Nullable
+    private static TagKey<Biome> biomeTagKey(ResourceLocation file, int idx, @Nullable String raw) {
+        String stripped = raw != null && raw.startsWith("#") ? raw.substring(1) : raw;
+        ResourceLocation rl = parseOrWarn(file, idx, stripped, "biome_tag");
+        return rl == null ? null : TagKey.create(Registries.BIOME, rl);
+    }
+
+    /** Parses an id; a malformed value drops the constraint with a warning, it never kills the rule. */
+    @Nullable
+    private static ResourceLocation parseOrWarn(ResourceLocation file, int idx,
+                                                @Nullable String raw, String field) {
+        if (raw == null) {
+            return null;
+        }
+        ResourceLocation rl = ResourceLocation.tryParse(raw);
+        if (rl == null) {
+            CobbleSafari.LOGGER.warn("[CSMusic] {} rule#{} invalid {} '{}' - constraint ignored",
+                    file, idx, field, raw);
+        }
+        return rl;
     }
 
     private static String blankToNull(String s) {

@@ -27,7 +27,16 @@ public final class CsMusicRegistry {
     }
 
     public static void register(CsMusicDefinition def) {
-        BY_ID.put(def.id(), def);
+        CsMusicDefinition previous = BY_ID.put(def.id(), def);
+        if (previous != null) {
+            CobbleSafari.LOGGER.warn("[CSMusic] duplicate music id '{}' - the later file wins "
+                    + "(ids are <namespace>:<filename>, subdirectories are not part of the id)", def.id());
+            // Drop the previous registration's tag entries: leaving them would list the id twice in
+            // a pool, giving it double weight in the random pick.
+            for (List<String> ids : BY_TAG.values()) {
+                ids.remove(def.id());
+            }
+        }
         for (String tag : def.tags()) {
             BY_TAG.computeIfAbsent(tag, k -> new ArrayList<>()).add(def.id());
         }
@@ -65,7 +74,11 @@ public final class CsMusicRegistry {
         return BY_ID.size();
     }
 
-    /** Warns on unknown parents and breaks/reports parent cycles. Call after a full (re)load. */
+    /**
+     * Reports unknown parents and parent cycles. Call after a full (re)load. Detection only - a
+     * cycle is left in place, which is harmless because {@code crossfadeRelated} never walks more
+     * than one level of parenthood.
+     */
     public static void validateRelations() {
         for (CsMusicDefinition def : BY_ID.values()) {
             if (!def.hasParent()) {

@@ -30,8 +30,11 @@ public final class CsMusicDataLoader {
     public static void load(MinecraftServer server) {
         CsMusicRegistry.clear();
         ResourceManager manager = server.getResourceManager();
-        Map<ResourceLocation, Resource> resources =
-                manager.listResources(PREFIX, id -> id.getPath().endsWith(".json"));
+        // listResources recurses, so csmusic/<SUBDIR>/ (the trigger files) must be excluded here -
+        // otherwise every trigger file is parsed as a definition and warns about a missing 'loop'.
+        String triggerDir = "/" + CsMusicTriggerDataLoader.SUBDIR + "/";
+        Map<ResourceLocation, Resource> resources = manager.listResources(PREFIX,
+                id -> id.getPath().endsWith(".json") && !id.getPath().contains(triggerDir));
         int ok = 0;
         int skipped = 0;
         for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {

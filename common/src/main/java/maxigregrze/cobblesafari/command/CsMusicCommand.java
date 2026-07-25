@@ -11,6 +11,7 @@ import maxigregrze.cobblesafari.csmusic.CsMusicAreaStore;
 import maxigregrze.cobblesafari.csmusic.CsMusicBox;
 import maxigregrze.cobblesafari.csmusic.CsMusicDefinition;
 import maxigregrze.cobblesafari.csmusic.CsMusicRegistry;
+import maxigregrze.cobblesafari.csmusic.CsMusicStructureTracker;
 import maxigregrze.cobblesafari.csmusic.DimensionalMusicManager;
 import maxigregrze.cobblesafari.config.DimensionalMusicConfig;
 import maxigregrze.cobblesafari.network.SetCsMusicPayload;
@@ -61,6 +62,7 @@ public final class CsMusicCommand {
         return Commands.literal("csmusic")
                 .then(Commands.literal("list").executes(CsMusicCommand::listMusic))
                 .then(Commands.literal("current").executes(CsMusicCommand::current))
+                .then(Commands.literal("structures").executes(CsMusicCommand::structuresHere))
                 // Debug commands disabled (test-only). Handlers retained below for re-enabling.
                 /*
                 .then(Commands.literal("debug")
@@ -169,6 +171,39 @@ public final class CsMusicCommand {
                                     ? Component.translatable("cobblesafari.command.csmusic.current.winner")
                                     : Component.empty()),
                     false);
+        }
+        return 1;
+    }
+
+    /**
+     * Lists the naturally generated structures around the player, with both "inside" answers:
+     * {@code bounds} (what {@code when.structure} actually tests) and {@code piece}. Reads fresh,
+     * bypassing the {@link CsMusicStructureTracker} cache, so it reports the current truth.
+     */
+    private static int structuresHere(CommandContext<CommandSourceStack> ctx) {
+        ServerPlayer player = requirePlayer(ctx);
+        if (player == null) {
+            return 0;
+        }
+        BlockPos pos = player.blockPosition();
+        List<CsMusicStructureTracker.StructureInfo> found =
+                CsMusicStructureTracker.describeAt(player.serverLevel(), pos);
+        ctx.getSource().sendSuccess(() -> Component.translatable(
+                "cobblesafari.command.csmusic.structures.header",
+                pos.getX(), pos.getY(), pos.getZ(), found.size()), false);
+        if (found.isEmpty()) {
+            ctx.getSource().sendSuccess(
+                    () -> Component.translatable("cobblesafari.command.csmusic.current.none"), false);
+            return 0;
+        }
+        for (CsMusicStructureTracker.StructureInfo info : found) {
+            ctx.getSource().sendSuccess(() -> Component.translatable(
+                    "cobblesafari.command.csmusic.structures.entry",
+                    info.id(), info.tags(), info.insideBounds(), info.insidePiece()), false);
+            for (String pieceId : info.pieceIds()) {
+                ctx.getSource().sendSuccess(() -> Component.translatable(
+                        "cobblesafari.command.csmusic.structures.piece", pieceId), false);
+            }
         }
         return 1;
     }

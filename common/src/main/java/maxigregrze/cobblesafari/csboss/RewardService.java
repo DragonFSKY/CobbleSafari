@@ -54,10 +54,12 @@ public final class RewardService {
             }
         }
 
-        // Common reward: SAME roll for everyone.
-        List<ItemStack> common = roll(level, session, def.rewards());
-        for (ServerPlayer p : winners) {
-            give(level, session, p, copy(common));
+        // Common reward: SAME roll for everyone (skipped when the phase has no loot table).
+        if (def.rewards() != null) {
+            List<ItemStack> common = roll(level, session, def.rewards());
+            for (ServerPlayer p : winners) {
+                give(level, session, p, copy(common));
+            }
         }
     }
 

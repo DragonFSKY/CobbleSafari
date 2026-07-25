@@ -60,7 +60,10 @@ public class DimensionEvents {
         maxigregrze.cobblesafari.chat.ChatConversationDataLoader.load(server);
         maxigregrze.cobblesafari.csboss.CsBossDataLoader.load(server);
         maxigregrze.cobblesafari.csboss.BossBattleManager.recoverAll(server);
+        // Order matters: the trigger loader warns about rules targeting an unknown music id, which
+        // requires the definition registry to be populated first.
         maxigregrze.cobblesafari.csmusic.CsMusicDataLoader.load(server);
+        maxigregrze.cobblesafari.csmusic.CsMusicStructureTracker.clear();
         maxigregrze.cobblesafari.csmusic.CsMusicTriggerDataLoader.load(server);
         maxigregrze.cobblesafari.csmusic.CsMusicAreaStore.loadAll(server);
         maxigregrze.cobblesafari.objectives.DimensionalObjectivesDataLoader.load(server);
@@ -69,6 +72,8 @@ public class DimensionEvents {
     public static void onServerStopping(MinecraftServer server) {
         TimerManager.saveAllData();
         TimerManager.clearServer();
+        maxigregrze.cobblesafari.csmusic.DimensionalMusicManager.clearAll();
+        maxigregrze.cobblesafari.csmusic.CsMusicStructureTracker.clear();
         PortalSpawnManager.clearServer();
         maxigregrze.cobblesafari.dungeon.DungeonTeleportHandler.clearGenerationStates();
     }
@@ -80,6 +85,7 @@ public class DimensionEvents {
         SafariResetManager.tick(server);
         maxigregrze.cobblesafari.csboss.BossBattleManager.onServerTick(server);
         maxigregrze.cobblesafari.csmusic.DimensionalMusicManager.tick(server);
+        maxigregrze.cobblesafari.csmusic.CsMusicStructureTracker.purge(server);
         if ((server.getTickCount() % 100) == 0) {
             WonderTradeService.tickDailyScheduler(server);
             // Budgeted top-up (C6): gradually refills the Wonder Trade pool a few entries at a time instead
