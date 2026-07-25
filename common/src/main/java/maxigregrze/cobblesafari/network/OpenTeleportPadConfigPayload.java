@@ -8,7 +8,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * S2C — open the creative teleport-pad config GUI, pre-filled.
+ * S2C - open the creative teleport-pad config GUI, pre-filled.
  * {@code x/y/z} are the destination offset expressed in <b>world</b> axes
  * (converted server-side from the facing-relative storage); {@code linked} drives the
  * initial green text colour.

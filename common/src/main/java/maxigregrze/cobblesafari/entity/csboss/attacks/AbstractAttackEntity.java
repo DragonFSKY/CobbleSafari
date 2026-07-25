@@ -52,13 +52,13 @@ public abstract class AbstractAttackEntity extends Entity {
         this.maxTravel = maxTravel;
     }
 
-    /** Current session (or {@code null} if ended) — for self-replication. */
+    /** Current session (or {@code null} if ended) - for self-replication. */
     @Nullable
     protected BossBattleSession session() {
         return BossBattleManager.getSession(this.sessionId);
     }
 
-    /** Session boss (or {@code null}) — for entities attached to the boss's rotating frame. */
+    /** Session boss (or {@code null}) - for entities attached to the boss's rotating frame. */
     @Nullable
     protected CsBossEntity boss(ServerLevel level) {
         BossBattleSession s = session();

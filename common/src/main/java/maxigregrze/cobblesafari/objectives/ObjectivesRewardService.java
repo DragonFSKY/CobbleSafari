@@ -71,7 +71,7 @@ public final class ObjectivesRewardService {
 
         if (found.isEmpty()) {
             CobbleSafari.LOGGER.error(
-                    "[Objectives] No Golden Auspicious Pokeball found within {} chunks of {} for player {} — giving fallback reward",
+                    "[Objectives] No Golden Auspicious Pokeball found within {} chunks of {} for player {} - giving fallback reward",
                     radius, player.blockPosition(), player.getGameProfile().getName());
             if (def.fallbackCompletionReward() != null) {
                 rollAndGive(player, def.fallbackCompletionReward());

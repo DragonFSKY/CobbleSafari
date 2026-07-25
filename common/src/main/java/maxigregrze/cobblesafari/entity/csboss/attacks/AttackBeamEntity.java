@@ -13,7 +13,7 @@ import net.minecraft.world.phys.Vec3;
 /**
  * Reusable directional beam entity rendered with the vanilla <b>beacon beam</b> texture. Its
  * orientation comes from the entity yaw/pitch (so it interpolates client-side), and its length /
- * colour are synced. Purely visual — collision/damage is handled by the driving attack.
+ * colour are synced. Purely visual - collision/damage is handled by the driving attack.
  */
 public class AttackBeamEntity extends AbstractAttackEntity {
 

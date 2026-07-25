@@ -22,7 +22,7 @@ import java.util.List;
  * Shared library for CSBoss attack patterns. Groups common helpers
  * (directions, targeting, pursuit, area damage limited to participants, particles) to
  * avoid copy-paste between attacks. All collision detection remains limited to the
- * set of living participants — never a world scan.
+ * set of living participants - never a world scan.
  */
 public final class CsBossAttackLib {
 
@@ -295,7 +295,7 @@ public final class CsBossAttackLib {
 
     /**
      * "Swept" damage from a falling meteorite: covers the entire vertical segment traveled this tick
-     * ({@code fromY} → {@code toY}), not just the landing position — otherwise a fall step larger
+     * ({@code fromY} → {@code toY}), not just the landing position - otherwise a fall step larger
      * than the hitbox skips over the player (causes misses). Hits once and returns
      * {@code true} if a participant was struck.
      */

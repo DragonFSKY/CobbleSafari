@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Server-side teleport-pad logic: facing-relative offset maths, geometric pairing scan
- * (L-shape for TOP/BOTTOM, straight line with a configurable ±leeway window for FRONT — see
+ * (L-shape for TOP/BOTTOM, straight line with a configurable ±leeway window for FRONT - see
  * {@link MiscConfig#getTeleportpadForwardLeeway()}), link bookkeeping, and the
  * jump-triggered teleport with a per-player cooldown.
  */
@@ -141,7 +141,7 @@ public final class TeleportPadManager {
         Direction rightDir = facing.getClockWise();
         // Walk the full forward range without stopping at the first solid cell in our own row:
         // corridor clearance is validated per-candidate at the higher of the two pad levels
-        // (see frontCorridorClear), so a partner raised on a structure is still found — and the
+        // (see frontCorridorClear), so a partner raised on a structure is still found - and the
         // result is symmetric, i.e. either pad auto-pairs to the other.
         for (int d = 1; d <= MAX_RANGE; d++) {
             BlockPos found = checkFrontWindow(level, pos, d, facing, rightDir);

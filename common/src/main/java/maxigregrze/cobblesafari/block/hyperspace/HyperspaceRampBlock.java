@@ -38,7 +38,7 @@ public class HyperspaceRampBlock extends HorizontalDirectionalBlock {
     public static final MapCodec<HyperspaceRampBlock> CODEC = simpleCodec(HyperspaceRampBlock::new);
 
     // Per-cell staircase hitbox, authored from the supplied Blockbench hitbox models and then
-    // flipped 180° around Y (N<->S, E<->W) — i.e. the boxes below are the provided shapes mirrored
+    // flipped 180° around Y (N<->S, E<->W) - i.e. the boxes below are the provided shapes mirrored
     // on both horizontal axes. The model is flipped to match via the blockstate (+180° rotation).
     private static final VoxelShape LOWER_NORTH_SHAPE = Shapes.or(
             Block.box(0, 0, 3, 16, 3, 16),

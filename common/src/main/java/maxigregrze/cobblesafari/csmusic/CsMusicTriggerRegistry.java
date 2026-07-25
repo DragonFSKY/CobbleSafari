@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * In-memory set of compiled {@link CsMusicRule}s loaded from {@code csmusic/definition/*.json}.
- * Order is not significant — the resolver sorts by priority.
+ * Order is not significant - the resolver sorts by priority.
  */
 public final class CsMusicTriggerRegistry {
 
@@ -18,7 +18,7 @@ public final class CsMusicTriggerRegistry {
 
     /**
      * True if the player currently matches at least one rule that can only play during a battle
-     * ({@link CsMusicCondition#requiresBattle()}) — i.e. "a csmusic track matches the fight".
+     * ({@link CsMusicCondition#requiresBattle()}) - i.e. "a csmusic track matches the fight".
      * Drives suppression of Cobblemon's native battle music.
      */
     public static boolean hasMatchingBattleRule(ServerPlayer player) {

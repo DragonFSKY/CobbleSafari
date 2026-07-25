@@ -24,6 +24,7 @@ public class WonderTradeSavedData extends SavedData {
     private static final String KEY_BONUS_TICKETS = "BonusTickets";
     private static final String KEY_LAST_DAILY_EPOCH_DAY = "LastDailyEpochDay";
     private static final String KEY_EVENT = "Event";
+    private static final String KEY_EVENT_SEEN = "EventSeen";
 
     /** Fresh file: no NBT key; {@link WonderTradeService} will set before the first tick. */
     private long lastDailyResetEpochDay = -1L;
@@ -36,6 +37,10 @@ public class WonderTradeSavedData extends SavedData {
     private String activeEventId = "";
     private byte activeEventMode = 0;
     private int activeEventDaysLeft = 0;
+    /** Monotone id bumped on every event start (even for the same event id) - identifies an instance. */
+    private long activeEventInstanceId = 0L;
+    /** Per-player id of the last event instance the player opened the Wonder app for. Absent = never. */
+    private final Map<UUID, Long> lastSeenEventInstance = new HashMap<>();
 
     public WonderTradeSavedData() {
         // Required by the SavedData factory; state is populated in load().
@@ -81,6 +86,18 @@ public class WonderTradeSavedData extends SavedData {
             data.activeEventId = ev.getString("Id");
             data.activeEventMode = ev.getByte("Mode");
             data.activeEventDaysLeft = ev.getInt("DaysLeft");
+            data.activeEventInstanceId = ev.getLong("InstanceId");
+        }
+        if (tag.contains(KEY_EVENT_SEEN, Tag.TAG_COMPOUND)) {
+            CompoundTag seen = tag.getCompound(KEY_EVENT_SEEN);
+            for (String key : seen.getAllKeys()) {
+                try {
+                    UUID id = UUID.fromString(key);
+                    data.lastSeenEventInstance.put(id, seen.getLong(key));
+                } catch (IllegalArgumentException ignored) {
+                    // Skip entries whose key is not a valid UUID (corrupt/legacy data).
+                }
+            }
         }
         return data;
     }
@@ -110,7 +127,14 @@ public class WonderTradeSavedData extends SavedData {
         ev.putString("Id", activeEventId);
         ev.putByte("Mode", activeEventMode);
         ev.putInt("DaysLeft", activeEventDaysLeft);
+        ev.putLong("InstanceId", activeEventInstanceId);
         tag.put(KEY_EVENT, ev);
+
+        CompoundTag seen = new CompoundTag();
+        for (Map.Entry<UUID, Long> e : lastSeenEventInstance.entrySet()) {
+            seen.putLong(e.getKey().toString(), e.getValue());
+        }
+        tag.put(KEY_EVENT_SEEN, seen);
         return tag;
     }
 
@@ -204,6 +228,7 @@ public class WonderTradeSavedData extends SavedData {
         this.activeEventId = eventId;
         this.activeEventMode = 1;
         this.activeEventDaysLeft = 0;
+        this.activeEventInstanceId++;
         setDirty();
     }
 
@@ -211,7 +236,25 @@ public class WonderTradeSavedData extends SavedData {
         this.activeEventId = eventId;
         this.activeEventMode = 2;
         this.activeEventDaysLeft = days;
+        this.activeEventInstanceId++;
         setDirty();
+    }
+
+    public long getActiveEventInstanceId() {
+        return activeEventInstanceId;
+    }
+
+    /** True if the player has opened the Wonder app during the current event instance. */
+    public boolean hasSeenCurrentEvent(UUID playerId) {
+        return lastSeenEventInstance.getOrDefault(playerId, 0L) == activeEventInstanceId;
+    }
+
+    /** Records that the player has now opened the Wonder app for the current event instance. */
+    public void markEventSeen(UUID playerId) {
+        if (lastSeenEventInstance.getOrDefault(playerId, 0L) != activeEventInstanceId) {
+            lastSeenEventInstance.put(playerId, activeEventInstanceId);
+            setDirty();
+        }
     }
 
     public void clearEvent() {

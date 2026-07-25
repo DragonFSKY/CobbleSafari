@@ -12,8 +12,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * Hollow "tube" scaffolding. The outline / selection shape is a <em>full cube</em> (so the
- * block is easy to target and place against), while the collision shape is a hollow tube —
- * a full cube minus a 14x16x14 vertical hole — letting the player drop straight through from
+ * block is easy to target and place against), while the collision shape is a hollow tube -
+ * a full cube minus a 14x16x14 vertical hole - letting the player drop straight through from
  * top to bottom.
  */
 public class HyperspaceScaffoldTubeBlock extends Block {

@@ -21,8 +21,8 @@ import java.util.List;
  * <p>{@code unlockApp} is applied at the start of the step; {@code rewardSkin}/{@code rewardSkinTag}/
  * {@code rewardPersonalTrade}/{@code rewardPersonalTradeTag} are granted on claim. When a tag-based
  * reward is requested but the pool is exhausted, {@code fallbackReward} (a loot-table id) is granted
- * instead (defaulting to the global rotom fallback pool), and {@code fallbackMessagesAfter} — when
- * non-empty — replaces {@code messagesAfter} for that step (including in the transcript afterwards).
+ * instead (defaulting to the global rotom fallback pool), and {@code fallbackMessagesAfter} - when
+ * non-empty - replaces {@code messagesAfter} for that step (including in the transcript afterwards).
  */
 public record ChatStepDefinition(
         List<String> messagesBefore,

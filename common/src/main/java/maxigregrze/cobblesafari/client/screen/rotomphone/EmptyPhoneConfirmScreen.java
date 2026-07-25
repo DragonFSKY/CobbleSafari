@@ -26,7 +26,7 @@ import java.util.Set;
  * Confirmation shown before a Rotom is absorbed into an empty phone or earpiece. Built on the same
  * frame as {@link maxigregrze.cobblesafari.client.screen.TpAcceptScreen}: titled 272x184 top, one or
  * two 272x22 banners, then two 136x24 buttons. The destination artwork is replaced by the live model
- * of the Rotom being consumed — the aspect set carries both its shiny flag and its alternate form.
+ * of the Rotom being consumed - the aspect set carries both its shiny flag and its alternate form.
  */
 public class EmptyPhoneConfirmScreen extends Screen {
 
@@ -42,13 +42,13 @@ public class EmptyPhoneConfirmScreen extends Screen {
     private static final int MODEL_H = 128;
     /**
      * Extra clip width revealed on each side of the window, so the zoomed model is not cut off left
-     * and right. Only widens the scissor — the model's centre stays on the GUI centre.
+     * and right. Only widens the scissor - the model's centre stays on the GUI centre.
      */
     private static final int MODEL_CLIP_PAD_X = 40;
     /** Zoom applied on top of the Wonder Trade portrait's settings, which render a Rotom rather small. */
     private static final float MODEL_ZOOM = 1.8f;
     /**
-     * Rendered size is {@code MODEL_BASE_SCALE * MODEL_SCALE}, so the zoom goes on one factor only —
+     * Rendered size is {@code MODEL_BASE_SCALE * MODEL_SCALE}, so the zoom goes on one factor only -
      * multiplying both would square it.
      */
     private static final float MODEL_BASE_SCALE = 10.5f * MODEL_ZOOM;
@@ -243,7 +243,7 @@ public class EmptyPhoneConfirmScreen extends Screen {
 
     @Override
     public void onClose() {
-        // Escape or any other close path must release the server-side pending fill — and with it the
+        // Escape or any other close path must release the server-side pending fill - and with it the
         // claim held on the block.
         respond(false);
         super.onClose();

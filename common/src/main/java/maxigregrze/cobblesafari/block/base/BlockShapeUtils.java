@@ -19,7 +19,7 @@ import java.util.Map;
  * <p>The unit rotation below maps the cycle {@code NORTH → WEST → SOUTH → EAST → NORTH}
  * (one application = one step). The per‑facing step count is calibrated so that, for a
  * shape authored for {@code SOUTH}, the result equals the old {@code shapeForFacing}
- * tables, and for a shape authored for {@code NORTH} it equals the karate table — both
+ * tables, and for a shape authored for {@code NORTH} it equals the karate table - both
  * verified against the in‑game blockstate {@code y} rotations.</p>
  *
  * <p>Note: {@code block.hyperspace.HyperspaceShapes} reuses {@link #rotateClockwise90} as

@@ -415,7 +415,7 @@ public class DungeonTeleportHandler {
         long now = System.currentTimeMillis();
         for (Map.Entry<UUID, GenerationState> e : GENERATION_STATES.entrySet()) {
             if (now - e.getValue().startedAtMs > MAX_GENERATION_MS) {
-                CobbleSafari.LOGGER.warn("Dungeon generation for portal {} exceeded {} ms — force-releasing lock",
+                CobbleSafari.LOGGER.warn("Dungeon generation for portal {} exceeded {} ms - force-releasing lock",
                         e.getKey(), MAX_GENERATION_MS);
                 releaseGenerationLock(e.getKey());
             }

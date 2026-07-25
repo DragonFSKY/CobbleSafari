@@ -233,7 +233,7 @@ public final class CsMusicPlayer {
     private static void beginOutro(SetCsMusicPayload pending) {
         ResourceLocation outroFile = resolveOggFile(currentOutroId);
         if (outroFile == null) {
-            applyPending(pending); // no usable outro asset — go straight to the next instruction
+            applyPending(pending); // no usable outro asset - go straight to the next instruction
             return;
         }
         if (currentVoice != null) {

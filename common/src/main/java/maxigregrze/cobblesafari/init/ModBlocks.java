@@ -1689,7 +1689,7 @@ public class ModBlocks {
     // Planks: plain cube, wood properties.  Tagged #minecraft:planks.
     public static final Block HYPERSPACE_PLANKS = registerBlock("hyperspace_planks",
             new Block(hsPlanks()));
-    // Vanilla wood derivatives — no new class needed.
+    // Vanilla wood derivatives - no new class needed.
     public static final Block HYPERSPACE_WOOD_STAIRS = registerBlock("hyperspace_wood_stairs",
             new StairBlock(HYPERSPACE_PLANKS.defaultBlockState(), hsPlanks()));
     public static final Block HYPERSPACE_WOOD_SLAB = registerBlock("hyperspace_wood_slab",

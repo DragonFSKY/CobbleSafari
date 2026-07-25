@@ -9,7 +9,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * Orientable tombstone. Placeable only on solid ground, mined with pickaxe, drops itself.
- * Hitbox aligned to the model and rotated by FACING — all handled by
+ * Hitbox aligned to the model and rotated by FACING - all handled by
  * {@link HorizontalModelBlock} (the shape is authored for {@link Direction#SOUTH}).
  */
 public abstract class TombstoneBlock extends HorizontalModelBlock {

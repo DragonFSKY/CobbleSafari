@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
  * <p>Cobblemon's {@code FloatingState} is GUI-only: its {@code updatePartialTicks} <b>accumulates</b>
  * the partial-tick fraction every render frame and it has no tick-driven {@code age}. Used on a world
  * entity that renders several times per game tick, that accumulation makes
- * {@code animationSeconds = (age + partialTicks) / 20} advance faster than real time — so the higher
+ * {@code animationSeconds = (age + partialTicks) / 20} advance faster than real time - so the higher
  * the framerate, the faster the animation plays (this is why the Giratina boss animations ran far
  * faster than authored in Blockbench).
  *

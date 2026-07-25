@@ -23,7 +23,7 @@ import java.util.List;
  *
  * <p>{@link #DYED} selects the model (default single texture vs. colored+overlay), while
  * {@link #COLOR} feeds the client block-color handler on {@code tintindex 0}. Both live in
- * the blockstate — no block entity, NBT or network packet is needed (persistence and sync
+ * the blockstate - no block entity, NBT or network packet is needed (persistence and sync
  * are automatic).</p>
  */
 public final class HyperspaceFlagDye {
@@ -34,7 +34,7 @@ public final class HyperspaceFlagDye {
     private HyperspaceFlagDye() {
     }
 
-    /** Register the dye properties — call from a dyeable flag's {@code createBlockStateDefinition}. */
+    /** Register the dye properties - call from a dyeable flag's {@code createBlockStateDefinition}. */
     public static void appendProperties(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(DYED, COLOR);
     }

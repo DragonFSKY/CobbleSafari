@@ -240,7 +240,7 @@ public final class WonderTradeService {
     }
 
     /**
-     * Soft reset: refills the daily trade-ticket allowance only — no pool aging, no Pokémon expiry,
+     * Soft reset: refills the daily trade-ticket allowance only - no pool aging, no Pokémon expiry,
      * no event-day decrement. Used by the {@code /cobblesafari reset system} (soft) admin command.
      */
     public static void resetDailyCreditsOnly(MinecraftServer server) {

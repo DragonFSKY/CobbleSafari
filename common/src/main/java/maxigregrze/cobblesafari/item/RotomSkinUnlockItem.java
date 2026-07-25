@@ -24,11 +24,11 @@ import java.util.List;
  *
  * <p>Two flavours, chosen at registration:
  * <ul>
- *   <li><b>dynamic</b> ({@code targetSkin == null}) — a single registered item whose target skin id is
+ *   <li><b>dynamic</b> ({@code targetSkin == null}) - a single registered item whose target skin id is
  *       carried per-stack in the {@link ModComponents#SKIN_UNLOCK_TARGET} component. This sidesteps the
  *       registry freeze entirely, so it works for any skin including datapack-added ones. The disc only
  *       grants skins whose definition has {@code addUnlockItem == true}.</li>
- *   <li><b>all</b> ({@code targetSkin ==} {@link #ALL}) — unlocks every registered skin at once.</li>
+ *   <li><b>all</b> ({@code targetSkin ==} {@link #ALL}) - unlocks every registered skin at once.</li>
  * </ul>
  */
 public class RotomSkinUnlockItem extends Item {

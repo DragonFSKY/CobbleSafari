@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.properties.WoodType;
  * {@code assets/cobblesafari/textures/entity/signs/hyperspace.png} (and {@code .../signs/hanging/}).
  * Reuses {@link BlockSetType#OAK} for interaction sounds/behaviour.
  *
- * <p>The type is only <em>constructed</em> here, not added to {@code WoodType.TYPES} — that registration
+ * <p>The type is only <em>constructed</em> here, not added to {@code WoodType.TYPES} - that registration
  * method is not accessible from the common (vanilla-mapped) module, and is unnecessary: the only consumer
  * that matters is the client sign atlas, which each loader wires up via {@code Sheets.addWoodType(HYPERSPACE)}.</p>
  */

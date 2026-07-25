@@ -11,7 +11,7 @@ import net.minecraft.world.phys.Vec3;
  * "Jump → ground shockwave" attack: on each landing the boss spawns a shockwave.
  *
  * <p>Parameterized generic utility: the variant is defined by constructor arguments
- * (color, damage, jump interval, poison, knockback), not a fixed type — anyone can
+ * (color, damage, jump interval, poison, knockback), not a fixed type - anyone can
  * wire up a new variant. The {@link #water}/{@link #poison}/{@link #steel}/{@link #normal}
  * factories are only presets.
  */

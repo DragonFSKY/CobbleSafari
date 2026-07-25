@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Boss minion: lightweight entity that <b>borrows the model of a Cobblemon species</b> (like
  * {@link CsBossEntity}), meant to be driven by an attack pattern.
- * No vanilla AI, no gravity, immune — movement and removal are decided by
+ * No vanilla AI, no gravity, immune - movement and removal are decided by
  * attack code. Hitbox derived from species × size.
  */
 public class CsBossMinionEntity extends Mob {

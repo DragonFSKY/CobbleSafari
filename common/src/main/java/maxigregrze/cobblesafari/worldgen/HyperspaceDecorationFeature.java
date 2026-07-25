@@ -20,7 +20,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
  * (the 4-cell {@link HyperspaceQuadBlock} stacked) or a flowerpot topped with a Hyperspace
  * sapling (plain or flowering). Multiblocks cannot be placed by {@code minecraft:simple_block}
  * (it never calls {@code setPlacedBy}), so every cell is written directly with
- * {@code UPDATE_CLIENTS} — same approach as {@link PunchingBagFeature}.
+ * {@code UPDATE_CLIENTS} - same approach as {@link PunchingBagFeature}.
  */
 public class HyperspaceDecorationFeature extends Feature<NoneFeatureConfiguration> {
 

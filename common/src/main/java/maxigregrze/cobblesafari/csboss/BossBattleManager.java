@@ -868,7 +868,7 @@ public final class BossBattleManager {
 
     /**
      * True if {@code pos} is inside the arena bounds (playerRadius + arenaYTolerance) of an
-     * active session of {@code dim} — same bounds as participant capture. Used to block
+     * active session of {@code dim} - same bounds as participant capture. Used to block
      * Pokémon send-out during a fight.
      */
     public static boolean isInsideActiveArena(ResourceKey<Level> dim, Vec3 pos) {

@@ -16,7 +16,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * Hyperspace sapling. Behaves like a vanilla {@link SaplingBlock} (planted on dirt, custom model)
- * except it <em>never</em> grows on its own — natural random‑tick growth is disabled — and only
+ * except it <em>never</em> grows on its own - natural random‑tick growth is disabled - and only
  * grows <em>rarely</em> when bonemealed. Both the plain and flowering saplings grow the same
  * {@code cobblesafari:hyperspace_tree} via their shared {@link TreeGrower}.
  */

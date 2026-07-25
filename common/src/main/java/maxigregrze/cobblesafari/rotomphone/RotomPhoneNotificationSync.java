@@ -5,6 +5,7 @@ import maxigregrze.cobblesafari.chat.ChatConversationRegistry;
 import maxigregrze.cobblesafari.chat.ChatConversationService;
 import maxigregrze.cobblesafari.data.ChatProgressSavedData;
 import maxigregrze.cobblesafari.data.GtsSavedData;
+import maxigregrze.cobblesafari.data.WonderTradeSavedData;
 import maxigregrze.cobblesafari.network.RotomPhoneNotificationPayload;
 import maxigregrze.cobblesafari.platform.Services;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Builds and sends {@link RotomPhoneNotificationPayload} — the notification-dot snapshot. Mirrors
+ * Builds and sends {@link RotomPhoneNotificationPayload} - the notification-dot snapshot. Mirrors
  * {@link ChatConversationSync}, but where the contact list is configuration this is volatile state:
  * it is pushed on phone open and after every chat/GTS mutation, and polled by the open phone screen.
  *
@@ -37,6 +38,9 @@ public final class RotomPhoneNotificationSync {
         }
         boolean gtsPending =
                 !GtsSavedData.get(player.server).findSuccessesByRecipient(player.getUUID()).isEmpty();
-        Services.PLATFORM.sendPayloadToPlayer(player, new RotomPhoneNotificationPayload(pending, gtsPending));
+        WonderTradeSavedData wt = WonderTradeSavedData.get(player.server);
+        boolean wonderPending = wt.hasActiveEvent() && !wt.hasSeenCurrentEvent(player.getUUID());
+        Services.PLATFORM.sendPayloadToPlayer(
+                player, new RotomPhoneNotificationPayload(pending, gtsPending, wonderPending));
     }
 }

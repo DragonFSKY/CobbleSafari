@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
  * Client-only wiring for common blocks whose behaviour needs the local player or a client screen.
  *
  * <p>These hooks let the common block classes stay free of any {@code net.minecraft.client}
- * reference — such a reference would fail class verification and crash a <b>dedicated server</b>
+ * reference - such a reference would fail class verification and crash a <b>dedicated server</b>
  * the moment {@code ModBlocks} constructs the block. This class lives in the client-only
  * {@code client} package and is loaded only from each loader's client entrypoint.
  */

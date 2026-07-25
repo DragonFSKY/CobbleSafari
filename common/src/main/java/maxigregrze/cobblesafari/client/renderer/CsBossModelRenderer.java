@@ -64,7 +64,7 @@ public final class CsBossModelRenderer {
         try {
             // Resolve species + aspects straight from the parsed properties rather than building a full
             // Pokemon via create(). parse() computes aspects through the *properties* aspect providers
-            // (AspectProvider.provide(PokemonProperties)) — the client-safe path Cobblemon itself uses.
+            // (AspectProvider.provide(PokemonProperties)) - the client-safe path Cobblemon itself uses.
             // This resolves tag/aspect-triggered forms (e.g. "rowlet hisuian") that the Pokemon-level
             // providers drop on the client, and it avoids create()'s roll()/events/held-item form logic,
             // which throws for some modded (held-item) special forms.

@@ -8,7 +8,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * S2C — result of a {@link TeleportPadActionPayload} search, applied to the open config screen.
+ * S2C - result of a {@link TeleportPadActionPayload} search, applied to the open config screen.
  * For {@link Status#VALID} / {@link Status#FOUND} the {@code x/y/z} carry the world-axis offset
  * to fill into the GUI (and turn the text green).
  */

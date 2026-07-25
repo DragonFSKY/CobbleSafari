@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 /**
- * Filled "Rotie Earpiece" — an accessory variant of the Rotom Phone.
+ * Filled "Rotie Earpiece" - an accessory variant of the Rotom Phone.
  *
  * <p>Reuses {@link RotomPhoneItem}'s static NBT helpers, tooltip and {@code inventoryTick}, but
  * unlike the phone the earpiece does <b>not</b> open the GUI on right-click: it only opens when

@@ -22,7 +22,7 @@ public class DistortionWalkAttack implements CsBossAttack {
 
     private static final int SEND_INTERVAL = 40; // a new shadow every 2 s
     private static final int SHADOW_LIFE = 100; // 5 s of forward travel
-    private static final double WALK_SPEED = 0.2; // plancher (petites arènes) — mis à l'échelle sinon
+    private static final double WALK_SPEED = 0.2; // plancher (petites arènes) - mis à l'échelle sinon
     private static final double DEVIATION_DEG = 12.0; // max mid-course turn (left or right)
     private static final int END_DELAY = 20; // 3*40 + 100 + 20 = 240 t
     private static final int COUNT = 4; // deterministic

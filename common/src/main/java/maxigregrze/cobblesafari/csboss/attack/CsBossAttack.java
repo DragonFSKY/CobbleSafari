@@ -29,7 +29,7 @@ public interface CsBossAttack {
     }
 
     /**
-     * Effect category — used to allow two simultaneous attacks of different
+     * Effect category - used to allow two simultaneous attacks of different
      * categories. By default {@link AttackCategory#SPREAD} ({@code test} case / bullet volleys).
      */
     default AttackCategory category() {

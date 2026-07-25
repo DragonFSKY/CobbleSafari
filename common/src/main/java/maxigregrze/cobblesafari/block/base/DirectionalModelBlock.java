@@ -28,7 +28,7 @@ import java.util.Map;
  *
  * <p>By default a block places with {@code FACING = } the clicked face (floor click ⇒ UP, wall
  * click ⇒ that side, ceiling click ⇒ DOWN). Blocks that need a real placement/survival rule may
- * extend this and override only {@link #getStateForPlacement} — see {@code HyperspaceLogBlock}.</p>
+ * extend this and override only {@link #getStateForPlacement} - see {@code HyperspaceLogBlock}.</p>
  */
 public class DirectionalModelBlock extends DirectionalBlock {
 

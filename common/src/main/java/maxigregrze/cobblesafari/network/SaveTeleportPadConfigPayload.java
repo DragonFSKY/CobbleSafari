@@ -8,7 +8,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * C2S — save the teleport-pad config: mode + destination offset (world axes) + tint colour.
+ * C2S - save the teleport-pad config: mode + destination offset (world axes) + tint colour.
  * Server validates (creative / Tinkhammer + proximity) and converts the offset to facing-relative storage.
  */
 public record SaveTeleportPadConfigPayload(

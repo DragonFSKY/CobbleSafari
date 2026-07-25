@@ -137,7 +137,7 @@ public class ModItems {
 
     public static final Item ROTOM_PHONE = new RotomPhoneItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
 
-    // Rotie Earpiece — accessory variant of the Rotom Phone (worn in the Accessories "hat" slot).
+    // Rotie Earpiece - accessory variant of the Rotom Phone (worn in the Accessories "hat" slot).
     // Both items are always registered; recipe + creative-tab visibility are gated on Accessories.
     public static final Item EMPTY_EARPIECE = new maxigregrze.cobblesafari.item.EmptyEarpieceItem(
             new Item.Properties().stacksTo(16));
@@ -158,7 +158,7 @@ public class ModItems {
             new Item.Properties().stacksTo(16).rarity(Rarity.RARE), RotomSkinUnlockItem.ALL);
 
     /**
-     * Ids of the mod's bundled skins flagged {@code addUnlockItem} — one dynamic disc per id is shown in
+     * Ids of the mod's bundled skins flagged {@code addUnlockItem} - one dynamic disc per id is shown in
      * the creative tab (each stack tagged with the SKIN_UNLOCK_TARGET component). Populated at init from
      * the bundled skin JSONs; empty when no bundled skin is disc-obtainable (so no blank disc is shown).
      */

@@ -199,7 +199,7 @@ public final class GtsService {
     }
 
     /**
-     * A successful trade consumes one extra slot of the depositor — only when the bonus was actually
+     * A successful trade consumes one extra slot of the depositor - only when the bonus was actually
      * occupied (offer count before removal above the base). Expiry, admin removal and manual retrieve
      * never consume the bonus.
      */
@@ -272,7 +272,7 @@ public final class GtsService {
         return searchOffers(server, page, speciesFilter, genderFilter, shinyFilter, null);
     }
 
-    /** Player Seek screen — excludes the searching player's own offers. */
+    /** Player Seek screen - excludes the searching player's own offers. */
     public static SearchResult searchOffersForPlayer(
             ServerPlayer player,
             int page,
@@ -593,7 +593,7 @@ public final class GtsService {
 
     /**
      * Public API: grants a personal (player-bound) unique offer built from a template. Usable by admin commands and by
-     * external systems (e.g. quest rewards) without requiring the target to be online — only the UUID is stored.
+     * external systems (e.g. quest rewards) without requiring the target to be online - only the UUID is stored.
      *
      * <p>At most one personal offer per {@code (targetUuid, templateOfferId)} pair may exist.
      */

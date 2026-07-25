@@ -20,7 +20,7 @@ import java.util.List;
  * Large Hyperspace flag: a thin, dyeable adapter over the reusable 3-cell multiblock
  * {@link HyperspaceTriBlock}. Dyeing any cell recolours the whole column. All dye behaviour is
  * delegated to {@link HyperspaceFlagDye}; {@link HyperspaceTriBlock} itself is left generic
- * (untouched) so it can back future multiblocks — the bottom cell is recomputed here from the
+ * (untouched) so it can back future multiblocks - the bottom cell is recomputed here from the
  * public {@link HyperspaceTriBlock#PART} property.
  */
 public class HyperspaceFlagLargeBlock extends HyperspaceTriBlock {

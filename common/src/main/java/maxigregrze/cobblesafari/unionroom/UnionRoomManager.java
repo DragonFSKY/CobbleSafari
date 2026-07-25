@@ -636,7 +636,7 @@ public final class UnionRoomManager {
         instance.id = id;
         instance.type = type;
         instance.structurePos = structurePos;
-        // anchorPos = jigsaw start position (structurePos) — where the player spawns.
+        // anchorPos = jigsaw start position (structurePos) - where the player spawns.
         // Updated to the void marker location once jigsaw completes if needed.
         instance.anchorPos = structurePos;
         instance.occupied = false;
@@ -725,7 +725,7 @@ public final class UnionRoomManager {
                 iter.remove();
             } else if (counter[0] <= 0) {
                 CobbleSafari.LOGGER.warn(
-                        "Union Room: void marker not found after 40 ticks for instance {} — "
+                        "Union Room: void marker not found after 40 ticks for instance {} - "
                                 + "placing fallback exit at structure origin {}",
                         instanceId, structurePos);
                 placeFallbackExit(unionLevel, structurePos, instanceId);

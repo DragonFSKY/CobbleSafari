@@ -38,7 +38,7 @@ public final class CsBossAttackRegistry {
             TYPE_POOLS.put(type, List.of(id));
         }
 
-        // Real patterns — re-registered after the loop (last register wins).
+        // Real patterns - re-registered after the loop (last register wins).
         register("base_electric_1", () -> new ElectricVoltorbAttack("base_electric_1"));
         register("base_fire_1", () -> new FireShadowAttack("base_fire_1"));
         register("base_rock_1", () -> MeteorShowerAttack.rock("base_rock_1"));
@@ -50,15 +50,15 @@ public final class CsBossAttackRegistry {
         register("base_ghost_1", () -> new GhostShadowAttack("base_ghost_1"));
         register("base_electric_2", () -> new ElectricFieldAttack("base_electric_2"));
 
-        // Patterns from batch 3 — ring attacks.
+        // Patterns from batch 3 - ring attacks.
         register("base_rock_2", () -> new RockRingAttack("base_rock_2"));
         register("base_electric_3", () -> new ElectricRingAttack("base_electric_3"));
 
-        // Patterns from batch 4 — water.
+        // Patterns from batch 4 - water.
         register("base_water_1", () -> new WaterShadowAttack("base_water_1"));
         register("base_water_2", () -> new WaterWaveAttack("base_water_2"));
 
-        // Patterns from batch 5 — distortion, rock, ground.
+        // Patterns from batch 5 - distortion, rock, ground.
         register("distortion_2", () -> new DistortionWalkAttack("distortion_2"));
         register("distortion_3", () -> new DistortionFieldAttack("distortion_3"));
         register("distortion_4", () -> new DistortionOrbAttack("distortion_4"));

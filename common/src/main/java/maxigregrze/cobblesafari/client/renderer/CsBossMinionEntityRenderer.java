@@ -122,7 +122,7 @@ public class CsBossMinionEntityRenderer extends EntityRenderer<CsBossMinionEntit
     /**
      * Plays the first battle animation the species defines, in {@link #BATTLE_ANIMATION_PRIORITY}
      * order. Resolved manually instead of {@code state.addFirstAnimation(...)}: standard species
-     * posers define physical/special as {@code q.bedrock_primary(...)} — a {@code PrimaryAnimation}
+     * posers define physical/special as {@code q.bedrock_primary(...)} - a {@code PrimaryAnimation}
      * whose lifecycle expects Cobblemon's per-tick entity delegate ({@code incrementAge}), which
      * this borrowed-model pipeline never runs, so primaries were observed to never play. Unwrapping
      * the primary and playing its inner bedrock animation as an <b>active</b> animation uses the

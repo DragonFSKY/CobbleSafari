@@ -113,7 +113,7 @@ public final class GtsDataLoader {
                 Mark mark = Marks.getByIdentifier(markId);
                 if (mark == null) {
                     CobbleSafari.LOGGER.warn(
-                            "[GTS] unique offer {} unknown mark '{}' — skipped",
+                            "[GTS] unique offer {} unknown mark '{}' - skipped",
                             sourcePath,
                             markId);
                     continue;
@@ -129,13 +129,13 @@ public final class GtsDataLoader {
                 CobbleSafari.LOGGER.warn("[GTS] unique offer {} invalid givenActiveMark", sourcePath);
             } else if (Marks.getByIdentifier(activeMarkId) == null) {
                 CobbleSafari.LOGGER.warn(
-                        "[GTS] unique offer {} unknown givenActiveMark '{}' — ignored",
+                        "[GTS] unique offer {} unknown givenActiveMark '{}' - ignored",
                         sourcePath,
                         activeMarkId);
                 activeMarkId = null;
             } else if (!markIds.isEmpty() && !markIds.contains(activeMarkId)) {
                 CobbleSafari.LOGGER.warn(
-                        "[GTS] unique offer {} givenActiveMark not in givenMarks — ignored",
+                        "[GTS] unique offer {} givenActiveMark not in givenMarks - ignored",
                         sourcePath);
                 activeMarkId = null;
             }

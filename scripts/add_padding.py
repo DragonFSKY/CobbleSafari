@@ -37,7 +37,7 @@ def add_padding(input_dir: str, output_dir: str | None = None) -> None:
         img = Image.open(png_file).convert("RGBA")
 
         if img.size != (16, 16):
-            print(f"  Skipping '{png_file.name}' — size is {img.size}, expected (16, 16).")
+            print(f"  Skipping '{png_file.name}' - size is {img.size}, expected (16, 16).")
             skipped += 1
             continue
 

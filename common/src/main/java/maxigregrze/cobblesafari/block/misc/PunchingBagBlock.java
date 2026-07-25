@@ -117,7 +117,7 @@ public class PunchingBagBlock extends HorizontalDirectionalBlock implements Enti
         BlockPos upperPos = state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER ? pos : pos.above();
         if (!level.isClientSide()) {
             // Bag swings in the facing-axis plane; start direction depends
-            // on which side the player is on (like a bell) — flips if clicked from the other side.
+            // on which side the player is on (like a bell) - flips if clicked from the other side.
             Direction.Axis moveAxis = state.getValue(FACING).getAxis();
             double rel = moveAxis == Direction.Axis.Z
                     ? player.getZ() - (pos.getZ() + 0.5)

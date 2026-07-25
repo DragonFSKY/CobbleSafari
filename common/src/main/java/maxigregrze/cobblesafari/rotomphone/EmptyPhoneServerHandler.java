@@ -137,8 +137,8 @@ public class EmptyPhoneServerHandler {
     }
 
     /**
-     * Consumes the empty phone this confirmation was opened on. Returns {@code false} — without any
-     * side effect — when it is no longer there: block broken or already absorbed by someone else,
+     * Consumes the empty phone this confirmation was opened on. Returns {@code false} - without any
+     * side effect - when it is no longer there: block broken or already absorbed by someone else,
      * item moved out of its slot, or player now in another dimension.
      */
     private static boolean consumeContainer(ServerPlayer player, PendingFill pending, boolean earpiece) {

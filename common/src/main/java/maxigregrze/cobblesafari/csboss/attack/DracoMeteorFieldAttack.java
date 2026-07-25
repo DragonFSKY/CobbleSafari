@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * {@code base_dragon_3} (Type B / AREA): covers ~10% of the arena surface — chosen at <b>random</b>
- * (no Perlin noise) — with shadows that each drop a falling draco meteorite. Two waves (at 0 s and
+ * {@code base_dragon_3} (Type B / AREA): covers ~10% of the arena surface - chosen at <b>random</b>
+ * (no Perlin noise) - with shadows that each drop a falling draco meteorite. Two waves (at 0 s and
  * 6 s) over ~12 s. Each impact places a draco-meteorite block.
  */
 public class DracoMeteorFieldAttack implements CsBossAttack {

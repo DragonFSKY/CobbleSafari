@@ -49,7 +49,7 @@ public class CsBossEntity extends Mob {
     public static final int PHASE_ACTIVE = 1;
     public static final int PHASE_DYING = 2;
 
-    /** Fall height (blocks) during entrance — also the portal / death-rise height. */
+    /** Fall height (blocks) during entrance - also the portal / death-rise height. */
     public static final double ENTRANCE_HEIGHT = 12.0;
     /** Y offset of the target position: 0 ⇒ the boss is "inside" the trigger block, not standing on top. */
     public static final double STAND_Y_OFFSET = 0.0;

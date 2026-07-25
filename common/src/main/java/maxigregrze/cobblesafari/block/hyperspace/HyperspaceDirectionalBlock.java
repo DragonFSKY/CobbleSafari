@@ -10,10 +10,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Orientable (N/E/S/W) Hyperspace block with a custom model, now a thin configuration of
  * the shared {@link HorizontalModelBlock}:
  * <ul>
- *   <li>{@code wallMounted=true} — attaches to the wall behind ({@link HorizontalModelBlock.Support#WALL});
+ *   <li>{@code wallMounted=true} - attaches to the wall behind ({@link HorizontalModelBlock.Support#WALL});
  *       the shape is authored for {@link Direction#SOUTH} (the wall blocks render their base model facing south).</li>
- *   <li>{@code wallMounted=false} — free‑standing ({@link HorizontalModelBlock.Support#NONE}), shape authored NORTH.</li>
- *   <li>{@code hasCollision=false} — selection only (decorative banners / neon).</li>
+ *   <li>{@code wallMounted=false} - free‑standing ({@link HorizontalModelBlock.Support#NONE}), shape authored NORTH.</li>
+ *   <li>{@code hasCollision=false} - selection only (decorative banners / neon).</li>
  * </ul>
  * Reused by small neon (wall, no collision), iron railing (wall), shutters (wall).
  */

@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Per-player progress for the Rotom Phone chat questlines. Attached to the
- * Overworld storage like {@code StatProgressSavedData}; light and robust — entries whose conversation
+ * Overworld storage like {@code StatProgressSavedData}; light and robust - entries whose conversation
  * id no longer exists are simply ignored (never purged destructively), and nothing here ever touches
  * the vanilla {@code player.dat} (so removing the mod cannot corrupt player data).
  */
@@ -32,12 +32,12 @@ public class ChatProgressSavedData extends SavedData {
 
     /** Message-streaming / questline phase for one conversation. Int values used on the wire. */
     public enum Phase {
-        BEFORE, // 0 — streaming messagesBefore
-        TASK, // 1 — task bubble shown, awaiting claim
-        AFTER, // 2 — streaming messagesAfter
-        WAIT_NEXT_DAY, // 3 — step ready, held until the next daily reset
-        DONE, // 4 — conversation finished
-        WAIT_UNLOCK; // 5 — step held (and hidden) until its unlockingAdvancement is obtained
+        BEFORE, // 0 - streaming messagesBefore
+        TASK, // 1 - task bubble shown, awaiting claim
+        AFTER, // 2 - streaming messagesAfter
+        WAIT_NEXT_DAY, // 3 - step ready, held until the next daily reset
+        DONE, // 4 - conversation finished
+        WAIT_UNLOCK; // 5 - step held (and hidden) until its unlockingAdvancement is obtained
 
         public static Phase fromInt(int i) {
             Phase[] v = values();
@@ -81,7 +81,7 @@ public class ChatProgressSavedData extends SavedData {
         /** Ids of {@code isUnique} series already completed (excluded from future rolls). */
         public final Set<String> completedUnique = new HashSet<>();
         /**
-         * Ids of <em>every</em> series (unique or not) completed at least once — the ledger the
+         * Ids of <em>every</em> series (unique or not) completed at least once - the ledger the
          * {@code prerequisite} check reads. Never pruned.
          */
         public final Set<String> completedOnce = new HashSet<>();
@@ -95,7 +95,7 @@ public class ChatProgressSavedData extends SavedData {
 
         /**
          * Appends a resolved series to the transcript while keeping {@link #history} bounded (A3):
-         * first drops entries that are permanently hidden ({@code doDisapear} resolved on a prior day —
+         * first drops entries that are permanently hidden ({@code doDisapear} resolved on a prior day -
          * never rendered again), then trims the oldest entries beyond {@link #MAX_HISTORY}. The
          * {@link #completedUnique} set is tracked separately and is never affected.
          */

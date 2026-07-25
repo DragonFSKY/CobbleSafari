@@ -112,7 +112,7 @@ public class TeleportPadBlock extends BaseEntityBlock {
     @Override
     public RenderShape getRenderShape(BlockState state) {
         // Rendered entirely by TeleportPadBlockEntityRenderer (per-frame, depth-sorted translucency
-        // showing every face — including the model's own back faces — through the transparent texture).
+        // showing every face - including the model's own back faces - through the transparent texture).
         return RenderShape.INVISIBLE;
     }
 

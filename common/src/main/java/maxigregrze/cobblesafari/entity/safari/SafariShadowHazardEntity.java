@@ -16,7 +16,7 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * Invisible driver for a single fire/water column cycle at a fixed position.
- * Particles only — no shadow entity.
+ * Particles only - no shadow entity.
  */
 public class SafariShadowHazardEntity extends Entity {
 

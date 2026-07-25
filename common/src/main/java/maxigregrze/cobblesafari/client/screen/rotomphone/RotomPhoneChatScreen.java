@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Rotom Phone "Chat" app — data-driven questline messenger.
+ * Rotom Phone "Chat" app - data-driven questline messenger.
  * Client-driven message streaming; server-persisted position; server-authoritative progress.
  * The whole transcript (all steps up to the current one) stays on screen and is scrollable.
  */
@@ -507,7 +507,7 @@ public class RotomPhoneChatScreen extends RotomPhoneBaseScreen {
         /**
          * Whether hovering this bubble should list the objective's items. Only while the gathering is
          * actually in progress: once every item is held the bar turns into the claim button, and after
-         * the claim the step is history — in both cases the shopping list is no longer useful.
+         * the claim the step is history - in both cases the shopping list is no longer useful.
          */
         private boolean hasGatherTooltip() {
             return type == 1 && taskCurrent && state != null
@@ -593,7 +593,7 @@ public class RotomPhoneChatScreen extends RotomPhoneBaseScreen {
      *
      * <p>The box itself goes through {@link GuiGraphics#renderComponentTooltip}, exactly like the GTS
      * and Wonder Trade tooltips, so the background is the shared one (and stays shared if a loader or
-     * another mod restyles it). Only the icons are drawn on top, over the rows vanilla just laid out —
+     * another mod restyles it). Only the icons are drawn on top, over the rows vanilla just laid out -
      * hence the indent reserved at the start of every line and the line geometry mirrored below.
      */
     private void renderGatherTooltip(GuiGraphics g, List<ChatAppResultPayload.ItemLine> items, int mouseX, int mouseY) {

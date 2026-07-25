@@ -45,7 +45,7 @@ public class UnionRoomGlobeBlock extends HorizontalDirectionalBlock implements E
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        // Like MagneticClusterBlock: do not rely on super alone — register FACING explicitly with HALF.
+        // Like MagneticClusterBlock: do not rely on super alone - register FACING explicitly with HALF.
         builder.add(FACING, BlockStateProperties.DOUBLE_BLOCK_HALF);
     }
 

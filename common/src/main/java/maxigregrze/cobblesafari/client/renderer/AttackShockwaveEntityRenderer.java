@@ -75,7 +75,7 @@ public class AttackShockwaveEntityRenderer extends EntityRenderer<AttackShockwav
 
     /**
      * Radial band (ring) between {@code inner} and {@code outer}, drawn as <b>quads</b>
-     * (one full quad per angular segment — triangle-strip order produced every other quad,
+     * (one full quad per angular segment - triangle-strip order produced every other quad,
      * hence the missing "rectangles").
      */
     private static void drawAnnulus(VertexConsumer vc, PoseStack.Pose pose, int light, float y,

@@ -25,7 +25,7 @@ public class CsBossSettings {
 
     private boolean uniqueLootCommunism = false;
     private int maximumConcurrentFights = 5;
-    private int maximumFightDuration = 900; // seconds — hard global cap (no floor)
+    private int maximumFightDuration = 900; // seconds - hard global cap (no floor)
     private int defaultPlayerRadius = 24; // blocks
     private int defaultBlockRadius = 2; // chunks
     private int maxConcurrentBulletsPerSession = 256;

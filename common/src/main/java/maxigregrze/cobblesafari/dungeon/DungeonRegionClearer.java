@@ -122,7 +122,7 @@ public class DungeonRegionClearer {
     /**
      * Non-blocking wait. The DUNGEON_CLEAR tickets posted in {@link #addAllDungeonClearTickets} drive
      * the chunks to FULL asynchronously over the following ticks; here we only poll their readiness with
-     * {@link net.minecraft.server.level.ServerChunkCache#getChunkNow} — which never blocks nor generates.
+     * {@link net.minecraft.server.level.ServerChunkCache#getChunkNow} - which never blocks nor generates.
      * As long as a chunk isn't ready we simply return and retry next tick, so the main thread is never
      * parked (this is the fix for the ServerHangWatchdog crash caused by the old blocking getChunkFuture).
      */
@@ -130,7 +130,7 @@ public class DungeonRegionClearer {
         ServerLevel level = job.level();
         for (ChunkPos cp : job.positions()) {
             if (level.getChunkSource().getChunkNow(cp.x, cp.z) == null) {
-                // Not ready yet — the tickets keep loading it in the background. If we have waited a
+                // Not ready yet - the tickets keep loading it in the background. If we have waited a
                 // long time and other jobs are queued behind us, rotate this one to the back so a single
                 // slow region can't stall the whole queue. The job is never abandoned: it keeps its
                 // tickets and the instance stays pendingDeletion, so it is retried (eventually, or via the

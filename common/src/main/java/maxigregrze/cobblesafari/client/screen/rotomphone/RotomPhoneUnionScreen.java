@@ -44,6 +44,8 @@ public class RotomPhoneUnionScreen extends RotomPhoneBaseScreen {
     private int inputFilled;
     private String lastErrorKey = "";
     private long openedAt;
+    /** Set when a create request is in flight; blocks repeat clicks until the server replies (anti double-create under lag). */
+    private boolean createPending;
 
     public RotomPhoneUnionScreen(String rotomName, boolean shinyStatus, String currentSkin, boolean safetyMode, boolean rotoGlide) {
         super(Component.translatable("gui.cobblesafari.rotomphone.app.union"), rotomName, shinyStatus, currentSkin, safetyMode, rotoGlide);
@@ -65,6 +67,9 @@ public class RotomPhoneUnionScreen extends RotomPhoneBaseScreen {
     }
 
     public void applyServerSnapshot(UnionAppResultPayload p) {
+        // Any server reply resolves an in-flight create request (success closes the GUI; a failure
+        // reply re-enables the button).
+        this.createPending = false;
         if (p.subscreen() == UnionAppResultPayload.SUB_CLOSE_GUI) {
             return;
         }
@@ -285,13 +290,20 @@ public class RotomPhoneUnionScreen extends RotomPhoneBaseScreen {
     }
 
     private boolean handleChooseTypeClick(double mx, double my) {
-        if (isInBounds(mx, my, originX + 98, originY + 96, 72, 32)) {
+        boolean onRoom = isInBounds(mx, my, originX + 98, originY + 96, 72, 32);
+        boolean onPlaza = isInBounds(mx, my, originX + 178, originY + 96, 72, 32);
+        if (createPending && (onRoom || onPlaza)) {
+            return true; // request already in flight: swallow repeat clicks until the server replies
+        }
+        if (onRoom) {
             lastErrorKey = "";
+            createPending = true;
             Services.PLATFORM.sendPayloadToServer(new UnionAppPayload(UnionAppPayload.ACTION_CREATE, new int[]{0}));
             return true;
         }
-        if (isInBounds(mx, my, originX + 178, originY + 96, 72, 32)) {
+        if (onPlaza) {
             lastErrorKey = "";
+            createPending = true;
             Services.PLATFORM.sendPayloadToServer(new UnionAppPayload(UnionAppPayload.ACTION_CREATE, new int[]{1}));
             return true;
         }
@@ -335,6 +347,7 @@ public class RotomPhoneUnionScreen extends RotomPhoneBaseScreen {
     protected void onBackButtonClicked() {
         if (state == SubScreen.CHOOSE_TYPE) {
             lastErrorKey = "";
+            createPending = false;
             state = SubScreen.BEGIN;
             return;
         }

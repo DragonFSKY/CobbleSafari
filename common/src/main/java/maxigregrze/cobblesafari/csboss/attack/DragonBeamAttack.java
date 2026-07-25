@@ -14,7 +14,7 @@ import org.joml.Vector3f;
 /**
  * {@code base_dragon_2} (Type C / SPREAD): from the boss (centered like {@code distortion_1}),
  * 8 beacon beams (#cc55ba) reach 30 blocks out in the N/NE/E/SE/… directions. They continuously
- * <b>swing up and down</b> ±45° (around the axis perpendicular to their facing — cardinals starting
+ * <b>swing up and down</b> ±45° (around the axis perpendicular to their facing - cardinals starting
  * at +45°, diagonals at −45°) <b>while rotating</b> around the world Y axis, for the same duration as
  * {@code distortion_1} (at a reduced speed). Beacon-texture beams (plus particles) show them; contact
  * deals damage.

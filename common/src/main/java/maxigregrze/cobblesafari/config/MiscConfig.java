@@ -66,7 +66,7 @@ public class MiscConfig {
     private int unionRoomMaxGuestsPerSession = 6;
     /** Maximum concurrent Union Plaza instances. */
     private int unionRoomPlazaMaxInstances = 2;
-    /** Maximum guests per Union Plaza session (host not counted) — 4× room (6) by default. */
+    /** Maximum guests per Union Plaza session (host not counted) - 4× room (6) by default. */
     private int unionRoomPlazaMaxGuestsPerSession = 24;
     /** Room types (key → limits). Missing from JSON ⇒ rebuilt from fields above. */
     private Map<String, RoomTypeConfig> unionRoomTypes = null;

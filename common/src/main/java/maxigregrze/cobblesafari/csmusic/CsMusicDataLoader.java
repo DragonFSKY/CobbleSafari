@@ -101,7 +101,7 @@ public final class CsMusicDataLoader {
         }
         ResourceLocation rl = ResourceLocation.tryParse(json.get(key).getAsString().trim());
         if (rl == null) {
-            CobbleSafari.LOGGER.warn("[CSMusic] {} invalid '{}' sound id — ignored", file, key);
+            CobbleSafari.LOGGER.warn("[CSMusic] {} invalid '{}' sound id - ignored", file, key);
         }
         return rl;
     }

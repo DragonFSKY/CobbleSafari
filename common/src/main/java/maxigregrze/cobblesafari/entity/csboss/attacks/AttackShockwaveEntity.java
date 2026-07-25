@@ -25,7 +25,7 @@ import java.util.UUID;
  * collision limited to participants (dodge by jumping).
  *
  * <p>Generic utility: the caller supplies color, damage, and effects
- * (poison / knockback) directly — no fixed "type"; anyone can create a variant.
+ * (poison / knockback) directly - no fixed "type"; anyone can create a variant.
  */
 public class AttackShockwaveEntity extends AbstractAttackEntity {
 

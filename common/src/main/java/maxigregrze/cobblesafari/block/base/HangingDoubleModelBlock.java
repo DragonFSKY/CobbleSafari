@@ -25,8 +25,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 /**
  * Shared base for a two‑cell orientable cluster block that can be placed standing on the
  * ground (grows upward) or hanging from a ceiling (grows downward). Holds the whole
- * multiblock skeleton — {@code FACING} + {@code HANGING} + {@code DOUBLE_BLOCK_HALF},
- * placement of the second half, mutual survival, joint break, and per‑state shapes — so a
+ * multiblock skeleton - {@code FACING} + {@code HANGING} + {@code DOUBLE_BLOCK_HALF},
+ * placement of the second half, mutual survival, joint break, and per‑state shapes - so a
  * concrete block only supplies its four {@link VoxelShape}s.
  */
 public abstract class HangingDoubleModelBlock extends HorizontalDirectionalBlock {

@@ -25,7 +25,7 @@ final class TrapEffects {
 
     /**
      * Explosion that deals damage/knockback without breaking blocks (base) or breaking only soft blocks (hard).
-     * When {@code silentSound} is non-null it replaces the default explosion boom — used by the fart trap so its
+     * When {@code silentSound} is non-null it replaces the default explosion boom - used by the fart trap so its
      * own sound can be heard. Trap supports are preserved so a hard blast never knocks a trap off (no self-drop).
      */
     static void explode(ServerLevel level, BlockPos pos, boolean hard, @Nullable Holder<SoundEvent> silentSound) {

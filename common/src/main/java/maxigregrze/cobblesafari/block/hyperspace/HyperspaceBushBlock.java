@@ -10,7 +10,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * Hyperspace bush: a foliage-tinted plant that, like flowers and saplings, must sit on dirt or
- * grass — it cannot float and breaks if its support is removed. Custom hitbox via {@code shape};
+ * grass - it cannot float and breaks if its support is removed. Custom hitbox via {@code shape};
  * the shears-only drop is handled by the loot table.
  */
 public class HyperspaceBushBlock extends BushBlock {

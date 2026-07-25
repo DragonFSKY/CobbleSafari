@@ -92,6 +92,7 @@ public class RotomPhoneMenuScreen extends RotomPhoneBaseScreen {
         return switch (appId) {
             case "chatApp" -> RotomPhoneNotificationCache.isAnyConversationPending();
             case "gtsApp" -> RotomPhoneNotificationCache.isGtsPending();
+            case "wonderApp" -> RotomPhoneNotificationCache.isWonderPending();
             default -> false;
         };
     }

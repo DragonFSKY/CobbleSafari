@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Per-player Rotom Phone unlock state: which apps and which skins a player has unlocked through a
- * channel that is <em>not</em> "enabled by default" / "unlocked from start" / advancement — i.e. via
+ * channel that is <em>not</em> "enabled by default" / "unlocked from start" / advancement - i.e. via
  * a consumable item, a chat questline step, or an admin command.
  *
  * <p>Attached to the Overworld storage like {@code ChatProgressSavedData}; never touches the vanilla

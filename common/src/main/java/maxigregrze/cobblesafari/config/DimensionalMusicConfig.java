@@ -37,7 +37,7 @@ public final class DimensionalMusicConfig {
             CobbleSafari.LOGGER.info("CobbleSafari >> dimensional_music.json loaded from {}", CONFIG_PATH);
         } catch (Exception e) {
             CobbleSafari.LOGGER.error(
-                    "CobbleSafari >> Failed to read dimensional_music.json at {} — using in-memory defaults, file not overwritten",
+                    "CobbleSafari >> Failed to read dimensional_music.json at {} - using in-memory defaults, file not overwritten",
                     CONFIG_PATH, e);
             data = new DimensionalMusicData();
         }

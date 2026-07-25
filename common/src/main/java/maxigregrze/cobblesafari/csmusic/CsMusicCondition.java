@@ -129,7 +129,7 @@ public record CsMusicCondition(
     }
 
     /**
-     * True if this rule can only ever match during a battle — i.e. a battle-only {@code battle} mode,
+     * True if this rule can only ever match during a battle - i.e. a battle-only {@code battle} mode,
      * or a species/form constraint (only known for wild battles). Used to decide whether a matching
      * rule should suppress Cobblemon's native battle music (§ battle suppression).
      */

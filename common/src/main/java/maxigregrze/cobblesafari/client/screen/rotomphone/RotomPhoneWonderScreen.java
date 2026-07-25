@@ -140,10 +140,15 @@ public class RotomPhoneWonderScreen extends RotomPhoneBaseScreen {
             case WonderAppResultPayload.SUB_TRADE -> {
                 tradePending = false;
                 if (this.minecraft != null && this.minecraft.player != null) {
-                    this.offeredPokemon = Pokemon.Companion.loadFromNBT(
-                            this.minecraft.player.registryAccess(), p.offeredNbt());
-                    this.receivedPokemon = Pokemon.Companion.loadFromNBT(
-                            this.minecraft.player.registryAccess(), p.receivedNbt());
+                    // The client rebuild loses data-driven form aspects; re-apply the stored form.
+                    this.offeredPokemon = StoredPokemonRenderFix.restoreForm(
+                            Pokemon.Companion.loadFromNBT(
+                                    this.minecraft.player.registryAccess(), p.offeredNbt()),
+                            p.offeredNbt());
+                    this.receivedPokemon = StoredPokemonRenderFix.restoreForm(
+                            Pokemon.Companion.loadFromNBT(
+                                    this.minecraft.player.registryAccess(), p.receivedNbt()),
+                            p.receivedNbt());
                 }
                 this.offeredState = new FloatingState();
                 this.receivedState = new FloatingState();
@@ -379,8 +384,14 @@ public class RotomPhoneWonderScreen extends RotomPhoneBaseScreen {
         int bx = originX + 46;
         int by = originY + 136;
         drawBlitWithAlpha(g, bannerTex, bx, by, 0, 0, 255, 32, 255, 32);
+        // Full days remaining before the deadline: eventDaysLeft counts resets left, so the last
+        // reset window (< 24 h) reads "0 days left". Deadline = next reset + (resets - 1) full days.
+        long nowSec = System.currentTimeMillis() / 1000L;
+        long remainingSec = Math.max(0L,
+                (nextResetEpochSeconds - nowSec) + (long) (eventDaysLeft - 1) * 86400L);
+        long fullDays = remainingSec / 86400L;
         Component bannerLabel = Component.translatable(
-                "gui.cobblesafari.rotomphone.wonder.banner", eventName, eventDaysLeft);
+                "gui.cobblesafari.rotomphone.wonder.banner", eventName, fullDays);
         int labelY = by + (32 - this.font.lineHeight) / 2;
         g.drawCenteredString(this.font, bannerLabel, originX + 174, labelY, 0xFFFFFFFF);
     }
@@ -675,6 +686,12 @@ public class RotomPhoneWonderScreen extends RotomPhoneBaseScreen {
         Quaternionf rotation = QuaternionUtilsKt.fromEulerXYZDegrees(
                 new Quaternionf(), new Vector3f(13f, 35f, 0f));
         RenderablePokemon renderable = pokemon.asRenderablePokemon();
+        // Set before anything reads renderable.form: that field is lazy and derives the model/texture
+        // from the aspects (see StoredPokemonRenderFix for why they need repairing client-side).
+        java.util.Set<String> aspects = StoredPokemonRenderFix.renderAspects(pokemon);
+        if (!aspects.equals(renderable.getAspects())) {
+            renderable.setAspects(aspects);
+        }
         state.setCurrentAspects(renderable.getAspects());
         PokemonGuiUtilsKt.drawProfilePokemon(
                 renderable,

@@ -9,17 +9,17 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * One non-positional OpenAL source driven by a background streaming thread. Plays a sequence of
- * segments — {@code [intro?, loop]} — where the last segment loops <b>gaplessly</b> (on end-of-stream
+ * segments - {@code [intro?, loop]} - where the last segment loops <b>gaplessly</b> (on end-of-stream
  * we {@code seekMs(0)} and keep feeding). Carries a gain <b>envelope</b> (0..1) for crossfades,
  * multiplied by an externally-pushed {@code volume} (MUSIC × MASTER).
  *
  * <p>We drive our own source instead of the vanilla mixer so we can (a) seek to an arbitrary
- * offset — the synced crossfade starts the child at the parent's exact playhead — and (b) run
+ * offset - the synced crossfade starts the child at the parent's exact playhead - and (b) run
  * two voices at once with independent gain envelopes.</p>
  *
  * <p>Threading: the pump thread owns all per-frame AL calls on this source. The client thread only
  * calls {@link #setVolume}, {@link #rampTo}, {@link #setPaused}, {@link #requestStop} and reads
- * {@link #loopPositionMs}/{@link #isFinished} — all via volatile (or atomic) fields.</p>
+ * {@link #loopPositionMs}/{@link #isFinished} - all via volatile (or atomic) fields.</p>
  */
 final class CsMusicVoice {
 
@@ -199,7 +199,7 @@ final class CsMusicVoice {
                 Thread.sleep(POLL_SLEEP_MS);
             }
         } catch (InterruptedException ignored) {
-            Thread.currentThread().interrupt(); // stop requested — restore the flag for teardown
+            Thread.currentThread().interrupt(); // stop requested - restore the flag for teardown
         } catch (RuntimeException e) {
             CobbleSafari.LOGGER.error("[CSMusic] voice {} streaming error", source, e);
         } finally {

@@ -70,7 +70,7 @@ public final class CsMusicTriggerDataLoader {
         CsMusicTriggerFileData.When w = raw.when != null ? raw.when : new CsMusicTriggerFileData.When();
         CsMusicCondition.BattleMode battle = CsMusicCondition.BattleMode.fromJson(w.battle);
         if (battle == null) {
-            CobbleSafari.LOGGER.warn("[CSMusic] {} rule#{} invalid battle mode '{}' — defaulting to 'any'", file, idx, w.battle);
+            CobbleSafari.LOGGER.warn("[CSMusic] {} rule#{} invalid battle mode '{}' - defaulting to 'any'", file, idx, w.battle);
             battle = CsMusicCondition.BattleMode.ANY;
         }
 

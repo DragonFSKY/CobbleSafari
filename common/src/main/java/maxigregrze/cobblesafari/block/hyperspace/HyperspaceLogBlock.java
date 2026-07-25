@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Hyperspace log: a six‑way oriented pillar (model + hitbox follow {@link DirectionalBlock#FACING})
- * with a custom <em>placement</em> rule — it may only be placed against a sturdy face of a solid
+ * with a custom <em>placement</em> rule - it may only be placed against a sturdy face of a solid
  * block, or onto another Hyperspace log sharing the <em>same</em> orientation. The orientation is
  * the clicked face: clicking a block's top ⇒ upright (UP), a side ⇒ lying (that side), the bottom
  * face of a block above ⇒ upside down (DOWN).

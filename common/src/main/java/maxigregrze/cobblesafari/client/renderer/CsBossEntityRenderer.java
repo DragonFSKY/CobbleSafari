@@ -113,7 +113,7 @@ public class CsBossEntityRenderer extends EntityRenderer<CsBossEntity> {
         float limbSwing = boss.walkAnimation.position(partialTicks);
         float limbSwingAmount = Math.min(1.0f, boss.walkAnimation.speed(partialTicks));
         float anim = boss.getAnim();
-        // Entry grows 0→1, departure shrinks to DEATH_MIN_SCALE — sourced from the entity so the
+        // Entry grows 0→1, departure shrinks to DEATH_MIN_SCALE - sourced from the entity so the
         // hitbox (which uses the same animScale) always matches the rendered model.
         float scaleMul = boss.animScale();
         float alpha = phase == CsBossEntity.PHASE_DYING ? Math.max(0.0f, 1.0f - anim) : 1.0f;
@@ -152,7 +152,7 @@ public class CsBossEntityRenderer extends EntityRenderer<CsBossEntity> {
         int seq = boss.getAttackSeq();
         UUID id = boss.getUUID();
         Integer lastSeq = lastAttackSeq.get(id);
-        // Only start the attack animation when the model is free — no primary animation (e.g. faint) AND
+        // Only start the attack animation when the model is free - no primary animation (e.g. faint) AND
         // no attack animation still running. The battle anims (physical/special/status/cry) are *active*
         // (non-primary) animations, so getPrimaryAnimation() stays null while they play; without the
         // activeAnimations check the server's repeated seq bumps would stack a fresh animation each tick

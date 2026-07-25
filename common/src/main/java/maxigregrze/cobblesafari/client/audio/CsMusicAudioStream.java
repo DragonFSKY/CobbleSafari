@@ -12,7 +12,7 @@ import java.nio.ShortBuffer;
 
 /**
  * OGG Vorbis decoded in memory and seekable to an arbitrary sample via {@code STBVorbis}
- * ({@code stb_vorbis_seek}). Both mono and stereo are supported natively — the OpenAL format
+ * ({@code stb_vorbis_seek}). Both mono and stereo are supported natively - the OpenAL format
  * follows the file's real channel count, no downmix. <b>Not thread-safe</b>: a single reader
  * thread (the owning {@link CsMusicVoice} pump) may call {@link #readPcm}/{@link #seekMs}.
  *
@@ -21,7 +21,7 @@ import java.nio.ShortBuffer;
  */
 final class CsMusicAudioStream implements AutoCloseable {
 
-    private ByteBuffer encoded;   // native copy of the OGG bytes (memAlloc — must be freed)
+    private ByteBuffer encoded;   // native copy of the OGG bytes (memAlloc - must be freed)
     private long handle;          // stb_vorbis handle
     final int format;             // AL_FORMAT_MONO16 / AL_FORMAT_STEREO16
     final int sampleRate;

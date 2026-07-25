@@ -51,7 +51,7 @@ public class AuspiciousPokeballBlock extends BaseEntityBlock {
      * Client-only gate deciding whether the local player should see this orb's ambient particles.
      * Injected by the client at init (see {@code ClientBlockHooks}); {@code null} on a dedicated
      * server. Kept as a plain JDK functional type so this common class carries no client-class
-     * references — a direct {@code Minecraft}/{@code LocalPlayer} reference here would fail class
+     * references - a direct {@code Minecraft}/{@code LocalPlayer} reference here would fail class
      * verification and crash a dedicated server when {@code ModBlocks} constructs this block.
      */
     public static BiPredicate<Level, BlockPos> particleGate;

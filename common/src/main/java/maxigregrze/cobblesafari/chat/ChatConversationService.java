@@ -181,7 +181,7 @@ public final class ChatConversationService {
             return;
         }
         int current = Math.min(Math.max(0, e.stepIndex), steps.size() - 1);
-        // The held step (WAIT_UNLOCK / WAIT_NEXT_DAY) is the current, finished step — rendered fully as a
+        // The held step (WAIT_UNLOCK / WAIT_NEXT_DAY) is the current, finished step - rendered fully as a
         // completed step by the phase block below; the next (not-yet-started) step is simply not present.
         for (int i = 0; i <= current; i++) {
             ChatStepDefinition step = steps.get(i);
@@ -214,7 +214,7 @@ public final class ChatConversationService {
                 afterShown = Math.min(e.messageIndex, afterSize);
                 taskVisible = true;
                 done = true;
-            } else { // WAIT_UNLOCK / WAIT_NEXT_DAY / DONE — the finished step, shown fully
+            } else { // WAIT_UNLOCK / WAIT_NEXT_DAY / DONE - the finished step, shown fully
                 beforeShown = beforeSize;
                 afterShown = afterSize;
                 taskVisible = true;
@@ -246,8 +246,8 @@ public final class ChatConversationService {
 
     /**
      * Per-item breakdown of an item-gated step (empty for any other gating), so the client can list the
-     * shopping list in the task bubble's tooltip. An unresolvable item id is still listed — with 0 held,
-     * matching {@link #computeProgress} — so the objective stays visible instead of silently vanishing.
+     * shopping list in the task bubble's tooltip. An unresolvable item id is still listed - with 0 held,
+     * matching {@link #computeProgress} - so the objective stays visible instead of silently vanishing.
      */
     private static List<ChatAppResultPayload.ItemLine> itemLines(ServerPlayer player, ChatStepDefinition step) {
         if (!step.isItemGated()) {
@@ -270,7 +270,7 @@ public final class ChatConversationService {
 
     /**
      * @param snapshotBaseline when {@code false}, an unset stat baseline is left alone and the step
-     *     simply reads as 0 progress — the exact value the snapshot would have produced
+     *     simply reads as 0 progress - the exact value the snapshot would have produced
      *     ({@code now - now}), but without writing to the save. Used by the read-only notification
      *     path ({@link #hasPendingAttention}), which runs for every conversation on every poll.
      */
@@ -388,7 +388,7 @@ public final class ChatConversationService {
         };
     }
 
-    /** Objective met and reward not taken — i.e. the task bar is showing "Complete". */
+    /** Objective met and reward not taken - i.e. the task bar is showing "Complete". */
     private static boolean isTaskClaimable(ServerPlayer player, ChatConversationDefinition conv,
                                            ProgressEntry e, ChatProgressSavedData data) {
         if (e.claimed) {
@@ -408,7 +408,7 @@ public final class ChatConversationService {
      * <p>Needed because {@link #onDailyReset} walks offline players and therefore cannot roll an
      * advancement-gated series ({@code isSeriesUnlocked} excludes them when the player is unknown).
      * Without this, a series that became eligible would sit there with no dot to prompt the player to
-     * open the app. The probe never rolls anything — {@code maybeRollIdle} still does that on open.
+     * open the app. The probe never rolls anything - {@code maybeRollIdle} still does that on open.
      */
     private static boolean hasEligibleSeries(ChatConversationDefinition conv, ProgressEntry e, ServerPlayer player) {
         if (!e.baseComplete || !conv.usesRepeatables()
@@ -699,7 +699,7 @@ public final class ChatConversationService {
 
     /**
      * Decides what happens once the current step's after-messages are done. The current step is
-     * <em>held</em> (kept as the visible, completed step — {@code stepIndex} unchanged) while a condition
+     * <em>held</em> (kept as the visible, completed step - {@code stepIndex} unchanged) while a condition
      * is pending, and only when everything is clear do we advance. Ordering matches the spec: an
      * {@code unlockingAdvancement} gate on the <em>next</em> step is waited out first, then any
      * {@code waitNextDay} owed by the finished step; the actual advance happens on the next reset (for
@@ -778,7 +778,7 @@ public final class ChatConversationService {
 
     private static void warnBadGate(String idStr, String reason) {
         if (WARNED_ADVANCEMENTS.add(idStr)) {
-            CobbleSafari.LOGGER.warn("[Chat] unlockingAdvancement '{}' {} — the step is treated as unlocked",
+            CobbleSafari.LOGGER.warn("[Chat] unlockingAdvancement '{}' {} - the step is treated as unlocked",
                     idStr, reason);
         }
     }
@@ -999,7 +999,7 @@ public final class ChatConversationService {
                 // 2. A waitNextDay step advances to the next step on the next reset (natural daily rollover,
                 //    safari reset, or a manual /cobblesafari reset system|hard). The wait only *begins* once
                 //    any owed unlock gate has opened (WAIT_UNLOCK → WAIT_NEXT_DAY): "unlock first, then one
-                //    reset". A held gate (WAIT_UNLOCK) never advances here — it resolves on the app-open path.
+                //    reset". A held gate (WAIT_UNLOCK) never advances here - it resolves on the app-open path.
                 if (e.phase == Phase.WAIT_NEXT_DAY) {
                     advanceAfterStep(conv, e, today, rng, online);
                     e.lastResetEpochDay = today;

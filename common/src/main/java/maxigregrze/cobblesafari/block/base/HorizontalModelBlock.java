@@ -30,7 +30,7 @@ import java.util.Map;
  * description id.
  *
  * <p>Blocks that need a real mechanic (e.g. an effect on entities) may extend this and
- * override only the relevant hook — see {@code PileBlock} overriding {@code entityInside}.
+ * override only the relevant hook - see {@code PileBlock} overriding {@code entityInside}.
  * Never subclass merely to set a shape or facing; pass {@link Settings} instead.</p>
  */
 public class HorizontalModelBlock extends HorizontalDirectionalBlock {

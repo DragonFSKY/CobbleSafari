@@ -47,8 +47,15 @@ public final class WonderAppServerHandler {
             return;
         }
         switch (payload.actionType()) {
-            case WonderAppPayload.ACTION_REQUEST_STATE -> sendSnapshot(
-                    player, WonderAppResultPayload.SUB_BEGIN, new CompoundTag(), new CompoundTag(), "");
+            case WonderAppPayload.ACTION_REQUEST_STATE -> {
+                // Opening the Wonder app clears its event notification for the current instance.
+                WonderTradeSavedData data = WonderTradeSavedData.get(server);
+                if (data.hasActiveEvent() && !data.hasSeenCurrentEvent(player.getUUID())) {
+                    data.markEventSeen(player.getUUID());
+                    maxigregrze.cobblesafari.rotomphone.RotomPhoneNotificationSync.syncToPlayer(player);
+                }
+                sendSnapshot(player, WonderAppResultPayload.SUB_BEGIN, new CompoundTag(), new CompoundTag(), "");
+            }
             case WonderAppPayload.ACTION_TRADE -> {
                 int slot = payload.slot();
                 if (slot < 0 || slot > 5) {

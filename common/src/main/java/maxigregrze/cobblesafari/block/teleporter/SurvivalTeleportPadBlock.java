@@ -35,7 +35,7 @@ public class SurvivalTeleportPadBlock extends TeleportPadBlock {
     }
 
     /**
-     * Shared Tinkhammer logic — invoked from the block and from {@link maxigregrze.cobblesafari.item.TinkhammerItem}
+     * Shared Tinkhammer logic - invoked from the block and from {@link maxigregrze.cobblesafari.item.TinkhammerItem}
      * so sneaking with a tool still reaches the handler when vanilla skips block activation.
      */
     public static ItemInteractionResult tinkhammerInteract(ItemStack stack, BlockState state, Level level,

@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 /**
- * Empty earpiece — a pure item (not a block) that, on right-click, opens the shared Rotom
+ * Empty earpiece - a pure item (not a block) that, on right-click, opens the shared Rotom
  * confirmation screen and, on confirm, is turned into a {@link RotomEarpieceItem} using the first
  * Rotom of the player's party (mirrors {@link EmptyPhoneItem} but targets the earpiece).
  */

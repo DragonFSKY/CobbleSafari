@@ -81,14 +81,14 @@ public class RotomPhoneConfig {
         // questline (or a consumable disc / admin command). See chat_conversation/rotom.json.
         Map<String, PhoneAppConfig> apps = new LinkedHashMap<>();
         apps.put("chatApp", new PhoneAppConfig(true, new ArrayList<>()));
-        apps.put(APP_GTS, new PhoneAppConfig(true, List.of(
+        apps.put(APP_GTS, new PhoneAppConfig(false, List.of(
                 DIM_DUNGEON_UNDERGROUND, DIM_DUNGEON_DISTORTION)));
-        apps.put(APP_WONDER, new PhoneAppConfig(true, List.of(
+        apps.put(APP_WONDER, new PhoneAppConfig(false, List.of(
                 DIM_DUNGEON_UNDERGROUND, DIM_DUNGEON_DISTORTION)));
-        apps.put(APP_UNION, new PhoneAppConfig(true, List.of(
+        apps.put(APP_UNION, new PhoneAppConfig(false, List.of(
                 DIM_DUNGEON_UNDERGROUND, DIM_DUNGEON_DISTORTION)));
-        apps.put("skinApp", new PhoneAppConfig(true, new ArrayList<>()));
-        apps.put("settingsApp", new PhoneAppConfig(true, new ArrayList<>()));
+        apps.put("skinApp", new PhoneAppConfig(false, new ArrayList<>()));
+        apps.put("settingsApp", new PhoneAppConfig(false, new ArrayList<>()));
         return apps;
     }
 

@@ -312,7 +312,7 @@ public abstract class RotomPhoneBaseScreen extends Screen {
     }
 
     /**
-     * Draws the blinking notification dot with its top-left pixel at ({@code x}, {@code y}) — flush
+     * Draws the blinking notification dot with its top-left pixel at ({@code x}, {@code y}) - flush
      * inside the icon's own top-left corner. Drawn with {@code fill} rather than a texture so it stays
      * pure red whatever the phone's theme tint. No-op during the dark half of the blink.
      */

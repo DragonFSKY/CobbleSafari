@@ -16,8 +16,8 @@ import java.util.UUID;
 
 /**
  * {@code base_ghost_3} (Type A / TARGETED): an Elder-Guardian-style jumpscare. For each player a
- * minion (boss JSON minion model) sweeps in front of the camera — from 90° below the view centre up
- * to 90° above it over 1.5 s — facing the player, while the curse sound plays and 10 s of Nausea is
+ * minion (boss JSON minion model) sweeps in front of the camera - from 90° below the view centre up
+ * to 90° above it over 1.5 s - facing the player, while the curse sound plays and 10 s of Nausea is
  * applied.
  */
 public class GhostJumpscareAttack implements CsBossAttack {

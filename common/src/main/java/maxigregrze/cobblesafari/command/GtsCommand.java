@@ -13,7 +13,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import maxigregrze.cobblesafari.data.GtsSavedData;
 import maxigregrze.cobblesafari.gts.GenderFilter;
 import maxigregrze.cobblesafari.gts.GenderFilter;
@@ -44,23 +43,13 @@ import java.util.stream.Collectors;
 
 public final class GtsCommand {
     private static final String ARG_PLAYER = "player";
-    private static final String ARG_SLOT = "slot";
-    private static final String ARG_SPECIES = "species";
-    private static final String ARG_LEVEL_BUCKET = "levelBucket";
-    private static final String ARG_GENDER = "gender";
-    private static final String ARG_SHINY = "shiny";
     private static final String ARG_ID = "id";
     private static final String MSG_GTS_ERROR = "cobblesafari.command.gts.error";
     private static final String KEY_DETAILS_SUCCESS = "cobblesafari.command.gts.details_header.success";
     private static final String KEY_DETAILS_OFFER = "cobblesafari.command.gts.details_header.offer";
-    private static final String ARG_PICK = "pickIndex";
     private static final String ARG_PAGE = "page";
     private static final String ARG_AMOUNT = "amount";
     private static final String ARG_OFFER_ID = "offerId";
-    private static final String ARG_SUCCESS_ID = "successId";
-
-    private static final SimpleCommandExceptionType INVALID_LEVEL_BUCKET =
-            new SimpleCommandExceptionType(Component.translatable("cobblesafari.command.gts.invalid_level_bucket"));
 
     /** Same order as official permanent stats (see Cobblemon {@code Stats.PERMANENT}). */
     private static final Stat[] PERMANENT_STATS = {
@@ -109,31 +98,6 @@ public final class GtsCommand {
                                 .then(Commands.literal("add")
                                         .then(Commands.argument(ARG_AMOUNT, IntegerArgumentType.integer())
                                                 .executes(GtsCommand::extraSlotsAdd)))))
-                .then(Commands.literal("test-deposit")
-                        .then(Commands.argument(ARG_PLAYER, EntityArgument.player())
-                                .then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(1, 6))
-                                        .then(Commands.argument(ARG_SPECIES, StringArgumentType.string())
-                                                .then(Commands.argument(ARG_LEVEL_BUCKET, StringArgumentType.word())
-                                                        .then(Commands.argument(ARG_GENDER, StringArgumentType.word())
-                                                                .then(Commands.argument(ARG_SHINY, StringArgumentType.word())
-                                                                        .executes(GtsCommand::testDeposit))))))))
-                .then(Commands.literal("test-trade")
-                        .then(Commands.argument(ARG_PLAYER, EntityArgument.player())
-                                .then(Commands.argument(ARG_ID, IntegerArgumentType.integer(1))
-                                        .executes(GtsCommand::testTrade))))
-                .then(Commands.literal("test-tradeconfirm")
-                        .then(Commands.argument(ARG_PLAYER, EntityArgument.player())
-                                .then(Commands.argument(ARG_ID, IntegerArgumentType.integer(1))
-                                        .then(Commands.argument(ARG_PICK, IntegerArgumentType.integer(1))
-                                                .executes(GtsCommand::testTradeConfirm)))))
-                .then(Commands.literal("test-retrieve")
-                        .then(Commands.argument(ARG_PLAYER, EntityArgument.player())
-                                .then(Commands.argument(ARG_OFFER_ID, IntegerArgumentType.integer(1))
-                                        .executes(GtsCommand::testRetrieve))))
-                .then(Commands.literal("test-claim")
-                        .then(Commands.argument(ARG_PLAYER, EntityArgument.player())
-                                .then(Commands.argument(ARG_SUCCESS_ID, IntegerArgumentType.integer(1))
-                                        .executes(GtsCommand::testClaim))))
                 .then(Commands.literal("uniqueoffer")
                         .then(Commands.literal("add")
                                 .requires(s -> s.hasPermission(4))
@@ -190,25 +154,6 @@ public final class GtsCommand {
                 GtsUniqueOfferRegistry.getAllTags().stream().map(t -> GtsService.TAG_PREFIX + t);
         return SharedSuggestionProvider.suggest(
                 java.util.stream.Stream.concat(ids, tagTokens).sorted(), builder);
-    }
-
-    private static int parseLevelBucketToken(String raw) throws CommandSyntaxException {
-        if (raw == null) {
-            throw INVALID_LEVEL_BUCKET.create();
-        }
-        String s = raw.trim().toLowerCase(Locale.ROOT);
-        if (s.equals("any")) {
-            return -1;
-        }
-        try {
-            int v = Integer.parseInt(s);
-            if (v < 0 || v > 9) {
-                throw INVALID_LEVEL_BUCKET.create();
-            }
-            return v;
-        } catch (NumberFormatException e) {
-            throw INVALID_LEVEL_BUCKET.create();
-        }
     }
 
     private static int listOffers(CommandContext<CommandSourceStack> ctx, int page) {
@@ -881,209 +826,6 @@ public final class GtsCommand {
             count++;
         }
         return count;
-    }
-
-    private static int testDeposit(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        ServerPlayer target = EntityArgument.getPlayer(ctx, ARG_PLAYER);
-        int opSlot = IntegerArgumentType.getInteger(ctx, ARG_SLOT);
-        int internal = opSlot - 1;
-        String species = StringArgumentType.getString(ctx, ARG_SPECIES);
-        int bucket = parseLevelBucketToken(StringArgumentType.getString(ctx, ARG_LEVEL_BUCKET));
-        GenderFilter gf = GenderFilter.parse(StringArgumentType.getString(ctx, ARG_GENDER));
-        GtsOffer.ShinyWish shiny = GtsOffer.ShinyWish.parse(StringArgumentType.getString(ctx, ARG_SHINY));
-        GtsService.DepositResult r = GtsService.tryDeposit(target, internal, species, bucket, gf, shiny);
-        return switch (r) {
-            case SUCCESS -> {
-                ctx.getSource().sendSuccess(() -> Component.translatable("cobblesafari.command.gts.deposit_success", target.getName().getString(), opSlot), true);
-                yield 1;
-            }
-            case EMPTY_SLOT -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.empty_slot", opSlot));
-                yield 0;
-            }
-            case BANNED_DEPOSIT -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.banned_deposit"));
-                yield 0;
-            }
-            case UNKNOWN_WISH_SPECIES -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.unknown_wish_species"));
-                yield 0;
-            }
-            case BANNED_WISH -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.banned_wish"));
-                yield 0;
-            }
-            case INVALID_LEVEL_BUCKET -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.invalid_level_bucket"));
-                yield 0;
-            }
-            case INCOMPATIBLE_GENDER -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.incompatible_gender"));
-                yield 0;
-            }
-            case LIMIT_REACHED -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.limit_reached"));
-                yield 0;
-            }
-            case ERROR -> {
-                ctx.getSource().sendFailure(Component.translatable(MSG_GTS_ERROR));
-                yield 0;
-            }
-        };
-    }
-
-    private static int testTrade(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        ServerPlayer target = EntityArgument.getPlayer(ctx, ARG_PLAYER);
-        int id = IntegerArgumentType.getInteger(ctx, ARG_ID);
-        GtsService.StartTradeResult res = GtsService.tryStartTrade(target, id);
-        return switch (res.kind()) {
-            case OK -> {
-                ctx.getSource()
-                        .sendSuccess(
-                                () -> Component.translatable("cobblesafari.command.gts.candidate_header", res.candidates().size()),
-                                false);
-                int i = 1;
-                for (GtsTradeCandidate c : res.candidates()) {
-                    final int idx = i++;
-                    Pokemon p = resolveCandidatePokemon(target, c);
-                    if (p == null) {
-                        continue;
-                    }
-                    final Component src = c.source() == GtsTradeCandidate.CandidateSource.PARTY
-                            ? Component.translatable("cobblesafari.command.gts.source.party")
-                            : Component.translatable("cobblesafari.command.gts.source.pc");
-                    final int fs = c.source() == GtsTradeCandidate.CandidateSource.PARTY ? c.partySlot() : c.pcBox() * 100 + c.pcSlot();
-                    final String name = p.getSpecies().getName();
-                    final int lvl = p.getLevel();
-                    final Component gen = cobblemonGenderLabel(p.getGender());
-                    ctx.getSource()
-                            .sendSuccess(
-                                    () -> Component.translatable(
-                                            "cobblesafari.command.gts.candidate_line", idx, src, fs, name, lvl, gen),
-                                    false);
-                }
-                yield 1;
-            }
-            case OFFER_NOT_FOUND -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.offer_not_found"));
-                yield 0;
-            }
-            case OFFER_LOCKED -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.offer_locked"));
-                yield 0;
-            }
-            case OFFER_OWN -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.offer_own"));
-                yield 0;
-            }
-            case NO_MATCHING_POKEMON -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.no_matching_pokemon"));
-                yield 0;
-            }
-            case ERROR -> {
-                ctx.getSource().sendFailure(Component.translatable(MSG_GTS_ERROR));
-                yield 0;
-            }
-        };
-    }
-
-    private static Pokemon resolveCandidatePokemon(ServerPlayer player, GtsTradeCandidate c) {
-        return switch (c.source()) {
-            case PARTY -> com.cobblemon.mod.common.Cobblemon.INSTANCE.getStorage().getParty(player).get(c.partySlot());
-            case PC -> {
-                var pc = com.cobblemon.mod.common.Cobblemon.INSTANCE.getStorage().getPC(player);
-                var boxes = pc.getBoxes();
-                if (c.pcBox() < 0 || c.pcBox() >= boxes.size()) {
-                    yield null;
-                }
-                yield boxes.get(c.pcBox()).get(c.pcSlot());
-            }
-        };
-    }
-
-    private static int testTradeConfirm(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        ServerPlayer target = EntityArgument.getPlayer(ctx, ARG_PLAYER);
-        int id = IntegerArgumentType.getInteger(ctx, ARG_ID);
-        int pick = IntegerArgumentType.getInteger(ctx, ARG_PICK);
-        GtsService.ConfirmTradeKind k = GtsService.tryConfirmTrade(target, id, pick);
-        return switch (k) {
-            case SUCCESS -> {
-                ctx.getSource().sendSuccess(() -> Component.translatable("cobblesafari.command.gts.trade_success", target.getName().getString()), true);
-                yield 1;
-            }
-            case SELECTION_EXPIRED -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.selection_expired"));
-                yield 0;
-            }
-            case CANDIDATE_GONE -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.candidate_gone"));
-                yield 0;
-            }
-            case ERROR -> {
-                ctx.getSource().sendFailure(Component.translatable(MSG_GTS_ERROR));
-                yield 0;
-            }
-        };
-    }
-
-    private static int testRetrieve(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        ServerPlayer target = EntityArgument.getPlayer(ctx, ARG_PLAYER);
-        int oid = IntegerArgumentType.getInteger(ctx, ARG_OFFER_ID);
-        GtsService.RetrieveResult r = GtsService.tryRetrieveOwnOffer(target, oid);
-        return switch (r) {
-            case SUCCESS -> {
-                ctx.getSource().sendSuccess(() -> Component.translatable("cobblesafari.command.gts.retrieve_success", oid), true);
-                yield 1;
-            }
-            case NOT_FOUND -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.retrieve_not_found"));
-                yield 0;
-            }
-            case NOT_OWNER -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.retrieve_not_owner"));
-                yield 0;
-            }
-            case LOCKED -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.retrieve_locked"));
-                yield 0;
-            }
-            case INVENTORY_FULL -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.retrieve_inventory_full"));
-                yield 0;
-            }
-            case ERROR -> {
-                ctx.getSource().sendFailure(Component.translatable(MSG_GTS_ERROR));
-                yield 0;
-            }
-        };
-    }
-
-    private static int testClaim(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        ServerPlayer target = EntityArgument.getPlayer(ctx, ARG_PLAYER);
-        int sid = IntegerArgumentType.getInteger(ctx, ARG_SUCCESS_ID);
-        GtsService.ClaimResult r = GtsService.tryClaimSuccess(target, sid);
-        return switch (r) {
-            case SUCCESS -> {
-                ctx.getSource().sendSuccess(() -> Component.translatable("cobblesafari.command.gts.claim_success", sid), true);
-                yield 1;
-            }
-            case NOT_FOUND -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.claim_not_found"));
-                yield 0;
-            }
-            case NOT_RECIPIENT -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.claim_not_recipient"));
-                yield 0;
-            }
-            case INVENTORY_FULL -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.gts.claim_inventory_full"));
-                yield 0;
-            }
-            case ERROR -> {
-                ctx.getSource().sendFailure(Component.translatable(MSG_GTS_ERROR));
-                yield 0;
-            }
-        };
     }
 
     private static Component speciesNameFromOffer(MinecraftServer server, GtsOffer o) {

@@ -104,7 +104,7 @@ public final class BattleMusicTracker {
             }
             List<BattlePokemon> team = actor.getPokemonList();
             if (team.isEmpty()) {
-                continue; // wild actor without a team — keep looking
+                continue; // wild actor without a team - keep looking
             }
             Pokemon p = team.get(0).getEffectedPokemon();
             String species = p.getSpecies().getResourceIdentifier().toString();

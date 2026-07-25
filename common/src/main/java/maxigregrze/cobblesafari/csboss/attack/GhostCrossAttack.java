@@ -21,7 +21,7 @@ import java.util.UUID;
 
 /**
  * {@code base_ghost_2} (Type C / SPREAD): 5 times in a row (within ~10 s) the boss fires a phantom
- * volume — a 5×5×1 cloud of purple particles travelling in a random direction. Inside it ride 5
+ * volume - a 5×5×1 cloud of purple particles travelling in a random direction. Inside it ride 5
  * minions facing the travel direction: one in the centre and four (up/down/left/right) that spin
  * around it on the forward axis. Contact deals damage.
  */

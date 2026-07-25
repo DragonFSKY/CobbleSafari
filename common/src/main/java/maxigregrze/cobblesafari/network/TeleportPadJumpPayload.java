@@ -7,7 +7,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * C2S — the player pressed the jump key while standing on a teleport pad.
+ * C2S - the player pressed the jump key while standing on a teleport pad.
  * The server locates the pad under the player and attempts the teleport (never trusts a position).
  */
 public record TeleportPadJumpPayload() implements CustomPacketPayload {

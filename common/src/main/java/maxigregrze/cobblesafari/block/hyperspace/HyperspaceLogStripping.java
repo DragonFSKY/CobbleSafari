@@ -18,7 +18,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 /**
  * Axe-stripping for the Hyperspace log. The log is a six-way {@link DirectionalBlock} (it carries
  * {@code FACING}, not the vanilla {@code AXIS}), so it cannot be registered through the loaders'
- * standard strippable APIs — both expect an {@code axis} pillar. This helper reproduces the vanilla
+ * standard strippable APIs - both expect an {@code axis} pillar. This helper reproduces the vanilla
  * strip behaviour (swap block, preserve orientation, damage the axe, play the sound) and is invoked
  * from each loader's right-click/use-block hook.
  */

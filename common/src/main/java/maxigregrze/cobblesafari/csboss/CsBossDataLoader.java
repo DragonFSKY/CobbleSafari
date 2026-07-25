@@ -119,7 +119,7 @@ public final class CsBossDataLoader {
         if (json.has("uniqueReward") && !json.get("uniqueReward").getAsString().isBlank()) {
             uniqueReward = ResourceLocation.tryParse(json.get("uniqueReward").getAsString().trim());
             if (uniqueReward == null) {
-                CobbleSafari.LOGGER.warn("[CSBoss] {} invalid uniqueReward id — ignored", source);
+                CobbleSafari.LOGGER.warn("[CSBoss] {} invalid uniqueReward id - ignored", source);
             }
         }
 
@@ -161,11 +161,11 @@ public final class CsBossDataLoader {
         String minion = json.get("minion").getAsString().trim();
         try {
             if (PokemonProperties.Companion.parse(minion).getSpecies() == null) {
-                CobbleSafari.LOGGER.warn("[CSBoss] {} 'minion' has no species: {} — ignored", source, minion);
+                CobbleSafari.LOGGER.warn("[CSBoss] {} 'minion' has no species: {} - ignored", source, minion);
                 return null;
             }
         } catch (Exception e) {
-            CobbleSafari.LOGGER.warn("[CSBoss] {} could not parse 'minion' '{}' — ignored", source, minion, e);
+            CobbleSafari.LOGGER.warn("[CSBoss] {} could not parse 'minion' '{}' - ignored", source, minion, e);
             return null;
         }
         return minion;
@@ -211,7 +211,7 @@ public final class CsBossDataLoader {
             case "notched_20" -> BossEvent.BossBarOverlay.NOTCHED_20;
             case "progress" -> BossEvent.BossBarOverlay.PROGRESS;
             default -> {
-                CobbleSafari.LOGGER.warn("[CSBoss] {} unknown healthStyle '{}' — default progress", source, raw);
+                CobbleSafari.LOGGER.warn("[CSBoss] {} unknown healthStyle '{}' - default progress", source, raw);
                 yield BossEvent.BossBarOverlay.PROGRESS;
             }
         };
@@ -230,7 +230,7 @@ public final class CsBossDataLoader {
             case "purple" -> BossEvent.BossBarColor.PURPLE;
             case "white" -> BossEvent.BossBarColor.WHITE;
             default -> {
-                CobbleSafari.LOGGER.warn("[CSBoss] {} unknown healthColor '{}' — default purple", source, raw);
+                CobbleSafari.LOGGER.warn("[CSBoss] {} unknown healthColor '{}' - default purple", source, raw);
                 yield BossEvent.BossBarColor.PURPLE;
             }
         };

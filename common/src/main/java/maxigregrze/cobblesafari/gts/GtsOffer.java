@@ -35,8 +35,8 @@ public final class GtsOffer {
     }
 
     /**
-     * Provenance of a personal offer (B3). {@code MESSAGE} = earned through gameplay (chat rewards) —
-     * never expires, never capped. {@code ADMIN} = injected by a command / external quest API — subject to
+     * Provenance of a personal offer (B3). {@code MESSAGE} = earned through gameplay (chat rewards) -
+     * never expires, never capped. {@code ADMIN} = injected by a command / external quest API - subject to
      * a configurable per-player cap. Defaults to {@code MESSAGE} for backward compatibility.
      */
     public enum PersonalSource {

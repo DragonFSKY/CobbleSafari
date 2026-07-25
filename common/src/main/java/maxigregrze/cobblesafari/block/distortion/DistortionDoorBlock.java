@@ -158,7 +158,7 @@ public class DistortionDoorBlock extends HorizontalDirectionalBlock implements B
         }
         // Every part drives the two empty cells via the resolved anchor. applyFillSpots is idempotent
         // (only fills air/replaceable, only removes our own fill), so it is safe to run from any of the 7
-        // parts — and this ensures the fills are cleared on recovery as long as ANY part is recaptured, not
+        // parts - and this ensures the fills are cleared on recovery as long as ANY part is recaptured, not
         // just the anchor part (whose chunk may be unloaded). See action plan 145 (C9).
         BlockPos anchor = getAnchorFromPart(pos, state);
         applyFillSpots(level, anchor, state.getValue(FACING), battle);
@@ -166,7 +166,7 @@ public class DistortionDoorBlock extends HorizontalDirectionalBlock implements B
 
     /**
      * Fills/clears the two empty cells with a "no-grief" rule: on activation only
-     * air/replaceable cells are filled; on deactivation only our own fill block is removed — a block
+     * air/replaceable cells are filled; on deactivation only our own fill block is removed - a block
      * placed by a player is never overwritten nor removed.
      */
     private static void applyFillSpots(ServerLevel level, BlockPos anchor, Direction facing, boolean battle) {

@@ -148,21 +148,21 @@ public final class DimensionalObjectivesDataLoader {
 
     private static DimensionalObjectivesDefinition.TaskPoolEntry parseTask(JsonObject json, String source) {
         if (!json.has("taskId") || !json.has("weight")) {
-            CobbleSafari.LOGGER.warn("[Objectives] {} task entry missing taskId/weight — ignored", source);
+            CobbleSafari.LOGGER.warn("[Objectives] {} task entry missing taskId/weight - ignored", source);
             return null;
         }
         TaskType type = TaskType.byId(json.get("taskId").getAsString().trim());
         if (type == null) {
-            CobbleSafari.LOGGER.warn("[Objectives] {} unknown taskId '{}' — ignored", source, json.get("taskId").getAsString());
+            CobbleSafari.LOGGER.warn("[Objectives] {} unknown taskId '{}' - ignored", source, json.get("taskId").getAsString());
             return null;
         }
         if (type.isDeferred()) {
-            CobbleSafari.LOGGER.warn("[Objectives] {} task '{}' is reserved (Cobblemon 1.8) — ignored", source, type.id());
+            CobbleSafari.LOGGER.warn("[Objectives] {} task '{}' is reserved (Cobblemon 1.8) - ignored", source, type.id());
             return null;
         }
         int weight = json.get("weight").getAsInt();
         if (weight <= 0) {
-            CobbleSafari.LOGGER.warn("[Objectives] {} task '{}' weight must be > 0 — ignored", source, type.id());
+            CobbleSafari.LOGGER.warn("[Objectives] {} task '{}' weight must be > 0 - ignored", source, type.id());
             return null;
         }
 

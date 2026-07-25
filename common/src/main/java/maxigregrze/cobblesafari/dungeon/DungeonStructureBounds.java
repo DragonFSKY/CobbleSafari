@@ -21,8 +21,8 @@ public final class DungeonStructureBounds {
 
     /**
      * Only capture bounds while a CobbleSafari placement is running on this thread. Without this guard the
-     * jigsaw mixin (which targets the generic {@code JigsawPlacement.generateJigsaw}) would record — and never
-     * consume — a {@link BoundingBox} for every vanilla structure (village, trial chamber, …) generated over
+     * jigsaw mixin (which targets the generic {@code JigsawPlacement.generateJigsaw}) would record - and never
+     * consume - a {@link BoundingBox} for every vanilla structure (village, trial chamber, …) generated over
      * the server's uptime, leaking one entry each. See action plan 145 (B4).
      */
     private static final ThreadLocal<Boolean> CAPTURING = ThreadLocal.withInitial(() -> Boolean.FALSE);

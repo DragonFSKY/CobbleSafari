@@ -48,7 +48,7 @@ final class CsMusicAreaStorage {
             target.putAll(parsed);
             return true;
         } catch (Exception e) {
-            CobbleSafari.LOGGER.error("[CSMusic] Failed to read {} — keeping existing in-memory areas", file, e);
+            CobbleSafari.LOGGER.error("[CSMusic] Failed to read {} - keeping existing in-memory areas", file, e);
             return false;
         }
     }
@@ -106,7 +106,7 @@ final class CsMusicAreaStorage {
     private static CsMusicBox boxFromEntry(CsMusicAreaFileData.BoxEntry entry, Path file) {
         if (entry == null || entry.min == null || entry.max == null
                 || entry.min.length != 3 || entry.max.length != 3) {
-            CobbleSafari.LOGGER.warn("[CSMusic] {} invalid box entry — skipped", file);
+            CobbleSafari.LOGGER.warn("[CSMusic] {} invalid box entry - skipped", file);
             return null;
         }
         return new CsMusicBox(

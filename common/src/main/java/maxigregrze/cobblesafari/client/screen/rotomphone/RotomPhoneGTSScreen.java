@@ -20,6 +20,7 @@ import maxigregrze.cobblesafari.gts.GtsService;
 import maxigregrze.cobblesafari.network.GtsAppPayload;
 import maxigregrze.cobblesafari.network.GtsAppResultPayload;
 import maxigregrze.cobblesafari.platform.Services;
+import maxigregrze.cobblesafari.rotomphone.RotomPhoneNotificationCache;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.RenderType;
@@ -35,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
 
@@ -430,7 +432,9 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
             return null;
         }
         try {
-            return Pokemon.Companion.loadFromNBT(this.minecraft.player.registryAccess(), tag);
+            Pokemon loaded = Pokemon.Companion.loadFromNBT(this.minecraft.player.registryAccess(), tag);
+            // The client rebuild loses data-driven form aspects; re-apply the stored form.
+            return StoredPokemonRenderFix.restoreForm(loaded, tag);
         } catch (Exception ignored) {
             return null;
         }
@@ -745,6 +749,10 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
                 Component.translatable("gui.cobblesafari.rotomphone.gts.myoffers"));
         drawButton(g, originX + 178, originY + 96, seeHov, theme,
                 Component.translatable("gui.cobblesafari.rotomphone.gts.seeoffers"));
+        // Same source of truth as the GTS app icon: a Pokémon is waiting to be received.
+        if (RotomPhoneNotificationCache.isGtsPending()) {
+            drawNotificationDot(g, originX + 98, originY + 96);
+        }
 
         if (!lastErrorKey.isEmpty()) {
             drawScaledCentered(g, Component.translatable(lastErrorKey), originX + 174, originY + 152, 0xFFFFFFFF);
@@ -779,6 +787,10 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
         } else {
             drawInactiveButton(g, originX + 218, originY + 56, theme,
                     Component.translatable("gui.cobblesafari.rotomphone.gts.receive"));
+        }
+        // Same source of truth as the GTS app icon: a Pokémon is waiting to be received.
+        if (RotomPhoneNotificationCache.isGtsPending()) {
+            drawNotificationDot(g, originX + 218, originY + 56);
         }
 
         if (myOffers.isEmpty()) {
@@ -2131,6 +2143,12 @@ public class RotomPhoneGTSScreen extends RotomPhoneBaseScreen {
         Quaternionf rotation = QuaternionUtilsKt.fromEulerXYZDegrees(
                 new Quaternionf(), new Vector3f(13f, 35f, 0f));
         RenderablePokemon renderable = pokemon.asRenderablePokemon();
+        // Set before anything reads renderable.form: that field is lazy and derives the model/texture
+        // from the aspects (see StoredPokemonRenderFix for why they need repairing client-side).
+        Set<String> aspects = StoredPokemonRenderFix.renderAspects(pokemon);
+        if (!aspects.equals(renderable.getAspects())) {
+            renderable.setAspects(aspects);
+        }
         floatingState.setCurrentAspects(renderable.getAspects());
         PokemonGuiUtilsKt.drawProfilePokemon(
                 renderable,

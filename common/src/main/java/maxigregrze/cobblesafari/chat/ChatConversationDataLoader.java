@@ -174,7 +174,7 @@ public final class ChatConversationDataLoader {
 
     /**
      * Checks every {@code prerequisite} once all series ids are known: the target must exist, must not be
-     * the series itself, and the prerequisite graph must be acyclic — a cycle would make every series in
+     * the series itself, and the prerequisite graph must be acyclic - a cycle would make every series in
      * it permanently unrollable, silently emptying the pool.
      *
      * @return false (reason logged) if the conversation must be skipped
@@ -268,7 +268,7 @@ public final class ChatConversationDataLoader {
                 if (!st.isStatGated()) {
                     CobbleSafari.LOGGER.warn("[Chat] {} : repeatable series '{}' is not unique but has an "
                             + "advancement-gated step; advancements complete only once, so it will auto-complete on "
-                            + "every rerun — use a 'statistic' task instead", fileId, id);
+                            + "every rerun - use a 'statistic' task instead", fileId, id);
                     break;
                 }
             }

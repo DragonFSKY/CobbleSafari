@@ -100,7 +100,7 @@ public class HyperspaceBarrierBlock extends HorizontalModelBlock {
     }
 
     /**
-     * Shared Tinkhammer logic — invoked from the block and from
+     * Shared Tinkhammer logic - invoked from the block and from
      * {@link maxigregrze.cobblesafari.item.TinkhammerItem} so sneaking with the tool still
      * reaches the handler when vanilla skips block activation.
      */

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Arena util: identifies "surface" blocks (exposed top, {@code y = triggerY ± tol})
  * in the participant disk, and places blocks on that surface. Called occasionally
- * (not per tick) — a full disk scan is acceptable.
+ * (not per tick) - a full disk scan is acceptable.
  */
 public final class CsBossSurfaceScanner {
 

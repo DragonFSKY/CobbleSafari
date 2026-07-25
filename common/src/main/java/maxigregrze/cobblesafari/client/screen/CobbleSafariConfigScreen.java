@@ -23,14 +23,14 @@ import java.util.List;
  * viewport</em> that resizes with the window/GUI scale. In-flow content (edit
  * boxes, option buttons, labels, inline text) is registered with
  * {@link #addScroll(AbstractWidget)} (or created via {@link #makeEditBox}) and is
- * clipped to the viewport and scrollable when it does not fit — so it can never
+ * clipped to the viewport and scrollable when it does not fit - so it can never
  * overlap the fixed bottom buttons. The title and the action buttons added with
  * {@code addRenderableWidget} stay fixed.
  *
  * <p>Subclasses lay out their scroll widgets exactly as if there were no
  * scrolling (absolute Y from {@link #contentTopY()} downward), draw their labels
  * in {@link #renderScrollContent}, and add their fixed action buttons with
- * {@code addRenderableWidget}. They never override {@link #render} — the base
+ * {@code addRenderableWidget}. They never override {@link #render} - the base
  * drives it.
  */
 public abstract class CobbleSafariConfigScreen extends Screen {

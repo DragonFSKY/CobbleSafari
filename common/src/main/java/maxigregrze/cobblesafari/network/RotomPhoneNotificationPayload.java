@@ -12,13 +12,14 @@ import java.util.List;
 /**
  * Server → client snapshot of the Rotom Phone notification dots. Fully derived state (nothing is
  * persisted): the ids of the unlocked conversations that currently have unread messages or a
- * claimable reward, plus whether the GTS holds at least one Pokémon waiting to be taken back.
+ * claimable reward, whether the GTS holds at least one Pokémon waiting to be taken back, and whether
+ * a Wonder Trade event is running that this player has not opened the app for since it started.
  *
  * <p>Kept separate from {@link ChatConversationSyncPayload} on purpose: the contact list is
  * configuration (sent at join and on datapack reload) while this is volatile state refreshed while
  * the phone is open.
  */
-public record RotomPhoneNotificationPayload(List<String> pendingConvIds, boolean gtsPending)
+public record RotomPhoneNotificationPayload(List<String> pendingConvIds, boolean gtsPending, boolean wonderPending)
         implements CustomPacketPayload {
 
     /** Upper bound on the decoded list; guards the codec against a malformed payload. */
@@ -39,6 +40,7 @@ public record RotomPhoneNotificationPayload(List<String> pendingConvIds, boolean
             buf.writeUtf(p.pendingConvIds.get(i), MAX_ID_LEN);
         }
         buf.writeBoolean(p.gtsPending);
+        buf.writeBoolean(p.wonderPending);
     }
 
     private static RotomPhoneNotificationPayload read(FriendlyByteBuf buf) {
@@ -47,7 +49,9 @@ public record RotomPhoneNotificationPayload(List<String> pendingConvIds, boolean
         for (int i = 0; i < n; i++) {
             ids.add(buf.readUtf(MAX_ID_LEN));
         }
-        return new RotomPhoneNotificationPayload(ids, buf.readBoolean());
+        boolean gtsPending = buf.readBoolean();
+        boolean wonderPending = buf.readBoolean();
+        return new RotomPhoneNotificationPayload(ids, gtsPending, wonderPending);
     }
 
     @Override

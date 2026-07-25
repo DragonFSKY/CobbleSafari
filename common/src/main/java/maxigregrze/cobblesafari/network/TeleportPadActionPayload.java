@@ -8,7 +8,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * C2S — GUI "Check" / "Auto-detect" request. The server runs the authoritative search
+ * C2S - GUI "Check" / "Auto-detect" request. The server runs the authoritative search
  * and replies with a {@link TeleportPadResultPayload}.
  */
 public record TeleportPadActionPayload(

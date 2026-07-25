@@ -25,7 +25,7 @@ public final class DifficultyScaling {
     public static int computeDuration(CsBossDefinition def, List<ServerPlayer> participants) {
         // Per-player score (party level median) + logging.
         double[] scores = new double[participants.size()];
-        CobbleSafari.LOGGER.info("[CSBoss] '{}' — duration calculation for {} participant(s):",
+        CobbleSafari.LOGGER.info("[CSBoss] '{}' - duration calculation for {} participant(s):",
                 def.bossId(), participants.size());
         for (int i = 0; i < participants.size(); i++) {
             ServerPlayer p = participants.get(i);

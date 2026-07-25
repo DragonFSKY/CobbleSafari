@@ -345,7 +345,7 @@ public class DungeonPositionSavedData extends SavedData {
     }
 
     /**
-     * Clears slot metadata only. Does NOT remove instance records — use
+     * Clears slot metadata only. Does NOT remove instance records - use
      * {@link maxigregrze.cobblesafari.dungeon.DungeonInstanceCleanup#scheduleResetForAllInstances}
      * instead to properly clear structures and free slots.
      */

@@ -39,7 +39,7 @@ public class RotomEarpieceAccessoryRenderer implements AccessoryRenderer {
             humanoid.head.translateAndRotate(poseStack);
         }
 
-        // 2) Earpiece-specific placement (starting values — calibrate in-game):
+        // 2) Earpiece-specific placement (starting values - calibrate in-game):
         //    right side of the head (left when viewed from the front), tilted 45° around X then
         //    90° around Y, at half size.
         poseStack.translate(0.32f, -0.25f, 0.0f);

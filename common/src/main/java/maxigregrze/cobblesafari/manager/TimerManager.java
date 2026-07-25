@@ -247,7 +247,7 @@ public class TimerManager {
      * Presence invariant (B6): a non-bypassed player physically inside a timed dimension must have an active
      * timer. The normal entry vector arms it via {@code ServerPlayer.changeDimension}, but any other vector
      * (a third-party teleport that does not go through {@code changeDimension}) would leave the player
-     * unmetered. This periodic sweep re-arms the timer exactly like the entry path — which, thanks to
+     * unmetered. This periodic sweep re-arms the timer exactly like the entry path - which, thanks to
      * {@link #checkDailyReset}, also evacuates a player whose daily budget is already spent.
      */
     private static void sweepPresenceInvariant() {

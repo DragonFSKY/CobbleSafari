@@ -14,7 +14,6 @@ import maxigregrze.cobblesafari.wondertrade.WonderTradeEventRegistry;
 import maxigregrze.cobblesafari.wondertrade.WonderTradeService;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -28,8 +27,6 @@ import java.util.UUID;
 public final class WonderTradeCommand {
     private static final String ARG_EVENT_ID = "eventId";
     private static final String ARG_DURATION = "duration";
-    private static final String ARG_PLAYER = "player";
-    private static final String ARG_SLOT = "slot";
     private static final String ARG_PLAYER_NAME = "playerName";
     private static final String ARG_AMOUNT = "amount";
 
@@ -75,11 +72,7 @@ public final class WonderTradeCommand {
                                                 .executes(WonderTradeCommand::ticketRemove))))
                         .then(Commands.literal("get")
                                 .then(Commands.argument(ARG_PLAYER_NAME, StringArgumentType.word())
-                                        .executes(WonderTradeCommand::ticketGet))))
-                .then(Commands.literal("test-trade")
-                        .then(Commands.argument(ARG_PLAYER, EntityArgument.player())
-                                .then(Commands.argument(ARG_SLOT, IntegerArgumentType.integer(1, 6))
-                                        .executes(WonderTradeCommand::testTrade))));
+                                        .executes(WonderTradeCommand::ticketGet))));
     }
 
     private static int resetPool(CommandContext<CommandSourceStack> ctx, boolean onlyGenerated) {
@@ -215,36 +208,4 @@ public final class WonderTradeCommand {
         return 1;
     }
 
-    private static int testTrade(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
-        ServerPlayer target = EntityArgument.getPlayer(ctx, ARG_PLAYER);
-        int operatorSlot = IntegerArgumentType.getInteger(ctx, ARG_SLOT);
-        int internalSlot = operatorSlot - 1;
-        WonderTradeService.TradeResult r = WonderTradeService.tryTrade(target, internalSlot).result();
-        return switch (r) {
-            case SUCCESS -> {
-                ctx.getSource().sendSuccess(() -> Component.translatable("cobblesafari.command.wondertrade.test_trade_success", target.getName().getString(), operatorSlot), true);
-                yield 1;
-            }
-            case EMPTY_SLOT -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.wondertrade.empty_slot", operatorSlot));
-                yield 0;
-            }
-            case POOL_EMPTY -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.wondertrade.pool_empty"));
-                yield 0;
-            }
-            case NO_CREDITS -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.wondertrade.no_credits"));
-                yield 0;
-            }
-            case BANNED_DEPOSIT, BANNED_HELD_ITEM, LEVEL_OUT_OF_BOUNDS, EV_OVERFLOW -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.wondertrade.rejected_deposit"));
-                yield 0;
-            }
-            case ERROR -> {
-                ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.wondertrade.error"));
-                yield 0;
-            }
-        };
-    }
 }

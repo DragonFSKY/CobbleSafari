@@ -27,7 +27,7 @@ public record ChatAppResultPayload(int kind, StateData state, String errorKey) i
     /**
      * One line of an item-gathering objective: the item to hold, how many are required and how many
      * the player currently holds (clamped to {@code required}). Only filled for the current step of an
-     * item-gated task — it feeds the hover tooltip that details the otherwise opaque "gather items" bar.
+     * item-gated task - it feeds the hover tooltip that details the otherwise opaque "gather items" bar.
      */
     public record ItemLine(String itemId, int required, int held) {}
 

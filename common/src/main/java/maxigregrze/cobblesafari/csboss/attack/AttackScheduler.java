@@ -127,7 +127,7 @@ public class AttackScheduler {
                 if (CsBossAttackRegistry.has(id)) {
                     out.add(id);
                 } else {
-                    CobbleSafari.LOGGER.warn("[CSBoss] boss '{}' references unknown attack '{}' — ignored", def.bossId(), id);
+                    CobbleSafari.LOGGER.warn("[CSBoss] boss '{}' references unknown attack '{}' - ignored", def.bossId(), id);
                 }
             }
             if (!out.isEmpty()) {

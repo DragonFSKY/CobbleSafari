@@ -42,7 +42,7 @@ public class ModSounds {
     public static final SoundEvent FART_REVERB = SoundEvent.createVariableRangeEvent(
             ResourceLocation.fromNamespaceAndPath(CobbleSafari.MOD_ID, "entity.generic.fart_reverb"));
 
-    /** Intentionally silent sound (empty sounds.json entry) — used to mute the fart trap's explosion boom. */
+    /** Intentionally silent sound (empty sounds.json entry) - used to mute the fart trap's explosion boom. */
     public static final SoundEvent SILENT = SoundEvent.createVariableRangeEvent(
             ResourceLocation.fromNamespaceAndPath(CobbleSafari.MOD_ID, "entity.generic.silent"));
 
