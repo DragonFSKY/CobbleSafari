@@ -1,1 +1,3 @@
-{ "parent": "cobblesafari:block/hyperspace_platform" }
+{
+  "parent": "cobblesafari:block/hyperspace_platform_none"
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "cobblesafari:block/kalos_wall",
+    "side": "cobblesafari:block/kalos_window_middle_trans"
+  }
+}

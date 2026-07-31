@@ -175,6 +175,7 @@ public class DimensionEvents {
         DungeonTeleportHandler.clearPlayerData(player.getUUID());
         RotoGlideServerLogic.removeState(player.getUUID());
         maxigregrze.cobblesafari.rotomphone.EmptyPhoneServerHandler.clear(player.getUUID());
+        maxigregrze.cobblesafari.rotomphone.OnlinePcAccess.clear(player.getUUID());
         LAST_DIMENSION.remove(player.getUUID());
         maxigregrze.cobblesafari.objectives.ObjectivesManager.onPlayerDisconnect(player.getUUID());
     }

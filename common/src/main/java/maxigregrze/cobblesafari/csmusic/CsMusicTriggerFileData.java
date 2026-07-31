@@ -24,6 +24,17 @@ public class CsMusicTriggerFileData {
         public String dimension;
         public String biome;
         public String biome_tag;
+        /**
+         * Id of a csmusic area (as created by {@code /cobblesafari csmusic area create}) the player
+         * must be standing in. Areas are per-dimension world data, so this implies the dimension.
+         * Omitted ⇒ no constraint.
+         */
+        public String area;
+        /**
+         * Tag carried by an area the player is standing in. Lets one rule cover every town, every
+         * cave, … without naming them. Omitted ⇒ no constraint.
+         */
+        public String area_tag;
         /** never | any | in_battle | wild | npc | pvp (default: any). Folds the old battle_type in. */
         public String battle;
         public String species;

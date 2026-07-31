@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "cobblesafari:block/kalos_canopy_slab_trans"
+    },
+    "type=top": {
+      "model": "cobblesafari:block/kalos_canopy_slab_trans_top"
+    },
+    "type=double": {
+      "model": "cobblesafari:block/kalos_canopy_double_trans"
+    }
+  }
+}

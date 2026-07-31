@@ -33,8 +33,11 @@ public final class CsMusicTriggerRegistry {
      * Drives suppression of Cobblemon's native battle music.
      */
     public static boolean hasMatchingBattleRule(ServerPlayer player) {
+        // One context for the whole loop: the biome and area axes are memoized in it, so building
+        // one per rule would rescan the area store (and the biome) for every rule.
+        CsMusicEvalContext ctx = new CsMusicEvalContext(player);
         for (CsMusicRule rule : RULES) {
-            if (rule.condition().requiresBattle() && rule.condition().matches(player)) {
+            if (rule.condition().requiresBattle() && rule.condition().matches(ctx)) {
                 return true;
             }
         }

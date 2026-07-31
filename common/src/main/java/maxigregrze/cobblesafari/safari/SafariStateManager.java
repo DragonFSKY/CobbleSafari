@@ -4,6 +4,7 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.pokemon.properties.UncatchableProperty;
 import maxigregrze.cobblesafari.config.SafariConfig;
 import maxigregrze.cobblesafari.config.SafariTimerConfig;
+import maxigregrze.cobblesafari.effect.RedShackledEffects;
 import maxigregrze.cobblesafari.init.ModSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -14,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.AABB;
 
@@ -25,6 +27,9 @@ public class SafariStateManager {
     private static final Map<UUID, SafariPokemonState> STATES = new ConcurrentHashMap<>();
     private static final List<ScheduledTask> SCHEDULED_TASKS = Collections.synchronizedList(new ArrayList<>());
     private static long currentServerTick = 0;
+
+    /** Floor applied to the grace period replanned once a shackle expires, so the window stays playable. */
+    private static final int MIN_RESUMED_GRACE_TICKS = 20;
 
     private SafariStateManager() {}
 
@@ -122,7 +127,8 @@ public class SafariStateManager {
 
     public static void tryFlee(PokemonEntity pokemonEntity) {
         if (!isInSafariDimension(pokemonEntity)) return;
-        
+        if (isShackleProtected(pokemonEntity)) return;
+
         UUID entityId = pokemonEntity.getUUID();
         SafariPokemonState state = getOrCreate(entityId);
         if (state.isFleeing()) return;
@@ -138,10 +144,15 @@ public class SafariStateManager {
     }
 
     public static void triggerImmediateDespawn(PokemonEntity pokemonEntity) {
+        if (isShackleProtected(pokemonEntity)) return;
         if (!(pokemonEntity.level() instanceof ServerLevel serverLevel)) return;
 
         SafariPokemonState state = getState(pokemonEntity.getUUID());
+        if (state != null && state.hasFled()) return;
         int token = state != null ? state.getFleeToken() : 0;
+        if (state != null) {
+            state.markFled();
+        }
 
         pokemonEntity.getPokemon().getCustomProperties().add(
                 UncatchableProperty.INSTANCE.uncatchable()
@@ -162,7 +173,79 @@ public class SafariStateManager {
         SafariPokemonState state = getState(entityId);
         if (state != null) {
             state.incrementFleeToken();
+            state.setFleeDeadlineTick(0);
         }
+    }
+
+    private static boolean isShackleProtected(PokemonEntity pokemonEntity) {
+        return SafariConfig.redShackledSuspendsFlee() && RedShackledEffects.isShackled(pokemonEntity);
+    }
+
+    /**
+     * Freezes an ongoing flee countdown while the Pokémon is red-shackled. The armed flee task is
+     * invalidated through the flee token and the remaining grace is stored so
+     * {@link #resumeFleeAfterShackle(PokemonEntity)} can replan exactly what was left.
+     */
+    public static void suspendFleeForShackle(PokemonEntity pokemonEntity) {
+        if (!SafariConfig.redShackledSuspendsFlee()) return;
+        if (!isInSafariDimension(pokemonEntity)) return;
+
+        SafariPokemonState state = getState(pokemonEntity.getUUID());
+        if (state == null || !state.isFleeing() || state.hasFled() || state.isFleeSuspended()) return;
+
+        int grace = SafariConfig.getFleeGracePeriodTicks();
+        long deadline = state.getFleeDeadlineTick();
+        int remaining = deadline > currentServerTick ? (int) (deadline - currentServerTick) : grace;
+        remaining = Math.clamp(remaining, MIN_RESUMED_GRACE_TICKS, grace);
+
+        state.incrementFleeToken();
+        state.setFleeSuspended(true);
+        state.setFleeRemainingGraceTicks(remaining);
+        state.setFleeDeadlineTick(0);
+
+        announceFleeSuspended(pokemonEntity);
+    }
+
+    /**
+     * Resumes a flee countdown frozen by {@link #suspendFleeForShackle(PokemonEntity)}. Runs even when
+     * the config toggle has been turned off in the meantime, otherwise a suspended Pokémon would stay
+     * stuck in a flee that never resolves.
+     */
+    public static void resumeFleeAfterShackle(PokemonEntity pokemonEntity) {
+        SafariPokemonState state = getState(pokemonEntity.getUUID());
+        if (state == null || !state.isFleeSuspended()) return;
+
+        state.setFleeSuspended(false);
+        if (!state.isFleeing() || state.hasFled()) return;
+        if (!pokemonEntity.isAlive() || !isInSafariDimension(pokemonEntity)) {
+            remove(pokemonEntity.getUUID());
+            return;
+        }
+
+        announceFleeResumed(pokemonEntity);
+        scheduleFleeSequence(pokemonEntity, state.getFleeRemainingGraceTicks());
+    }
+
+    private static void announceFleeSuspended(PokemonEntity pokemonEntity) {
+        sendSubtitleToNearbyPlayers(pokemonEntity, Component.translatable(
+                "cobblesafari.safari.flee_suspended",
+                pokemonEntity.getExposedSpecies().getTranslatedName()
+        ));
+
+        if (pokemonEntity.level() instanceof ServerLevel serverLevel) {
+            serverLevel.playSound(null, pokemonEntity.getX(), pokemonEntity.getY(), pokemonEntity.getZ(),
+                    SoundEvents.CHAIN_PLACE, SoundSource.NEUTRAL, 1.0f, 0.6f);
+            serverLevel.sendParticles(ParticleTypes.CRIT,
+                    pokemonEntity.getX(), pokemonEntity.getY() + pokemonEntity.getBbHeight() * 0.5,
+                    pokemonEntity.getZ(), 12, 0.35, 0.35, 0.35, 0.05);
+        }
+    }
+
+    private static void announceFleeResumed(PokemonEntity pokemonEntity) {
+        sendSubtitleToNearbyPlayers(pokemonEntity, Component.translatable(
+                "cobblesafari.safari.flee_resumed",
+                pokemonEntity.getExposedSpecies().getTranslatedName()
+        ));
     }
 
     private static void startFleeing(PokemonEntity pokemonEntity, SafariPokemonState state) {
@@ -198,15 +281,18 @@ public class SafariStateManager {
         if (state == null) return;
         int token = state.getFleeToken();
         long executionTick = currentServerTick + graceTicks;
+        state.setFleeDeadlineTick(executionTick);
 
         SCHEDULED_TASKS.add(new ScheduledTask(executionTick, () -> {
             SafariPokemonState current = getState(entityId);
             if (current == null || !current.isFleeing() || current.getFleeToken() != token) return;
+            if (current.hasFled()) return;
             if (!pokemonEntity.isAlive()) {
                 remove(entityId);
                 return;
             }
 
+            current.markFled();
             pokemonEntity.getPokemon().getCustomProperties().add(
                     UncatchableProperty.INSTANCE.uncatchable()
             );

@@ -150,21 +150,22 @@ public final class DimensionalMusicManager {
     }
 
     private static List<MusicSource> collectSources(ServerPlayer player) {
+        return collectSources(new CsMusicEvalContext(player));
+    }
+
+    private static List<MusicSource> collectSources(CsMusicEvalContext ctx) {
         List<MusicSource> list = new ArrayList<>();
-        // One context for the whole sweep of this player: axes that depend only on the player
-        // (biome) are resolved once instead of once per rule.
-        CsMusicEvalContext ctx = new CsMusicEvalContext(player);
+        // Areas first: rules may carry an area axis, and the very same resolved list then feeds the
+        // implicit sources below - the area store is walked once per sweep, as before. Insertion
+        // order is irrelevant, SOURCE_ORDER sorts by priority then key.
+        for (CsMusicArea area : ctx.areasHere()) {
+            if (area.hasMusic()) {
+                list.add(new MusicSource("area:" + area.id(), area.priority(), area.musicId(), null));
+            }
+        }
         for (CsMusicRule rule : CsMusicTriggerRegistry.all()) {
             if (rule.condition().matches(ctx)) {
                 list.add(new MusicSource(rule.source(), rule.priority(), rule.musicId(), rule.poolTag()));
-            }
-        }
-        int x = player.getBlockX();
-        int y = player.getBlockY();
-        int z = player.getBlockZ();
-        for (CsMusicArea area : CsMusicAreaStore.areasIn(player.serverLevel())) {
-            if (area.activated() && area.contains(x, y, z)) {
-                list.add(new MusicSource("area:" + area.id(), area.priority(), area.musicId(), null));
             }
         }
         return list;
@@ -250,6 +251,12 @@ public final class DimensionalMusicManager {
     }
 
     // --- /csmusic current ------------------------------------------------------
+
+    /** Areas the player currently stands in, so {@code /csmusic current} can explain a rule that
+     * carries an area axis but never fires (wrong id, wrong tag, area disabled, box misplaced). */
+    public static List<CsMusicArea> areasHereFor(ServerPlayer player) {
+        return new CsMusicEvalContext(player).areasHere();
+    }
 
     public static List<SourceInfo> describeSourcesFor(ServerPlayer player) {
         List<SourceInfo> result = new ArrayList<>();

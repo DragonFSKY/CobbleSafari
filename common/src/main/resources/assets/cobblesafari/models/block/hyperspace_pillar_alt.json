@@ -1,4 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": { "all": "cobblesafari:block/hyperspace_pillar_alt" }
-}

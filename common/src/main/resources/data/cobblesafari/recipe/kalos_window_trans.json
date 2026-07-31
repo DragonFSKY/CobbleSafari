@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:glass"
+    },
+    {
+      "item": "cobblesafari:kalos_window"
+    }
+  ],
+  "result": {
+    "id": "cobblesafari:kalos_window_trans",
+    "count": 2
+  }
+}

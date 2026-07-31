@@ -1,8 +1,11 @@
 package maxigregrze.cobblesafari.block.misc;
 
 import com.mojang.serialization.MapCodec;
+import maxigregrze.cobblesafari.block.base.BlockShapeUtils;
+import maxigregrze.cobblesafari.rotomphone.OnlinePcAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -24,6 +27,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.Map;
 
 public class OnlineFeaturePcBlock extends HorizontalDirectionalBlock {
 
@@ -51,6 +56,9 @@ public class OnlineFeaturePcBlock extends HorizontalDirectionalBlock {
             Block.box(0, 0, 2, 16, 3, 4),
             Block.box(4.5, 0, 2.0, 11.5, 6, 2.5)
     );
+    /** Upper-half shape per facing, rotated from the north-authored shape with the shared helper. */
+    private static final Map<Direction, VoxelShape> TOP_SHAPES =
+            BlockShapeUtils.precompute(TOP_SHAPE_NORTH, Direction.NORTH);
 
     private final Kind kind;
 
@@ -154,31 +162,10 @@ public class OnlineFeaturePcBlock extends HorizontalDirectionalBlock {
     }
 
     private static VoxelShape shapeFor(BlockState state) {
-        Direction facing = state.getValue(FACING);
         if (state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER) {
-            return rotateTopShape(TOP_SHAPE_NORTH, facing);
+            return TOP_SHAPES.getOrDefault(state.getValue(FACING), TOP_SHAPE_NORTH);
         }
         return LOWER_SHAPE;
-    }
-
-    private static VoxelShape rotateTopShape(VoxelShape shape, Direction facing) {
-        return switch (facing) {
-            case NORTH -> shape;
-            case SOUTH -> mirrorSouth(shape);
-            case EAST -> Shapes.box(
-                    shape.min(Direction.Axis.Z), shape.min(Direction.Axis.Y), 1 - shape.max(Direction.Axis.X),
-                    shape.max(Direction.Axis.Z), shape.max(Direction.Axis.Y), 1 - shape.min(Direction.Axis.X));
-            case WEST -> Shapes.box(
-                    1 - shape.max(Direction.Axis.Z), shape.min(Direction.Axis.Y), shape.min(Direction.Axis.X),
-                    1 - shape.min(Direction.Axis.Z), shape.max(Direction.Axis.Y), shape.max(Direction.Axis.X));
-            default -> shape;
-        };
-    }
-
-    private static VoxelShape mirrorSouth(VoxelShape shape) {
-        return Shapes.box(
-                1 - shape.max(Direction.Axis.X), shape.min(Direction.Axis.Y), 1 - shape.max(Direction.Axis.Z),
-                1 - shape.min(Direction.Axis.X), shape.max(Direction.Axis.Y), 1 - shape.min(Direction.Axis.Z));
     }
 
     @Override
@@ -196,6 +183,11 @@ public class OnlineFeaturePcBlock extends HorizontalDirectionalBlock {
                 screenOpener.accept(kind);
             }
             return InteractionResult.SUCCESS;
+        }
+        // Lets the app handlers accept this player's payloads without a Rotom Phone: the block is
+        // itself a legitimate terminal for the online features (see OnlinePcAccess).
+        if (player instanceof ServerPlayer serverPlayer) {
+            OnlinePcAccess.grant(serverPlayer, kind, pos);
         }
         return InteractionResult.CONSUME;
     }

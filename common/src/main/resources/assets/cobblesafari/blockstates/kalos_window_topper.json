@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "cobblesafari:block/kalos_window_topper"
+    },
+    "lit=true": {
+      "model": "cobblesafari:block/kalos_window_topper_light"
+    }
+  }
+}

@@ -15,8 +15,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 final class CsMusicAreaStorage {
@@ -73,7 +76,7 @@ final class CsMusicAreaStorage {
     }
 
     private static CsMusicArea fromEntry(CsMusicAreaFileData.AreaEntry entry, Path file) {
-        if (entry == null || entry.id == null || entry.music == null) {
+        if (entry == null || entry.id == null) {
             return null;
         }
         String id = entry.id.trim();
@@ -81,9 +84,20 @@ final class CsMusicAreaStorage {
             CobbleSafari.LOGGER.warn("[CSMusic] {} invalid area id '{}'", file, entry.id);
             return null;
         }
-        String musicId = entry.music.trim();
-        if (musicId.isEmpty()) {
-            return null;
+        // Music is optional: an area without one is pure geometry, targetable by when.area /
+        // when.area_tag but emitting no source of its own.
+        String musicId = entry.music == null || entry.music.isBlank() ? null : entry.music.trim();
+        Set<String> tags = new LinkedHashSet<>();
+        if (entry.tags != null) {
+            for (String raw : entry.tags) {
+                if (raw == null) {
+                    continue;
+                }
+                String tag = raw.trim().toLowerCase(Locale.ROOT);
+                if (!tag.isEmpty()) {
+                    tags.add(tag);
+                }
+            }
         }
         List<CsMusicBox> boxes = new ArrayList<>();
         if (entry.boxes != null) {
@@ -95,7 +109,7 @@ final class CsMusicAreaStorage {
             }
         }
         int priority = entry.priority > 0 ? entry.priority : defaultAreaPriority();
-        return new CsMusicArea(id, musicId, entry.activated, priority, List.copyOf(boxes));
+        return new CsMusicArea(id, musicId, CsMusicArea.copyTags(tags), entry.activated, priority, List.copyOf(boxes));
     }
 
     private static int defaultAreaPriority() {
@@ -123,7 +137,10 @@ final class CsMusicAreaStorage {
         for (CsMusicArea area : areas.values()) {
             CsMusicAreaFileData.AreaEntry entry = new CsMusicAreaFileData.AreaEntry();
             entry.id = area.id();
-            entry.music = area.musicId();
+            // Only write what the area actually carries: a pre-existing file rewritten after a
+            // command must not gain a stray "music": null or an empty "tags": [].
+            entry.music = area.hasMusic() ? area.musicId() : null;
+            entry.tags = area.tags().isEmpty() ? null : new ArrayList<>(area.tags());
             entry.activated = area.activated();
             entry.priority = area.priority();
             entry.boxes = new ArrayList<>();

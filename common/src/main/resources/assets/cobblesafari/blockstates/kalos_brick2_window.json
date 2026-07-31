@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "segment=single,lit=false": {
+      "model": "cobblesafari:block/kalos_brick2_window_single"
+    },
+    "segment=single,lit=true": {
+      "model": "cobblesafari:block/kalos_brick2_window_single_light"
+    },
+    "segment=bottom,lit=false": {
+      "model": "cobblesafari:block/kalos_brick2_window_bottom"
+    },
+    "segment=bottom,lit=true": {
+      "model": "cobblesafari:block/kalos_brick2_window_bottom_light"
+    },
+    "segment=middle,lit=false": {
+      "model": "cobblesafari:block/kalos_brick2_window_middle"
+    },
+    "segment=middle,lit=true": {
+      "model": "cobblesafari:block/kalos_brick2_window_middle_light"
+    },
+    "segment=top,lit=false": {
+      "model": "cobblesafari:block/kalos_brick2_window_top"
+    },
+    "segment=top,lit=true": {
+      "model": "cobblesafari:block/kalos_brick2_window_top_light"
+    }
+  }
+}

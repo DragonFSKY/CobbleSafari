@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "segment=single": {
+      "model": "cobblesafari:block/kalos_pillar_2_single"
+    },
+    "segment=bottom": {
+      "model": "cobblesafari:block/kalos_pillar_2_bottom"
+    },
+    "segment=middle": {
+      "model": "cobblesafari:block/kalos_pillar_2_middle"
+    },
+    "segment=top": {
+      "model": "cobblesafari:block/kalos_pillar_2_top"
+    }
+  }
+}

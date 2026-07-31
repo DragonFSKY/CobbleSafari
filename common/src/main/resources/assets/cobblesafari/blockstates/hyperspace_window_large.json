@@ -1,6 +1,0 @@
-{
-  "variants": {
-    "half=lower": { "model": "cobblesafari:block/hyperspace_window_large_bottom" },
-    "half=upper": { "model": "cobblesafari:block/hyperspace_window_large_top" }
-  }
-}

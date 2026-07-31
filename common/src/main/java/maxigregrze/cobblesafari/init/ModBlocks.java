@@ -97,8 +97,18 @@ import maxigregrze.cobblesafari.block.hyperspace.HyperspaceWallSignBlock;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceCeilingHangingSignBlock;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceWallHangingSignBlock;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceScaffoldStairsBlock;
-import maxigregrze.cobblesafari.block.hyperspace.HyperspaceScaffoldTubeBlock;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceShapedBlock;
+import maxigregrze.cobblesafari.block.base.ConnectedModelBlock;
+import maxigregrze.cobblesafari.block.base.ConnectedShape;
+import maxigregrze.cobblesafari.block.base.LayeredSideConnectedModelBlock;
+import maxigregrze.cobblesafari.block.base.SideConnectedModelBlock;
+import maxigregrze.cobblesafari.block.base.VerticalConnectedModelBlock;
+import maxigregrze.cobblesafari.block.base.DaylightLit;
+import maxigregrze.cobblesafari.block.base.GroundedSideConnectedModelBlock;
+import maxigregrze.cobblesafari.block.base.LitCubeBlock;
+import maxigregrze.cobblesafari.block.base.LitSlabBlock;
+import maxigregrze.cobblesafari.block.base.LitStairBlock;
+import maxigregrze.cobblesafari.block.base.LitVerticalConnectedModelBlock;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceTriPart;
 import maxigregrze.cobblesafari.block.hyperspace.HyperspaceTrashcanBlock;
 import net.minecraft.core.Registry;
@@ -107,6 +117,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -115,6 +126,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import maxigregrze.cobblesafari.block.misc.HyperspaceWoodDoorBlock;
 import maxigregrze.cobblesafari.block.misc.HyperspaceWoodTrapdoorBlock;
+import maxigregrze.cobblesafari.block.misc.KalosManholeBlock;
 import maxigregrze.cobblesafari.block.misc.HyperspaceWoodButtonBlock;
 import maxigregrze.cobblesafari.block.misc.HyperspaceWoodPressurePlateBlock;
 import net.minecraft.world.level.block.FenceBlock;
@@ -133,6 +145,7 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Optional;
@@ -1521,6 +1534,67 @@ public class ModBlocks {
     private static final VoxelShape HS_NEON_TRI_SHAPE = Block.box(6, 0, 6, 10, 16, 10);
     private static final VoxelShape HS_BUSH_SHAPE = Block.box(2, 0, 2, 14, 14, 14);
 
+    // Tube scaffolding: collision per silhouette (plan 163 - 3.5). Authored in the canonical
+    // orientation - END with its opening to the north, CORNER opening north + east - and rotated
+    // per state by the engine. Silhouettes left undeclared (straight/tee/cross) collide with
+    // nothing, which is what makes their empty models walk-through while staying breakable.
+    private static final VoxelShape HS_TUBE_COLLISION = Shapes.join(
+            Shapes.block(), Block.box(1, 0, 1, 15, 16, 15), BooleanOp.ONLY_FIRST);
+    private static final VoxelShape HS_TUBE_END_COLLISION = Block.box(0.5, 0, 13, 15.5, 16, 15.5);
+    private static final VoxelShape HS_TUBE_CORNER_COLLISION = Block.box(0.5, 0, 13.5, 2.5, 16, 15.5);
+
+    // Layer 1 of the tube (the "bis" model set) puts matter where layer 0 was empty, so it needs
+    // its own collisions - plan 163 section 9.3. These are the union of each model's element boxes,
+    // clamped to y <= 16; the AABB would have made end/corner near-solid cubes.
+    private static VoxelShape union(VoxelShape... parts) {
+        VoxelShape out = Shapes.empty();
+        for (VoxelShape part : parts) {
+            out = Shapes.or(out, part);
+        }
+        return out.optimize();
+    }
+
+    private static final VoxelShape HS_TUBE_CORNER_L1_COLLISION = union(
+            Block.box(0.5, 0, 13.5, 2.5, 16, 15.5),
+            Block.box(0.51, 13.01, 0.01, 2.49, 14.99, 13.99),
+            Block.box(2.01, 13.01, 13.51, 15.99, 14.99, 15.49));
+    private static final VoxelShape HS_TUBE_END_L1_COLLISION = union(
+            Block.box(0.5, 0, 13.5, 2.5, 16, 15.5),
+            Block.box(0.5, 1, 13, 2.5, 16, 15),
+            Block.box(0.51, 13.01, 0.01, 2.49, 14.99, 13.99),
+            Block.box(2.5, 1, 13.25, 13.5, 3, 15.25),
+            Block.box(2.5, 13, 13.25, 13.5, 15, 15.25),
+            Block.box(13.5, 0, 13.5, 15.5, 16, 15.5),
+            Block.box(13.51, 13.01, 0.01, 15.49, 14.99, 13.99));
+    private static final VoxelShape HS_TUBE_STRAIGHT_L1_COLLISION = union(
+            Block.box(0.51, 13.01, 0.01, 2.49, 14.99, 15.99),
+            Block.box(13.51, 13.01, 0.01, 15.49, 14.99, 15.99));
+    private static final VoxelShape HS_TUBE_TEE_L1_COLLISION =
+            Block.box(0.01, 13.01, 13.51, 15.99, 14.99, 15.49);
+
+    // Connection tags. One per block rather than one per family: the graph is non-transitive -
+    // the legged platform links to both the scaffolding and the floating platform, which do not
+    // link to each other - and connectsTo always reads the tag of the block being asked.
+    private static TagKey<Block> blockTag(String name) {
+        return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(CobbleSafari.MOD_ID, name));
+    }
+
+    private static final TagKey<Block> HYPERSPACE_SCAFFOLDING_CONNECTS = blockTag("hyperspace_scaffolding_connects");
+    private static final TagKey<Block> HYPERSPACE_SCAFFOLDING_PLATFORM_CONNECTS = blockTag("hyperspace_scaffolding_platform_connects");
+    private static final TagKey<Block> HYPERSPACE_PLATFORM_CONNECTS = blockTag("hyperspace_platform_connects");
+    private static final TagKey<Block> HYPERSPACE_PLATFORM_GROUND = blockTag("hyperspace_platform_ground");
+    private static final TagKey<Block> HYPERSPACE_SCAFFOLDING_TUBE_CONNECTS = blockTag("hyperspace_scaffolding_tube_connects");
+    private static final TagKey<Block> HYPERSPACE_PILLAR_CONNECTS = blockTag("hyperspace_pillar_connects");
+    private static final TagKey<Block> KALOS_PILLAR_CONNECTS = blockTag("kalos_pillar_connects");
+    private static final TagKey<Block> HYPERSPACE_WINDOW_CONNECTS = blockTag("hyperspace_window_connects");
+    private static final TagKey<Block> HYPERSPACE_BRICK_WINDOW_CONNECTS = blockTag("hyperspace_brick_window_connects");
+    private static final TagKey<Block> HYPERSPACE_BRICK2_WINDOW_CONNECTS = blockTag("hyperspace_brick2_window_connects");
+    private static final TagKey<Block> HYPERSPACE_PLAIN_WINDOW_CONNECTS = blockTag("hyperspace_plain_window_connects");
+    private static final TagKey<Block> KALOS_WINDOW_CONNECTS = blockTag("kalos_window_connects");
+    private static final TagKey<Block> KALOS_BRICK_WINDOW_CONNECTS = blockTag("kalos_brick_window_connects");
+    private static final TagKey<Block> KALOS_BRICK2_WINDOW_CONNECTS = blockTag("kalos_brick2_window_connects");
+    private static final TagKey<Block> KALOS_PLAIN_WINDOW_CONNECTS = blockTag("kalos_plain_window_connects");
+
     // Hyperspace tree (grown from a sapling, never generated naturally). Both saplings share it.
     public static final ResourceKey<ConfiguredFeature<?, ?>> HYPERSPACE_TREE =
             ResourceKey.create(Registries.CONFIGURED_FEATURE,
@@ -1528,11 +1602,17 @@ public class ModBlocks {
     private static final TreeGrower HYPERSPACE_GROWER = new TreeGrower(
             "cobblesafari:hyperspace", Optional.empty(), Optional.of(HYPERSPACE_TREE), Optional.empty());
 
-    public static final Block HYPERSPACE_PILLAR = registerBlock("hyperspace_pillar", new Block(hsStone()));
-    public static final Block HYPERSPACE_PILLAR_TOP = registerBlock("hyperspace_pillar_top", new Block(hsStone()));
-    public static final Block HYPERSPACE_PILLAR_ALT = registerBlock("hyperspace_pillar_alt", new Block(hsStone()));
-    public static final Block HYPERSPACE_PILLAR_TOP_ALT = registerBlock("hyperspace_pillar_top_alt", new Block(hsStone()));
-    public static final Block HYPERSPACE_PILLAR_BOTTOM = registerBlock("hyperspace_pillar_bottom", new Block(hsStone()));
+    // Connected columns (plan 163 - 4 bis): one block per column style, the segment deriving
+    // from the neighbours above and below. Both styles connect to each other, so a run can
+    // change style mid-height and still cap correctly.
+    public static final Block HYPERSPACE_PILLAR_1 = registerBlock("hyperspace_pillar_1",
+            new VerticalConnectedModelBlock(hsStone(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(HYPERSPACE_PILLAR_CONNECTS)
+                    .build()));
+    public static final Block HYPERSPACE_PILLAR_2 = registerBlock("hyperspace_pillar_2",
+            new VerticalConnectedModelBlock(hsStone(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(HYPERSPACE_PILLAR_CONNECTS)
+                    .build()));
     public static final Block HYPERSPACE_FLOOR = registerBlock("hyperspace_floor", new Block(hsStone()));
     public static final Block HYPERSPACE_FLOOR_PLAIN = registerBlock("hyperspace_floor_plain", new Block(hsStone()));
     public static final Block HYPERSPACE_ROAD = registerBlock("hyperspace_road",
@@ -1546,10 +1626,28 @@ public class ModBlocks {
     public static final Block HYPERSPACE_WALL_BOTTOM_GRATE = registerBlock("hyperspace_wall_bottom_grate", new Block(hsStone()));
     public static final Block HYPERSPACE_WALL_BRICKS = registerBlock("hyperspace_wall_bricks", new Block(hsStone()));
     public static final Block HYPERSPACE_CHAMFER = registerBlock("hyperspace_champfer", new Block(hsStone()));
-    // Orientable full cube (front shows the window texture, every other face is brick). Uses the
-    // vanilla GlazedTerracottaBlock: a plain HorizontalDirectionalBlock with no extra behaviour.
-    public static final Block HYPERSPACE_WINDOW_CEILING = registerBlock("hyperspace_window_ceiling", new GlazedTerracottaBlock(hsStone().noOcclusion()));
-    public static final Block HYPERSPACE_WINDOW_SMALL = registerBlock("hyperspace_window_small", new Block(hsGlass()));
+    // Connected windows (plan 163 - 5 bis): replace the four HyperspaceDoubleBlock large
+    // windows plus the small one and the ceiling one. Each family connects to itself only.
+    public static final Block HYPERSPACE_WINDOW = registerBlock("hyperspace_window",
+            new VerticalConnectedModelBlock(hsGlass(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(HYPERSPACE_WINDOW_CONNECTS)
+                    .skipRenderingAxis(Direction.Axis.Y)
+                    .build()));
+    public static final Block HYPERSPACE_BRICK_WINDOW = registerBlock("hyperspace_brick_window",
+            new VerticalConnectedModelBlock(hsGlass(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(HYPERSPACE_BRICK_WINDOW_CONNECTS)
+                    .skipRenderingAxis(Direction.Axis.Y)
+                    .build()));
+    public static final Block HYPERSPACE_BRICK2_WINDOW = registerBlock("hyperspace_brick2_window",
+            new VerticalConnectedModelBlock(hsGlass(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(HYPERSPACE_BRICK2_WINDOW_CONNECTS)
+                    .skipRenderingAxis(Direction.Axis.Y)
+                    .build()));
+    public static final Block HYPERSPACE_PLAIN_WINDOW = registerBlock("hyperspace_plain_window",
+            new VerticalConnectedModelBlock(hsGlass(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(HYPERSPACE_PLAIN_WINDOW_CONNECTS)
+                    .skipRenderingAxis(Direction.Axis.Y)
+                    .build()));
     public static final Block HYPERSPACE_WINDOW_TOPPER = registerBlock("hyperspace_window_topper", new Block(hsGlass()));
     public static final Block HYPERSPACE_CANOPY_STAIRS = registerBlock("hyperspace_canopy_stairs",
             new StairBlock(HYPERSPACE_WALL.defaultBlockState(), hsGlass()));
@@ -1584,24 +1682,26 @@ public class ModBlocks {
     public static final Block HYPERSPACE_IRONRAILS = registerBlock("hyperspace_ironrails",
             new HyperspaceDirectionalBlock(hsIronHand(), HS_IRONRAILS_SHAPE, true, true));
     public static final Block HYPERSPACE_SCAFFOLDING_PLATFORM = registerBlock("hyperspace_scaffolding_platform",
-            new HyperspaceShapedBlock(hsIronPick(), HS_FULL_SHAPE));
+            new SideConnectedModelBlock(hsIronPick(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(HYPERSPACE_SCAFFOLDING_PLATFORM_CONNECTS)
+                    .shape(HS_FULL_SHAPE)
+                    .build()));
     public static final Block HYPERSPACE_SCAFFOLDING = registerBlock("hyperspace_scaffolding",
-            new HyperspaceShapedBlock(hsIronPick(), HS_FULL_SHAPE));
+            new LayeredSideConnectedModelBlock(hsIronPick(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(HYPERSPACE_SCAFFOLDING_CONNECTS)
+                    .shape(HS_FULL_SHAPE)
+                    .build(), 3));
     public static final Block HYPERSPACE_PLATFORM = registerBlock("hyperspace_platform",
-            new HyperspaceShapedBlock(hsIronPick(), HS_PLATFORM_FLOATING_SHAPE));
+            new GroundedSideConnectedModelBlock(hsIronPick(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(HYPERSPACE_PLATFORM_CONNECTS)
+                    .groundTag(HYPERSPACE_PLATFORM_GROUND)
+                    .shape(HS_PLATFORM_FLOATING_SHAPE)
+                    .build()));
     public static final Block HYPERSPACE_SHUTTERS = registerBlock("hyperspace_shutters",
             new HyperspaceDirectionalBlock(hsTrapdoor(), HS_SHUTTERS_SHAPE, true, true));
     public static final Block HYPERSPACE_SLAB = registerBlock("hyperspace_slab",
             new HyperspaceShapedBlock(hsIronPick(), HS_SLAB_SHAPE));
 
-    public static final Block HYPERSPACE_WINDOW_LARGE = registerBlock("hyperspace_window_large",
-            new HyperspaceDoubleBlock(hsGlass()));
-    public static final Block HYPERSPACE_WINDOW_PLAIN_LARGE = registerBlock("hyperspace_window_plain_large",
-            new HyperspaceDoubleBlock(hsGlass()));
-    public static final Block HYPERSPACE_WINDOW_BRICK_LARGE = registerBlock("hyperspace_window_brick_large",
-            new HyperspaceDoubleBlock(hsGlass()));
-    public static final Block HYPERSPACE_WINDOW_BRICK_LARGE2 = registerBlock("hyperspace_window_brick_large2",
-            new HyperspaceDoubleBlock(hsGlass()));
     public static final Block HYPERSPACE_DOOR = registerBlock("hyperspace_door",
             new HyperspaceDoubleBlock(hsWood()));
     public static final Block HYPERSPACE_FLAG_LARGE = registerBlock("hyperspace_flag_large",
@@ -1664,7 +1764,133 @@ public class ModBlocks {
             new HyperspaceBushBlock(hsLeafy(), HS_BUSH_SHAPE));
     // Hollow "tube" scaffolding variant (iron, pickaxe): full-cube selection, hollow collision.
     public static final Block HYPERSPACE_SCAFFOLDING_TUBE = registerBlock("hyperspace_scaffolding_tube",
-            new HyperspaceScaffoldTubeBlock(hsIronPick()));
+            new LayeredSideConnectedModelBlock(hsIronPick(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(HYPERSPACE_SCAFFOLDING_TUBE_CONNECTS)
+                    // Selection stays a full cube so the block is targetable even when its model
+                    // is empty; only the collision follows the silhouette.
+                    .silhouetteCollision(ConnectedShape.NONE, HS_TUBE_COLLISION)
+                    .silhouetteCollision(ConnectedShape.END, HS_TUBE_END_COLLISION)
+                    .silhouetteCollision(ConnectedShape.CORNER, HS_TUBE_CORNER_COLLISION)
+                    // Layer 1 keeps the hollow shaft on NONE but makes its rails solid, so a fall
+                    // stops every second floor instead of running the whole height.
+                    .silhouetteCollision(1, ConnectedShape.NONE, HS_TUBE_COLLISION)
+                    .silhouetteCollision(1, ConnectedShape.END, HS_TUBE_END_L1_COLLISION)
+                    .silhouetteCollision(1, ConnectedShape.CORNER, HS_TUBE_CORNER_L1_COLLISION)
+                    .silhouetteCollision(1, ConnectedShape.STRAIGHT, HS_TUBE_STRAIGHT_L1_COLLISION)
+                    .silhouetteCollision(1, ConnectedShape.TEE, HS_TUBE_TEE_L1_COLLISION)
+                    .build(), 2));
+
+    // ---------------------------------------------------------------- Kalos family
+    // Mirror of the hyperspace structural blocks (plan 163 - 4): same classes, same
+    // Properties, same variants, same display names. Only the id and the textures differ.
+    // Convertible to their hyperspace counterpart via the ghast-tear recipes.
+    public static final Block KALOS_PILLAR_1 = registerBlock("kalos_pillar_1",
+            new VerticalConnectedModelBlock(hsStone(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(KALOS_PILLAR_CONNECTS)
+                    .build()));
+    public static final Block KALOS_PILLAR_2 = registerBlock("kalos_pillar_2",
+            new VerticalConnectedModelBlock(hsStone(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(KALOS_PILLAR_CONNECTS)
+                    .build()));
+    public static final Block KALOS_FLOOR = registerBlock("kalos_floor", new Block(hsStone()));
+    public static final Block KALOS_FLOOR_PLAIN = registerBlock("kalos_floor_plain", new Block(hsStone()));
+    public static final Block KALOS_WALL = registerBlock("kalos_wall", new Block(hsStone()));
+    public static final Block KALOS_WALL_PLAIN = registerBlock("kalos_wall_plain", new Block(hsStone()));
+    public static final Block KALOS_WALL_BOTTOM = registerBlock("kalos_wall_bottom", new Block(hsStone()));
+    public static final Block KALOS_WALL_BOTTOM_GRATE = registerBlock("kalos_wall_bottom_grate", new Block(hsStone()));
+    public static final Block KALOS_WALL_BRICKS = registerBlock("kalos_wall_bricks", new Block(hsStone()));
+    public static final Block KALOS_CHAMFER = registerBlock("kalos_champfer", new Block(hsStone()));
+    public static final Block KALOS_WINDOW_TOPPER = registerBlock("kalos_window_topper",
+            new LitCubeBlock(hsGlass().randomTicks().lightLevel(DaylightLit::lightLevel)));
+    public static final Block KALOS_ROAD = registerBlock("kalos_road",
+            new HyperspaceShapedBlock(hsStone().noOcclusion(), HS_ROAD_SHAPE));
+    public static final Block KALOS_ROAD_PLAIN = registerBlock("kalos_road_plain",
+            new HyperspaceShapedBlock(hsStone().noOcclusion(), HS_ROAD_SHAPE));
+    // Manhole: HYPERSPACE_MANHOLE's texture on a trapdoor. Iron-block material (hsIronBlock:
+    // METAL sounds, pickaxe, iron tier) with wooden-trapdoor behaviour - BlockSetType.STONE is
+    // the metal-sounding set that still has canOpenByHand, so hand *and* redstone open it.
+    public static final Block KALOS_MANHOLE = registerBlock("kalos_manhole",
+            new KalosManholeBlock(BlockSetType.STONE, hsIronBlock().noOcclusion()));
+    public static final Block KALOS_CANOPY_STAIRS = registerBlock("kalos_canopy_stairs",
+            new LitStairBlock(KALOS_WALL.defaultBlockState(),
+                    hsGlass().randomTicks().lightLevel(DaylightLit::lightLevel)));
+    public static final Block KALOS_BRICK_STAIRS = registerBlock("kalos_brick_stairs",
+            new StairBlock(KALOS_WALL_BRICKS.defaultBlockState(), hsStone()));
+    public static final Block KALOS_FLOOR_STAIRS = registerBlock("kalos_floor_stairs",
+            new StairBlock(KALOS_FLOOR.defaultBlockState(), hsStone()));
+    public static final Block KALOS_FLOOR_PLAIN_STAIRS = registerBlock("kalos_floor_plain_stairs",
+            new StairBlock(KALOS_FLOOR_PLAIN.defaultBlockState(), hsStone()));
+    public static final Block KALOS_ROAD_STAIRS = registerBlock("kalos_road_stairs",
+            new StairBlock(KALOS_ROAD.defaultBlockState(), hsStone().noOcclusion()));
+    public static final Block KALOS_ROAD_PLAIN_STAIRS = registerBlock("kalos_road_plain_stairs",
+            new StairBlock(KALOS_ROAD_PLAIN.defaultBlockState(), hsStone().noOcclusion()));
+    public static final Block KALOS_CANOPY_SLAB = registerBlock("kalos_canopy_slab",
+            new LitSlabBlock(hsGlass().randomTicks().lightLevel(DaylightLit::lightLevel)));
+    public static final Block KALOS_FLOOR_SLAB = registerBlock("kalos_floor_slab", new SlabBlock(hsStone()));
+    public static final Block KALOS_FLOOR_PLAIN_SLAB = registerBlock("kalos_floor_plain_slab", new SlabBlock(hsStone()));
+    public static final Block KALOS_ROAD_SLAB = registerBlock("kalos_road_slab", new SlabBlock(hsStone().noOcclusion()));
+    public static final Block KALOS_ROAD_PLAIN_SLAB = registerBlock("kalos_road_plain_slab", new SlabBlock(hsStone().noOcclusion()));
+
+    // Connected windows (plan 163 - 5): first consumers of VerticalConnectedModelBlock.
+    // Each family connects to itself only - mixing brick and plain in one column would
+    // not line up. skipRenderingAxis(Y) drops the seam between two stacked panes.
+    public static final Block KALOS_WINDOW = registerBlock("kalos_window",
+            new LitVerticalConnectedModelBlock(hsGlass().randomTicks().lightLevel(DaylightLit::lightLevel),
+                    ConnectedModelBlock.Settings.builder()
+                            .connectTag(KALOS_WINDOW_CONNECTS)
+                            .skipRenderingAxis(Direction.Axis.Y)
+                            .build()));
+    public static final Block KALOS_BRICK_WINDOW = registerBlock("kalos_brick_window",
+            new LitVerticalConnectedModelBlock(hsGlass().randomTicks().lightLevel(DaylightLit::lightLevel),
+                    ConnectedModelBlock.Settings.builder()
+                            .connectTag(KALOS_BRICK_WINDOW_CONNECTS)
+                            .skipRenderingAxis(Direction.Axis.Y)
+                            .build()));
+    public static final Block KALOS_BRICK2_WINDOW = registerBlock("kalos_brick2_window",
+            new LitVerticalConnectedModelBlock(hsGlass().randomTicks().lightLevel(DaylightLit::lightLevel),
+                    ConnectedModelBlock.Settings.builder()
+                            .connectTag(KALOS_BRICK2_WINDOW_CONNECTS)
+                            .skipRenderingAxis(Direction.Axis.Y)
+                            .build()));
+    public static final Block KALOS_PLAIN_WINDOW = registerBlock("kalos_plain_window",
+            new LitVerticalConnectedModelBlock(hsGlass().randomTicks().lightLevel(DaylightLit::lightLevel),
+                    ConnectedModelBlock.Settings.builder()
+                            .connectTag(KALOS_PLAIN_WINDOW_CONNECTS)
+                            .skipRenderingAxis(Direction.Axis.Y)
+                            .build()));
+
+    // Transparent glazing (plan 163 - 12.1): same models, _trans textures, vanilla-glass
+    // flags so the block behind renders. No night behaviour - that is the opaque set's job.
+    private static final TagKey<Block> KALOS_WINDOW_TRANS_CONNECTS = blockTag("kalos_window_trans_connects");
+    private static final TagKey<Block> KALOS_BRICK_WINDOW_TRANS_CONNECTS = blockTag("kalos_brick_window_trans_connects");
+    private static final TagKey<Block> KALOS_BRICK2_WINDOW_TRANS_CONNECTS = blockTag("kalos_brick2_window_trans_connects");
+    private static final TagKey<Block> KALOS_PLAIN_WINDOW_TRANS_CONNECTS = blockTag("kalos_plain_window_trans_connects");
+    public static final Block KALOS_WINDOW_TRANS = registerBlock("kalos_window_trans",
+            new VerticalConnectedModelBlock(hsGlassTransparent(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(KALOS_WINDOW_TRANS_CONNECTS)
+                    .skipRenderingAxis(Direction.Axis.Y)
+                    .build()));
+    public static final Block KALOS_BRICK_WINDOW_TRANS = registerBlock("kalos_brick_window_trans",
+            new VerticalConnectedModelBlock(hsGlassTransparent(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(KALOS_BRICK_WINDOW_TRANS_CONNECTS)
+                    .skipRenderingAxis(Direction.Axis.Y)
+                    .build()));
+    public static final Block KALOS_BRICK2_WINDOW_TRANS = registerBlock("kalos_brick2_window_trans",
+            new VerticalConnectedModelBlock(hsGlassTransparent(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(KALOS_BRICK2_WINDOW_TRANS_CONNECTS)
+                    .skipRenderingAxis(Direction.Axis.Y)
+                    .build()));
+    public static final Block KALOS_PLAIN_WINDOW_TRANS = registerBlock("kalos_plain_window_trans",
+            new VerticalConnectedModelBlock(hsGlassTransparent(), ConnectedModelBlock.Settings.builder()
+                    .connectTag(KALOS_PLAIN_WINDOW_TRANS_CONNECTS)
+                    .skipRenderingAxis(Direction.Axis.Y)
+                    .build()));
+    public static final Block KALOS_CANOPY_STAIRS_TRANS = registerBlock("kalos_canopy_stairs_trans",
+            new StairBlock(KALOS_WALL.defaultBlockState(), hsGlassTransparent()));
+    public static final Block KALOS_CANOPY_SLAB_TRANS = registerBlock("kalos_canopy_slab_trans",
+            new SlabBlock(hsGlassTransparent()));
+    public static final Block KALOS_WINDOW_TOPPER_TRANS = registerBlock("kalos_window_topper_trans",
+            new Block(hsGlassTransparent()));
     // Crate: full cube, planks material, axe; reuses the flowerpot texture by design (distinct model).
     public static final Block HYPERSPACE_CRATE = registerBlock("hyperspace_crate",
             new Block(hsPlanks().noOcclusion()));
@@ -1734,6 +1960,14 @@ public class ModBlocks {
     private static BlockBehaviour.Properties hsSign() {
         return BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).forceSolidOn()
                 .noCollission().strength(1.0f).sound(SoundType.WOOD);
+    }
+
+    /** hsGlass() plus the vanilla-glass flags, so the block behind really does render. */
+    private static BlockBehaviour.Properties hsGlassTransparent() {
+        return hsGlass()
+                .isViewBlocking((s, l, p) -> false)
+                .isSuffocating((s, l, p) -> false)
+                .isRedstoneConductor((s, l, p) -> false);
     }
 
     private static BlockBehaviour.Properties hsGlass() {

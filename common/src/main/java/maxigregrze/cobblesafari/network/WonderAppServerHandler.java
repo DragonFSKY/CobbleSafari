@@ -36,8 +36,9 @@ public final class WonderAppServerHandler {
         if (server == null) {
             return;
         }
-        if (!maxigregrze.cobblesafari.rotomphone.RotomPhoneServerHandler.hasPhone(player)) {
-            return; // server-authoritative possession check (C1)
+        if (!maxigregrze.cobblesafari.rotomphone.OnlinePcAccess.canUseApp(
+                player, maxigregrze.cobblesafari.block.misc.OnlineFeaturePcBlock.Kind.WONDER)) {
+            return; // server-authoritative possession check (C1), waived at an Online Feature PC
         }
         if (payload.actionType() == WonderAppPayload.ACTION_REQUEST_STATE
                 && !RateLimiter.allow(

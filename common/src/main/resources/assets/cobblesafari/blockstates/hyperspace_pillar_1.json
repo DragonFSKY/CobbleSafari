@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "segment=single": {
+      "model": "cobblesafari:block/hyperspace_pillar_1_single"
+    },
+    "segment=bottom": {
+      "model": "cobblesafari:block/hyperspace_pillar_1_bottom"
+    },
+    "segment=middle": {
+      "model": "cobblesafari:block/hyperspace_pillar_1_middle"
+    },
+    "segment=top": {
+      "model": "cobblesafari:block/hyperspace_pillar_1_top"
+    }
+  }
+}

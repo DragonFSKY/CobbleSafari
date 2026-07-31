@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "cobblesafari:block/kalos_window_stairs_light",
+    "top": "cobblesafari:block/kalos_window_stairs_light",
+    "side": "cobblesafari:block/kalos_window_stairs_light"
+  }
+}

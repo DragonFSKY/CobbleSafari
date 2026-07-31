@@ -1,1 +1,3 @@
-{ "parent": "cobblesafari:block/hyperspace_scaffolding" }
+{
+  "parent": "cobblesafari:block/hyperspace_scaffolding_l0_none"
+}

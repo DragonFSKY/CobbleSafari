@@ -22,11 +22,17 @@ import java.util.Locale;
  * than a boolean plus a separate type: folding the battle <i>type</i> into the same field makes
  * contradictory or redundant combinations impossible to express. The {@code structure} axis is
  * likewise a single compiled filter (any / id / tag).</p>
+ *
+ * <p>The {@code area} / {@code areaTag} axes are the only ones with nothing to compile: an area id
+ * is world data, not a {@code ResourceLocation}, so it never hits an intern table. They are matched
+ * against the areas the player currently stands in, resolved once per sweep by the context.</p>
  */
 public record CsMusicCondition(
         @Nullable ResourceKey<Level> dimension,
         @Nullable ResourceKey<Biome> biome,
         @Nullable TagKey<Biome> biomeTag,
+        @Nullable String area,
+        @Nullable String areaTag,
         BattleMode battle,
         @Nullable String species,
         @Nullable String form,
@@ -84,11 +90,6 @@ public record CsMusicCondition(
         }
     }
 
-    /** Convenience for the single off-sweep caller (battle start): builds a throwaway context. */
-    public boolean matches(ServerPlayer player) {
-        return matches(new CsMusicEvalContext(player));
-    }
-
     public boolean matches(CsMusicEvalContext ctx) {
         ServerPlayer player = ctx.player();
         if (dimension != null && !player.level().dimension().equals(dimension)) {
@@ -102,6 +103,14 @@ public record CsMusicCondition(
             if (biomeTag != null && !holder.is(biomeTag)) {
                 return false;
             }
+        }
+        // Set lookups on a per-sweep memoized scan: cheaper than the structure axes below, which
+        // are the only ones that can touch chunk storage.
+        if (area != null && !ctx.areaIds().contains(area)) {
+            return false;
+        }
+        if (areaTag != null && !ctx.areaTags().contains(areaTag)) {
+            return false;
         }
 
         BattleMusicTracker.BattleCtx battleCtx = BattleMusicTracker.of(player.getUUID());

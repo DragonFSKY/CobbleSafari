@@ -281,15 +281,35 @@ public class CobbleSafariClientFabric implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_TRASHCAN_LID_DISPLAY, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_LAMPPOST, RenderType.cutoutMipped());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_DOOR, RenderType.cutoutMipped());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_WINDOW_CEILING, RenderType.translucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_WINDOW_SMALL, RenderType.translucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_WINDOW_TOPPER, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_WINDOW, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_BRICK_WINDOW, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_BRICK2_WINDOW, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_PLAIN_WINDOW, RenderType.translucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_CANOPY_STAIRS, RenderType.translucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_CANOPY_SLAB, RenderType.translucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_WINDOW_LARGE, RenderType.translucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_WINDOW_PLAIN_LARGE, RenderType.translucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_WINDOW_BRICK_LARGE, RenderType.translucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_WINDOW_BRICK_LARGE2, RenderType.translucent());
+
+        // Kalos family (plan 163)
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_ROAD, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_ROAD_STAIRS, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_ROAD_SLAB, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_ROAD_PLAIN, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_ROAD_PLAIN_STAIRS, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_ROAD_PLAIN_SLAB, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_WINDOW_TOPPER, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_CANOPY_STAIRS, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_CANOPY_SLAB, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_WINDOW, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_BRICK_WINDOW, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_BRICK2_WINDOW, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_PLAIN_WINDOW, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_WINDOW_TRANS, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_BRICK_WINDOW_TRANS, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_BRICK2_WINDOW_TRANS, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_PLAIN_WINDOW_TRANS, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_CANOPY_STAIRS_TRANS, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_CANOPY_SLAB_TRANS, RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_WINDOW_TOPPER_TRANS, RenderType.translucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_FLAG_SMALL, RenderType.translucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_FLAG_LARGE, RenderType.translucent());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_FLOWERS, RenderType.cutout());
@@ -302,6 +322,7 @@ public class CobbleSafariClientFabric implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_SAPLING_FLOWERED, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_WOOD_DOOR, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.HYPERSPACE_WOOD_TRAPDOOR, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.KALOS_MANHOLE, RenderType.cutout());
     }
 
     private void registerColors() {

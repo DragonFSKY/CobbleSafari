@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "segment=single": {
+      "model": "cobblesafari:block/kalos_window_trans_single"
+    },
+    "segment=bottom": {
+      "model": "cobblesafari:block/kalos_window_trans_bottom"
+    },
+    "segment=middle": {
+      "model": "cobblesafari:block/kalos_window_trans_middle"
+    },
+    "segment=top": {
+      "model": "cobblesafari:block/kalos_window_trans_top"
+    }
+  }
+}

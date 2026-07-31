@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "segment=single": {
+      "model": "cobblesafari:block/hyperspace_brick2_window_single"
+    },
+    "segment=bottom": {
+      "model": "cobblesafari:block/hyperspace_brick2_window_bottom"
+    },
+    "segment=middle": {
+      "model": "cobblesafari:block/hyperspace_brick2_window_middle"
+    },
+    "segment=top": {
+      "model": "cobblesafari:block/hyperspace_brick2_window_top"
+    }
+  }
+}

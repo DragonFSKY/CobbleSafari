@@ -243,15 +243,35 @@ public class CobbleSafariClientNeoForge {
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_TRASHCAN_LID_DISPLAY, RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_LAMPPOST, RenderType.cutoutMipped());
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_DOOR, RenderType.cutoutMipped());
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_WINDOW_CEILING, RenderType.translucent());
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_WINDOW_SMALL, RenderType.translucent());
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_WINDOW_TOPPER, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_WINDOW, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_BRICK_WINDOW, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_BRICK2_WINDOW, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_PLAIN_WINDOW, RenderType.translucent());
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_CANOPY_STAIRS, RenderType.translucent());
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_CANOPY_SLAB, RenderType.translucent());
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_WINDOW_LARGE, RenderType.translucent());
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_WINDOW_PLAIN_LARGE, RenderType.translucent());
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_WINDOW_BRICK_LARGE, RenderType.translucent());
-            ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_WINDOW_BRICK_LARGE2, RenderType.translucent());
+
+            // Kalos family (plan 163)
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_ROAD, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_ROAD_STAIRS, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_ROAD_SLAB, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_ROAD_PLAIN, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_ROAD_PLAIN_STAIRS, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_ROAD_PLAIN_SLAB, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_WINDOW_TOPPER, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_CANOPY_STAIRS, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_CANOPY_SLAB, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_WINDOW, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_BRICK_WINDOW, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_BRICK2_WINDOW, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_PLAIN_WINDOW, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_WINDOW_TRANS, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_BRICK_WINDOW_TRANS, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_BRICK2_WINDOW_TRANS, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_PLAIN_WINDOW_TRANS, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_CANOPY_STAIRS_TRANS, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_CANOPY_SLAB_TRANS, RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_WINDOW_TOPPER_TRANS, RenderType.translucent());
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_FLAG_SMALL, RenderType.translucent());
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_FLAG_LARGE, RenderType.translucent());
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_FLOWERS, RenderType.cutout());
@@ -264,6 +284,7 @@ public class CobbleSafariClientNeoForge {
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_SAPLING_FLOWERED, RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_WOOD_DOOR, RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.HYPERSPACE_WOOD_TRAPDOOR, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.KALOS_MANHOLE, RenderType.cutout());
 
             BlockEntityRenderers.register(ModBlockEntities.HOOPA_RING_PORTAL, HoopaRingPortalBlockEntityRenderer::new);
             BlockEntityRenderers.register(ModBlockEntities.DUNGEON_PORTAL, DungeonPortalBlockEntityRenderer::new);

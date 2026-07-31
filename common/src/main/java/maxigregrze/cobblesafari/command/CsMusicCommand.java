@@ -27,9 +27,14 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public final class CsMusicCommand {
 
@@ -41,10 +46,20 @@ public final class CsMusicCommand {
     private static final String ARG_DIMENSION = "dimension";
     private static final String ARG_SEEK = "seekMs";
     private static final String ARG_PRIORITY = "priority";
+    private static final String ARG_TAG = "tag";
     private static final Pattern ID_PATTERN = Pattern.compile("[a-z0-9._-]+");
+    /** Value accepted in the {@code <csmusicId>} slot to mean "no music" (geometry-only area). */
+    private static final String NO_MUSIC = "-";
 
     private static final SuggestionProvider<CommandSourceStack> MUSIC_SUGGESTIONS =
             (ctx, builder) -> SharedSuggestionProvider.suggest(CsMusicRegistry.all().keySet(), builder);
+    /** Same as {@link #MUSIC_SUGGESTIONS} plus the {@code -} sentinel, for create / setmusic. */
+    private static final SuggestionProvider<CommandSourceStack> MUSIC_OR_NONE_SUGGESTIONS =
+            (ctx, builder) -> {
+                List<String> options = new ArrayList<>(CsMusicRegistry.all().keySet());
+                options.add(NO_MUSIC);
+                return SharedSuggestionProvider.suggest(options, builder);
+            };
     private static final SuggestionProvider<CommandSourceStack> AREA_SUGGESTIONS =
             (ctx, builder) -> {
                 ServerPlayer player = ctx.getSource().getPlayer();
@@ -54,6 +69,32 @@ public final class CsMusicCommand {
                 return SharedSuggestionProvider.suggest(
                         CsMusicAreaStore.areasIn(player.serverLevel()).stream().map(CsMusicArea::id).toList(),
                         builder);
+            };
+    /** Tags already used somewhere in the dimension - for {@code area tag add}. */
+    private static final SuggestionProvider<CommandSourceStack> DIMENSION_TAG_SUGGESTIONS =
+            (ctx, builder) -> {
+                ServerPlayer player = ctx.getSource().getPlayer();
+                if (player == null) {
+                    return builder.buildFuture();
+                }
+                Set<String> tags = new TreeSet<>();
+                for (CsMusicArea area : CsMusicAreaStore.areasIn(player.serverLevel())) {
+                    tags.addAll(area.tags());
+                }
+                return SharedSuggestionProvider.suggest(tags, builder);
+            };
+    /** Tags actually carried by the targeted area - for {@code area tag remove}. */
+    private static final SuggestionProvider<CommandSourceStack> AREA_TAG_SUGGESTIONS =
+            (ctx, builder) -> {
+                ServerPlayer player = ctx.getSource().getPlayer();
+                if (player == null) {
+                    return builder.buildFuture();
+                }
+                CsMusicArea area = CsMusicAreaStore.get(
+                        player.serverLevel(), StringArgumentType.getString(ctx, ARG_AREA));
+                return area == null
+                        ? builder.buildFuture()
+                        : SharedSuggestionProvider.suggest(area.tags(), builder);
             };
 
     private CsMusicCommand() {}
@@ -84,12 +125,34 @@ public final class CsMusicCommand {
                 .then(Commands.literal("area")
                         .then(Commands.literal("create")
                                 .then(Commands.argument(ARG_AREA, StringArgumentType.word())
-                                        .suggests(AREA_SUGGESTIONS)
+                                        // No music id at all: geometry-only area in the current
+                                        // dimension. The '-' sentinel below covers the same intent
+                                        // for a remote dimension, which this short form can't reach.
+                                        .executes(CsMusicCommand::areaCreateHereNoMusic)
                                         .then(Commands.argument(ARG_MUSIC, StringArgumentType.string())
-                                                .suggests(MUSIC_SUGGESTIONS)
+                                                .suggests(MUSIC_OR_NONE_SUGGESTIONS)
                                                 .executes(CsMusicCommand::areaCreateHere)
                                                 .then(Commands.argument(ARG_DIMENSION, DimensionArgument.dimension())
                                                         .executes(CsMusicCommand::areaCreateInDim)))))
+                        .then(Commands.literal("setmusic")
+                                .then(Commands.argument(ARG_AREA, StringArgumentType.word())
+                                        .suggests(AREA_SUGGESTIONS)
+                                        .then(Commands.argument(ARG_MUSIC, StringArgumentType.string())
+                                                .suggests(MUSIC_OR_NONE_SUGGESTIONS)
+                                                .executes(CsMusicCommand::areaSetMusic))))
+                        .then(Commands.literal("tag")
+                                .then(Commands.literal("add")
+                                        .then(Commands.argument(ARG_AREA, StringArgumentType.word())
+                                                .suggests(AREA_SUGGESTIONS)
+                                                .then(Commands.argument(ARG_TAG, StringArgumentType.word())
+                                                        .suggests(DIMENSION_TAG_SUGGESTIONS)
+                                                        .executes(CsMusicCommand::areaTagAdd))))
+                                .then(Commands.literal("remove")
+                                        .then(Commands.argument(ARG_AREA, StringArgumentType.word())
+                                                .suggests(AREA_SUGGESTIONS)
+                                                .then(Commands.argument(ARG_TAG, StringArgumentType.word())
+                                                        .suggests(AREA_TAG_SUGGESTIONS)
+                                                        .executes(CsMusicCommand::areaTagRemove)))))
                         .then(Commands.literal("addvolume")
                                 .then(Commands.argument(ARG_AREA, StringArgumentType.word())
                                         .suggests(AREA_SUGGESTIONS)
@@ -153,6 +216,16 @@ public final class CsMusicCommand {
         List<DimensionalMusicManager.SourceInfo> sources = DimensionalMusicManager.describeSourcesFor(player);
         ctx.getSource().sendSuccess(
                 () -> Component.translatable("cobblesafari.command.csmusic.current.header", player.getGameProfile().getName()),
+                false);
+        // Areas first: a rule carrying an area axis that never fires leaves no trace in the source
+        // list, so this line is what tells a typo'd id from a misplaced box or a disabled area.
+        List<CsMusicArea> areasHere = DimensionalMusicManager.areasHereFor(player);
+        Component areasLabel = areasHere.isEmpty()
+                ? Component.translatable("cobblesafari.command.csmusic.current.areas.none")
+                : Component.literal(areasHere.stream().map(CsMusicCommand::describeArea)
+                        .collect(Collectors.joining(", ")));
+        ctx.getSource().sendSuccess(
+                () -> Component.translatable("cobblesafari.command.csmusic.current.areas", areasLabel),
                 false);
         if (sources.isEmpty()) {
             ctx.getSource().sendSuccess(
@@ -262,16 +335,21 @@ public final class CsMusicCommand {
         return def;
     }
 
+    private static int areaCreateHereNoMusic(CommandContext<CommandSourceStack> ctx) {
+        ServerPlayer player = requirePlayer(ctx);
+        return player == null ? 0 : areaCreate(ctx, player.serverLevel(), null);
+    }
+
     private static int areaCreateHere(CommandContext<CommandSourceStack> ctx) {
         ServerPlayer player = requirePlayer(ctx);
-        return player == null ? 0 : areaCreate(ctx, player.serverLevel());
+        return player == null ? 0 : areaCreate(ctx, player.serverLevel(), musicArg(ctx));
     }
 
     private static int areaCreateInDim(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        return areaCreate(ctx, DimensionArgument.getDimension(ctx, ARG_DIMENSION));
+        return areaCreate(ctx, DimensionArgument.getDimension(ctx, ARG_DIMENSION), musicArg(ctx));
     }
 
-    private static int areaCreate(CommandContext<CommandSourceStack> ctx, ServerLevel level) {
+    private static int areaCreate(CommandContext<CommandSourceStack> ctx, ServerLevel level, String musicId) {
         String areaId = StringArgumentType.getString(ctx, ARG_AREA);
         if (!ID_PATTERN.matcher(areaId).matches()) {
             ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.csmusic.area.invalid_id", areaId));
@@ -281,15 +359,95 @@ public final class CsMusicCommand {
             ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.csmusic.area.exists", areaId));
             return 0;
         }
-        String musicId = StringArgumentType.getString(ctx, ARG_MUSIC);
         String dimId = level.dimension().location().toString();
-        CsMusicArea area = new CsMusicArea(areaId, musicId, false, defaultAreaPriority(), List.of());
+        CsMusicArea area = new CsMusicArea(areaId, musicId, Set.of(), false, defaultAreaPriority(), List.of());
         CsMusicAreaStore.put(level, area);
         CsMusicAreaStore.save(ctx.getSource().getServer(), level);
+        Component music = musicLabel(musicId);
         ctx.getSource().sendSuccess(
-                () -> Component.translatable("cobblesafari.command.csmusic.area.created", areaId, musicId, dimId),
+                () -> Component.translatable("cobblesafari.command.csmusic.area.created", areaId, music, dimId),
                 true);
         return 1;
+    }
+
+    private static int areaSetMusic(CommandContext<CommandSourceStack> ctx) {
+        ServerPlayer player = requirePlayer(ctx);
+        if (player == null) {
+            return 0;
+        }
+        ServerLevel level = player.serverLevel();
+        String areaId = StringArgumentType.getString(ctx, ARG_AREA);
+        CsMusicArea area = requireArea(ctx, level, areaId);
+        if (area == null) {
+            return 0;
+        }
+        String musicId = musicArg(ctx);
+        CsMusicAreaStore.put(level, area.withMusic(musicId));
+        CsMusicAreaStore.save(ctx.getSource().getServer(), level);
+        ctx.getSource().sendSuccess(
+                () -> musicId == null
+                        ? Component.translatable("cobblesafari.command.csmusic.area.music_cleared", areaId)
+                        : Component.translatable("cobblesafari.command.csmusic.area.music_set", areaId, musicId),
+                true);
+        return 1;
+    }
+
+    private static int areaTagAdd(CommandContext<CommandSourceStack> ctx) {
+        return areaTagEdit(ctx, true);
+    }
+
+    private static int areaTagRemove(CommandContext<CommandSourceStack> ctx) {
+        return areaTagEdit(ctx, false);
+    }
+
+    private static int areaTagEdit(CommandContext<CommandSourceStack> ctx, boolean add) {
+        ServerPlayer player = requirePlayer(ctx);
+        if (player == null) {
+            return 0;
+        }
+        ServerLevel level = player.serverLevel();
+        String areaId = StringArgumentType.getString(ctx, ARG_AREA);
+        CsMusicArea area = requireArea(ctx, level, areaId);
+        if (area == null) {
+            return 0;
+        }
+        String tag = StringArgumentType.getString(ctx, ARG_TAG).trim().toLowerCase(Locale.ROOT);
+        if (!ID_PATTERN.matcher(tag).matches()) {
+            ctx.getSource().sendFailure(
+                    Component.translatable("cobblesafari.command.csmusic.area.invalid_tag", tag));
+            return 0;
+        }
+        if (!add && !area.hasTag(tag)) {
+            ctx.getSource().sendFailure(
+                    Component.translatable("cobblesafari.command.csmusic.area.tag_absent", areaId, tag));
+            return 0;
+        }
+        Set<String> tags = new LinkedHashSet<>(area.tags());
+        if (add) {
+            tags.add(tag); // adding an already-present tag is a no-op that still reports success
+        } else {
+            tags.remove(tag);
+        }
+        CsMusicAreaStore.put(level, area.withTags(tags));
+        CsMusicAreaStore.save(ctx.getSource().getServer(), level);
+        ctx.getSource().sendSuccess(
+                () -> Component.translatable(add
+                        ? "cobblesafari.command.csmusic.area.tag_added"
+                        : "cobblesafari.command.csmusic.area.tag_removed", tag, areaId),
+                true);
+        return 1;
+    }
+
+    /** Reads the {@code <csmusicId>} argument, mapping the {@code -} sentinel to "no music". */
+    private static String musicArg(CommandContext<CommandSourceStack> ctx) {
+        String raw = StringArgumentType.getString(ctx, ARG_MUSIC).trim();
+        return raw.isEmpty() || NO_MUSIC.equals(raw) ? null : raw;
+    }
+
+    private static Component musicLabel(String musicId) {
+        return musicId == null
+                ? Component.translatable("cobblesafari.command.csmusic.area.no_music")
+                : Component.literal(musicId);
     }
 
     private static int areaSetPriority(CommandContext<CommandSourceStack> ctx) {
@@ -436,14 +594,18 @@ public final class CsMusicCommand {
                     ? Component.translatable("cobblesafari.command.csmusic.area.toggled.on")
                     : Component.translatable("cobblesafari.command.csmusic.area.toggled.off");
             int boxCount = area.boxes().size();
+            Component tags = area.tags().isEmpty()
+                    ? Component.empty()
+                    : Component.literal(" " + String.join(", ", area.tags()));
             ctx.getSource().sendSuccess(
                     () -> Component.translatable(
                             "cobblesafari.command.csmusic.area.list.entry",
                             area.id(),
-                            area.musicId(),
+                            musicLabel(area.musicId()),
                             status,
                             areaPriority,
-                            boxCount),
+                            boxCount,
+                            tags),
                     false);
         }
         return 1;
@@ -472,8 +634,15 @@ public final class CsMusicCommand {
                         "cobblesafari.command.csmusic.area.info.header",
                         areaId,
                         status,
-                        area.musicId()),
+                        musicLabel(area.musicId())),
                 false);
+        if (!area.tags().isEmpty()) {
+            ctx.getSource().sendSuccess(
+                    () -> Component.translatable(
+                            "cobblesafari.command.csmusic.area.info.tags",
+                            String.join(", ", area.tags())),
+                    false);
+        }
         for (int i = 0; i < area.boxes().size(); i++) {
             CsMusicBox box = area.boxes().get(i);
             int index = i;
@@ -517,6 +686,13 @@ public final class CsMusicCommand {
             ctx.getSource().sendFailure(Component.translatable("cobblesafari.command.csmusic.area.not_found", areaId));
         }
         return area;
+    }
+
+    /** {@code lumiose_city [town, hub]} - id plus tags, for the {@code current} header line. */
+    private static String describeArea(CsMusicArea area) {
+        return area.tags().isEmpty()
+                ? area.id()
+                : area.id() + " [" + String.join(", ", area.tags()) + "]";
     }
 
     private static String formatPos(int x, int y, int z) {

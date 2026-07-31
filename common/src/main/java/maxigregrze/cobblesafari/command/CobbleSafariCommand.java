@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import maxigregrze.cobblesafari.cstrader.logic.CsTraderDefinition;
 import maxigregrze.cobblesafari.cstrader.logic.CsTraderRegistry;
@@ -33,6 +34,9 @@ public class CobbleSafariCommand {
     private static final String ARG_PLAYER = "player";
     private static final String ARG_SECONDS = "seconds";
     private static final String ARG_DIMENSION = "dimension";
+    private static final String ROOT_LITERAL = "cobblesafari";
+    private static final String ROOT_ALIAS = "cs";
+    private static final int ROOT_PERMISSION_LEVEL = 2;
     private static final SuggestionProvider<CommandSourceStack> SUMMON_NAME_SUGGESTIONS =
             (context, builder) -> SharedSuggestionProvider.suggest(CsTraderRegistry.getTraderNames(), builder);
     private static final SuggestionProvider<CommandSourceStack> SUMMON_VARIANT_SUGGESTIONS =
@@ -50,9 +54,26 @@ public class CobbleSafariCommand {
 
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess) {
         Objects.requireNonNull(registryAccess);
-        dispatcher.register(
-                Commands.literal("cobblesafari")
-                        .requires(source -> source.hasPermission(2))
+        dispatcher.register(rootTree(ROOT_LITERAL));
+        dispatcher.register(rootTree(ROOT_ALIAS));
+    }
+
+    /**
+     * Describes the whole command tree under {@code literal}, so that "/cs" and "/cobblesafari"
+     * stay in sync from a single description instead of two copies.
+     *
+     * <p>Deliberately not a Brigadier {@code redirect()} onto one shared tree: a redirect opens a
+     * fresh {@code CommandContextBuilder}, so everything parsed past the alias lands on a child
+     * context, while {@code CommandDispatcher#getCompletionSuggestions} hands providers the
+     * <em>root</em> context. Any provider that reads an earlier argument - such as
+     * {@link #SUMMON_VARIANT_SUGGESTIONS} or {@code csmusic area tag remove} - then fails to find
+     * it and returns no completions at all, even though execution still succeeds (execution runs
+     * on the deepest context, which does hold the arguments). Instantiating the tree once per
+     * accepted name keeps suggestions and execution identical on both paths.
+     */
+    private static LiteralArgumentBuilder<CommandSourceStack> rootTree(String literal) {
+        return Commands.literal(literal)
+                        .requires(source -> source.hasPermission(ROOT_PERMISSION_LEVEL))
                         .then(CsBossCommand.build())
                         .then(CsMusicCommand.build())
                         .then(Commands.literal("reset")
@@ -151,8 +172,7 @@ public class CobbleSafariCommand {
                                         .then(Commands.literal("force")
                                                 .executes(CobbleSafariCommand::executeDungeonForceList)))
                                 .then(Commands.literal("dimensions")
-                                        .executes(CobbleSafariCommand::executeDungeonDimensions)))
-        );
+                                        .executes(CobbleSafariCommand::executeDungeonDimensions)));
     }
 
     private static int executeResetSafari(CommandContext<CommandSourceStack> context) {

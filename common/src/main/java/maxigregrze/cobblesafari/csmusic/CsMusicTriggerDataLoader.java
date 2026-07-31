@@ -99,10 +99,21 @@ public final class CsMusicTriggerDataLoader {
         String rawPiece = blankToNull(w.structure_piece);
         CsMusicPiecePattern structurePiece = rawPiece == null ? null : CsMusicPiecePattern.fromJson(rawPiece);
 
+        // Area axes carry no compilation step: an area id is world data, not a ResourceLocation.
+        // They are deliberately not cross-checked here - areas live in the world save and are read
+        // lazily per dimension, so no such check is possible at server start (see /csmusic current).
+        String area = blankToNull(w.area);
+        String areaTag = blankToNull(w.area_tag);
+        if (areaTag != null) {
+            areaTag = areaTag.toLowerCase(Locale.ROOT);
+        }
+
         CsMusicCondition cond = new CsMusicCondition(
                 dimensionKey(file, idx, blankToNull(w.dimension)),
                 biomeKey(file, idx, blankToNull(w.biome)),
                 biomeTagKey(file, idx, blankToNull(w.biome_tag)),
+                area,
+                areaTag,
                 battle,
                 blankToNull(w.species),
                 blankToNull(w.form),

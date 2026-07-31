@@ -1,5 +1,7 @@
 package maxigregrze.cobblesafari.effect;
 
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
+import maxigregrze.cobblesafari.safari.SafariStateManager;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.Vec3;
@@ -25,7 +27,12 @@ public final class RedShackledEffectHandler {
             return;
         }
 
-        FrozenAnchor anchor = ANCHORS.computeIfAbsent(entity.getUUID(), id -> createAnchor(entity));
+        FrozenAnchor anchor = ANCHORS.get(entity.getUUID());
+        if (anchor == null) {
+            anchor = createAnchor(entity);
+            ANCHORS.put(entity.getUUID(), anchor);
+            onShackleStarted(entity);
+        }
 
         entity.setDeltaMovement(Vec3.ZERO);
         entity.setNoGravity(true);
@@ -77,6 +84,21 @@ public final class RedShackledEffectHandler {
         entity.setNoGravity(anchor.hadNoGravity);
         if (entity instanceof Mob mob && anchor.noAiApplied) {
             mob.setNoAi(anchor.hadNoAi);
+        }
+        onShackleEnded(entity);
+    }
+
+    // Single server-side detection point for both shackle transitions, so every application path
+    // (thrown red chain, boss attack, /effect) feeds the Safari flee suspension.
+    private static void onShackleStarted(LivingEntity entity) {
+        if (entity instanceof PokemonEntity pokemon) {
+            SafariStateManager.suspendFleeForShackle(pokemon);
+        }
+    }
+
+    private static void onShackleEnded(LivingEntity entity) {
+        if (entity instanceof PokemonEntity pokemon) {
+            SafariStateManager.resumeFleeAfterShackle(pokemon);
         }
     }
 

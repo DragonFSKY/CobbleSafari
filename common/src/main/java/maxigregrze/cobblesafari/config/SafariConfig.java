@@ -47,6 +47,7 @@ public class SafariConfig {
 
     private int baseFleeRate = 60;
     private int fleeGracePeriodTicks = 100;
+    private boolean redShackledSuspendsFlee = true;
     private float shinyCatchMultiplier = 8.0f;
     private boolean canShinyFlee = false;
     private int dailyBaitCount = 32;
@@ -228,6 +229,11 @@ public class SafariConfig {
     public static int getFleeGracePeriodTicks() {
         if (INSTANCE == null) return 100;
         return Math.max(20, INSTANCE.fleeGracePeriodTicks);
+    }
+
+    public static boolean redShackledSuspendsFlee() {
+        if (INSTANCE == null) return true;
+        return INSTANCE.redShackledSuspendsFlee;
     }
 
     public static float getShinyCatchMultiplier() {

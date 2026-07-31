@@ -10,6 +10,10 @@ public class SafariPokemonState {
     private boolean fleeing = false;
     private long fleeStartTick = 0;
     private int fleeToken = 0;
+    private long fleeDeadlineTick = 0;
+    private boolean fleeSuspended = false;
+    private int fleeRemainingGraceTicks = 0;
+    private boolean fled = false;
     private int moodLevel = 0;
     private UUID lastInteractingPlayer = null;
 
@@ -95,5 +99,45 @@ public class SafariPokemonState {
 
     public int incrementFleeToken() {
         return ++fleeToken;
+    }
+
+    /**
+     * Absolute {@code SafariStateManager} tick at which the currently armed flee sequence resolves,
+     * or {@code 0} when no flee task is armed (never started, cancelled, or suspended).
+     */
+    public long getFleeDeadlineTick() {
+        return fleeDeadlineTick;
+    }
+
+    public void setFleeDeadlineTick(long fleeDeadlineTick) {
+        this.fleeDeadlineTick = fleeDeadlineTick;
+    }
+
+    public boolean isFleeSuspended() {
+        return fleeSuspended;
+    }
+
+    public void setFleeSuspended(boolean fleeSuspended) {
+        this.fleeSuspended = fleeSuspended;
+    }
+
+    public int getFleeRemainingGraceTicks() {
+        return fleeRemainingGraceTicks;
+    }
+
+    public void setFleeRemainingGraceTicks(int fleeRemainingGraceTicks) {
+        this.fleeRemainingGraceTicks = fleeRemainingGraceTicks;
+    }
+
+    /**
+     * Whether the flee has already been committed, i.e. the uncatchable property was posted and the
+     * despawn fade started. Past that point nothing can rescue the Pokémon anymore.
+     */
+    public boolean hasFled() {
+        return fled;
+    }
+
+    public void markFled() {
+        this.fled = true;
     }
 }

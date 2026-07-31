@@ -1,0 +1,178 @@
+{
+  "parent": "minecraft:block/block",
+  "format_version": "1.9.0",
+  "credit": "Made with Blockbench",
+  "texture_size": [
+    32,
+    16
+  ],
+  "textures": {
+    "particle": "cobblesafari:block/hyperspace_platform_scafolding"
+  },
+  "elements": [
+    {
+      "from": [
+        0.51,
+        13.01,
+        0.01
+      ],
+      "to": [
+        2.49,
+        14.99,
+        15.99
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          1.5,
+          14,
+          8
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            1,
+            2
+          ],
+          "texture": "#particle"
+        },
+        "east": {
+          "uv": [
+            8,
+            0,
+            16,
+            2
+          ],
+          "rotation": 180,
+          "texture": "#particle"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            1,
+            2
+          ],
+          "rotation": 180,
+          "texture": "#particle"
+        },
+        "west": {
+          "uv": [
+            8,
+            0,
+            16,
+            2
+          ],
+          "rotation": 180,
+          "texture": "#particle"
+        },
+        "up": {
+          "uv": [
+            8,
+            0,
+            16,
+            2
+          ],
+          "rotation": 90,
+          "texture": "#particle"
+        },
+        "down": {
+          "uv": [
+            8,
+            0,
+            16,
+            2
+          ],
+          "rotation": 270,
+          "texture": "#particle"
+        }
+      }
+    },
+    {
+      "from": [
+        13.51,
+        13.01,
+        0.01
+      ],
+      "to": [
+        15.49,
+        14.99,
+        15.99
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          14.5,
+          14,
+          8
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            1,
+            2
+          ],
+          "texture": "#particle"
+        },
+        "east": {
+          "uv": [
+            8,
+            0,
+            16,
+            2
+          ],
+          "rotation": 180,
+          "texture": "#particle"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            1,
+            2
+          ],
+          "rotation": 180,
+          "texture": "#particle"
+        },
+        "west": {
+          "uv": [
+            8,
+            0,
+            16,
+            2
+          ],
+          "rotation": 180,
+          "texture": "#particle"
+        },
+        "up": {
+          "uv": [
+            8,
+            0,
+            16,
+            2
+          ],
+          "rotation": 90,
+          "texture": "#particle"
+        },
+        "down": {
+          "uv": [
+            8,
+            0,
+            16,
+            2
+          ],
+          "rotation": 270,
+          "texture": "#particle"
+        }
+      }
+    }
+  ]
+}
