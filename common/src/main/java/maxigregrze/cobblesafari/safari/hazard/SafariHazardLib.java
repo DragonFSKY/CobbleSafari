@@ -50,15 +50,12 @@ public final class SafariHazardLib {
             }
             double dx = p.getX() - cx;
             double dz = p.getZ() - cz;
-            if (dx * dx + dz * dz > r2) {
-                continue;
-            }
-            if (p.getY() + p.getBbHeight() < baseY || p.getY() > baseY + height) {
-                continue;
-            }
-            p.hurt(source, damage);
-            if (fireTicks > 0) {
-                p.setRemainingFireTicks(Math.max(p.getRemainingFireTicks(), fireTicks));
+            if (!(dx * dx + dz * dz > r2)
+                    && !(p.getY() + p.getBbHeight() < baseY || p.getY() > baseY + height)) {
+                p.hurt(source, damage);
+                if (fireTicks > 0) {
+                    p.setRemainingFireTicks(Math.max(p.getRemainingFireTicks(), fireTicks));
+                }
             }
         }
     }
