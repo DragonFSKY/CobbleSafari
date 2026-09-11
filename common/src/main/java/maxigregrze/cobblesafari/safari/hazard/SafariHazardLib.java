@@ -12,6 +12,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.List;
+
 /**
  * Safari biome hazard helpers: reuses boss attack visuals/effects outside
  * boss sessions; damages any player in the hazard area.
@@ -42,7 +44,7 @@ public final class SafariHazardLib {
                                              double radius, double height, DamageSource source,
                                              float damage, int fireTicks) {
         double r2 = radius * radius;
-        for (ServerPlayer p : level.players()) {
+        for (ServerPlayer p : List.copyOf(level.players())) {
             if (p.isSpectator() || !p.isAlive()) {
                 continue;
             }

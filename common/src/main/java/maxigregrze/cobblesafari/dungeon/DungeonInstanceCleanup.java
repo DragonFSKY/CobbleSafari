@@ -266,7 +266,7 @@ public final class DungeonInstanceCleanup {
         int minY = record.structureY() - (record.clearSectionsBelow() * 16);
         int maxY = record.structureY() + (record.clearSectionsAbove() * 16);
 
-        for (ServerPlayer player : dungeonLevel.players()) {
+        for (ServerPlayer player : List.copyOf(dungeonLevel.players())) {
             BlockPos pos = player.blockPosition();
             if (pos.getX() >= blockMinX && pos.getX() <= blockMaxX
                     && pos.getZ() >= blockMinZ && pos.getZ() <= blockMaxZ
